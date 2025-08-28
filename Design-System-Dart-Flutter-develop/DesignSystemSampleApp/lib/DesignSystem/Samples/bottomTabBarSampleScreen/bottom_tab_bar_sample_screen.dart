@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../Components/BottomTabBar/bottom_tab_bar.dart';
 import '../../Components/BottomTabBar/bottom_tab_bar_view_model.dart';
+import '../../Components/BottomTabBar/bottom_tab_bar_delegate.dart';
 
 class BottomTabBarPage extends StatefulWidget {
   const BottomTabBarPage({super.key});
@@ -9,8 +10,16 @@ class BottomTabBarPage extends StatefulWidget {
   State<BottomTabBarPage> createState() => _BottomTabBarPageState();
 }
 
-class _BottomTabBarPageState extends State<BottomTabBarPage> {
+class _BottomTabBarPageState extends State<BottomTabBarPage> implements BottomTabBarDelegate {
   int actualIndex = 0;
+
+  @override
+  void onBottomTabBarIndexChanged(int index) {
+    setState(() {
+      actualIndex = index;
+    });
+    print('Bottom Tab Bar item selecionado: $index');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,13 +55,9 @@ class _BottomTabBarPageState extends State<BottomTabBarPage> {
               label: "Profile",
             )
           ],
-          onIndexChanged: (index) {
-            setState(() {
-              actualIndex = index;
-            });
-          },
         ),
         currentIndex: actualIndex,
+        delegate: this,
       ),
     );
   }

@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'tab_view_model.dart';
+import 'tab_delegate.dart';
 import '../../shared/colors.dart';
 
 class TabComponent extends StatefulWidget {
   final TabViewModel tabViewModel;
+  final TabDelegate? delegate;
 
-  const TabComponent._({super.key, required this.tabViewModel});
+  const TabComponent._({super.key, required this.tabViewModel, this.delegate});
 
   @override
   State<TabComponent> createState() => _TabComponentState();
 
-  static Widget instantiate({required TabViewModel tabViewModel}) {
-    return TabComponent._(tabViewModel: tabViewModel);
+  static Widget instantiate({required TabViewModel tabViewModel, TabDelegate? delegate}) {
+    return TabComponent._(tabViewModel: tabViewModel, delegate: delegate);
   }
 }
 
@@ -31,7 +33,7 @@ class _TabComponentState extends State<TabComponent>
 
   void handleTabChange() {
     if (tabController.indexIsChanging) {
-      widget.tabViewModel.onIndexChanged?.call(tabController.index);
+      widget.delegate?.onTabIndexChanged(tabController.index);
     }
   }
 
