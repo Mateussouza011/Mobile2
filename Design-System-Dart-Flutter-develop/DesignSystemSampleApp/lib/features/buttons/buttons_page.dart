@@ -2,80 +2,340 @@ import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_button.dart';
 
 /// Página que demonstra diferentes tipos de botões Shadcn/UI
-class ButtonsPage extends StatelessWidget {
+class ButtonsPage extends StatefulWidget {
   const ButtonsPage({super.key});
 
   @override
+  State<ButtonsPage> createState() => _ButtonsPageState();
+}
+
+class _ButtonsPageState extends State<ButtonsPage> {
+  @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Botão',
-          style: Theme.of(context).textTheme.titleLarge,
+          'Showcase de Botões',
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            color: colorScheme.onSurface,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         centerTitle: true,
+        backgroundColor: colorScheme.surface,
+        elevation: 0,
+        iconTheme: IconThemeData(color: colorScheme.onSurface),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(24.0),
         children: [
           // Descrição
           Text(
-            'Exibe um botão ou um componente que parece um botão.',
+            'Demonstração completa dos botões Shadcn/UI com todos os estados visuais.',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 32),
           
-          // Botão padrão
-          ShadcnButton(
-            text: 'Botão',
-            onPressed: () => _showMessage(context, 'Botão padrão pressionado!'),
+          // Botões Principais
+          _buildSection(
+            context,
+            'Variantes Principais',
+            'Botões primário, secundário e destrutivo com contraste adequado',
+            [
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: ShadcnButton(
+                      text: 'Primário',
+                      variant: ShadcnButtonVariant.default_,
+                      onPressed: () => _showMessage(context, 'Botão primário ativo!'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ShadcnButton(
+                      text: 'Secundário',
+                      variant: ShadcnButtonVariant.secondary,
+                      onPressed: () => _showMessage(context, 'Botão secundário ativo!'),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: ShadcnButton(
+                      text: 'Destrutivo',
+                      variant: ShadcnButtonVariant.destructive,
+                      onPressed: () => _showMessage(context, 'Ação destrutiva confirmada!'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ShadcnButton(
+                      text: 'Outline',
+                      variant: ShadcnButtonVariant.outline,
+                      onPressed: () => _showMessage(context, 'Botão outline ativo!'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
           
           const SizedBox(height: 32),
           
-          // Variantes de botões
+          // Botões com Ícones
           _buildSection(
             context,
-            'Variantes',
+            'Botões com Ícones',
+            'Botões com ícones mantendo contraste e legibilidade',
             [
-              const SizedBox(height: 16),
-              Wrap(
-                spacing: 12,
-                runSpacing: 12,
+              const SizedBox(height: 20),
+              Row(
                 children: [
-                  ShadcnButton(
-                    text: 'Padrão',
-                    variant: ShadcnButtonVariant.default_,
-                    onPressed: () => _showMessage(context, 'Botão padrão pressionado!'),
+                  Expanded(
+                    child: ShadcnButton.withLeadingIcon(
+                      text: 'Download',
+                      leadingIcon: Icon(
+                        Icons.download,
+                        color: colorScheme.onPrimary,
+                      ),
+                      onPressed: () => _showMessage(context, 'Download iniciado!'),
+                    ),
                   ),
-                  ShadcnButton(
-                    text: 'Destrutivo',
-                    variant: ShadcnButtonVariant.destructive,
-                    onPressed: () => _showMessage(context, 'Ação destrutiva executada!'),
-                  ),
-                  ShadcnButton(
-                    text: 'Contorno',
-                    variant: ShadcnButtonVariant.outline,
-                    onPressed: () => _showMessage(context, 'Botão de contorno clicado!'),
-                  ),
-                  ShadcnButton(
-                    text: 'Secundário',
-                    variant: ShadcnButtonVariant.secondary,
-                    onPressed: () => _showMessage(context, 'Ação secundária acionada!'),
-                  ),
-                  ShadcnButton(
-                    text: 'Fantasma',
-                    variant: ShadcnButtonVariant.ghost,
-                    onPressed: () => _showMessage(context, 'Botão fantasma ativado!'),
-                  ),
-                  ShadcnButton(
-                    text: 'Link',
-                    variant: ShadcnButtonVariant.link,
-                    onPressed: () => _showMessage(context, 'Botão link tocado!'),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ShadcnButton.withLeadingIcon(
+                      text: 'Enviar',
+                      leadingIcon: Icon(
+                        Icons.send,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                      variant: ShadcnButtonVariant.outline,
+                      onPressed: () => _showMessage(context, 'Mensagem enviada!'),
+                    ),
                   ),
                 ],
+              ),
+              const SizedBox(height: 16),
+              ShadcnButton.icon(
+                icon: Icon(
+                  Icons.favorite,
+                  color: colorScheme.onPrimary,
+                ),
+                onPressed: () => _showMessage(context, 'Favoritado!'),
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 32),
+          
+          // Estados de Botões
+          _buildSection(
+            context,
+            'Estados dos Botões',
+            'Demonstração de estados: ativo, hover, loading e desabilitado',
+            [
+              const SizedBox(height: 20),
+              // Estado normal
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: colorScheme.surfaceVariant.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Estado Normal',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ShadcnButton(
+                            text: 'Ativo',
+                            onPressed: () => _showMessage(context, 'Botão ativo!'),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: ShadcnButton(
+                            text: 'Ghost',
+                            variant: ShadcnButtonVariant.ghost,
+                            onPressed: () => _showMessage(context, 'Ghost ativo!'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              
+              const SizedBox(height: 16),
+              
+              // Estado loading
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: colorScheme.surfaceVariant.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Estado Loading',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ShadcnButton(
+                            text: 'Carregando...',
+                            loading: true,
+                            onPressed: null,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: ShadcnButton(
+                            text: 'Processando...',
+                            loading: true,
+                            variant: ShadcnButtonVariant.secondary,
+                            onPressed: null,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              
+              const SizedBox(height: 16),
+              
+              // Estado desabilitado
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: colorScheme.surfaceVariant.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Estado Desabilitado',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ShadcnButton(
+                            text: 'Desabilitado',
+                            disabled: true,
+                            onPressed: null,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: ShadcnButton(
+                            text: 'Indisponível',
+                            disabled: true,
+                            variant: ShadcnButtonVariant.outline,
+                            onPressed: null,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 32),
+          
+          // Teste de Contraste
+          _buildSection(
+            context,
+            'Teste de Contraste',
+            'Verificação da legibilidade em temas claro e escuro',
+            [
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: colorScheme.surface,
+                  border: Border.all(color: colorScheme.outline),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      'Todos os botões abaixo devem ter texto legível:',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Wrap(
+                      spacing: 12,
+                      runSpacing: 12,
+                      children: [
+                        ShadcnButton(
+                          text: 'Primário',
+                          size: ShadcnButtonSize.sm,
+                          onPressed: () => _showMessage(context, 'Contraste OK - Primário'),
+                        ),
+                        ShadcnButton(
+                          text: 'Secundário',
+                          variant: ShadcnButtonVariant.secondary,
+                          size: ShadcnButtonSize.sm,
+                          onPressed: () => _showMessage(context, 'Contraste OK - Secundário'),
+                        ),
+                        ShadcnButton(
+                          text: 'Outline',
+                          variant: ShadcnButtonVariant.outline,
+                          size: ShadcnButtonSize.sm,
+                          onPressed: () => _showMessage(context, 'Contraste OK - Outline'),
+                        ),
+                        ShadcnButton(
+                          text: 'Ghost',
+                          variant: ShadcnButtonVariant.ghost,
+                          size: ShadcnButtonSize.sm,
+                          onPressed: () => _showMessage(context, 'Contraste OK - Ghost'),
+                        ),
+                        ShadcnButton(
+                          text: 'Destrutivo',
+                          variant: ShadcnButtonVariant.destructive,
+                          size: ShadcnButtonSize.sm,
+                          onPressed: () => _showMessage(context, 'Contraste OK - Destrutivo'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -85,187 +345,32 @@ class ButtonsPage extends StatelessWidget {
           // Tamanhos
           _buildSection(
             context,
-            'Tamanhos',
+            'Diferentes Tamanhos',
+            'Botões em tamanhos pequeno, padrão e grande',
             [
-              const SizedBox(height: 16),
-              Wrap(
-                spacing: 12,
-                runSpacing: 12,
+              const SizedBox(height: 20),
+              Column(
                 children: [
-                  ShadcnButton(
-                    text: 'Pequeno',
-                    size: ShadcnButtonSize.sm,
-                    onPressed: () => _showMessage(context, 'Botão pequeno pressionado!'),
-                  ),
-                  ShadcnButton(
-                    text: 'Padrão',
-                    size: ShadcnButtonSize.default_,
-                    onPressed: () => _showMessage(context, 'Botão tamanho padrão!'),
-                  ),
-                  ShadcnButton(
-                    text: 'Grande',
-                    size: ShadcnButtonSize.lg,
-                    onPressed: () => _showMessage(context, 'Botão grande clicado!'),
-                  ),
-                  ShadcnButton(
-                    text: '',
-                    size: ShadcnButtonSize.icon,
-                    icon: const Icon(Icons.star),
-                    onPressed: () => _showMessage(context, 'Botão de ícone tocado!'),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          
-          const SizedBox(height: 32),
-          
-          // Botões com ícones
-          _buildSection(
-            context,
-            'Com Ícone',
-            [
-              const SizedBox(height: 16),
-              Wrap(
-                spacing: 12,
-                runSpacing: 12,
-                children: [
-                  ShadcnButton(
-                    text: 'Enviar Mensagem',
-                    icon: const Icon(Icons.mail),
-                    onPressed: () => _showMessage(context, 'Mensagem enviada com sucesso!'),
-                  ),
-                  ShadcnButton(
-                    text: 'Baixar',
-                    icon: const Icon(Icons.download),
-                    variant: ShadcnButtonVariant.outline,
-                    onPressed: () => _showMessage(context, 'Download iniciado!'),
-                  ),
-                  ShadcnButton(
-                    text: 'Compartilhar',
-                    icon: const Icon(Icons.share),
-                    variant: ShadcnButtonVariant.secondary,
-                    onPressed: () => _showMessage(context, 'Compartilhando conteúdo...'),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          
-          const SizedBox(height: 32),
-          
-          // Botões loading
-          _buildSection(
-            context,
-            'Carregando',
-            [
-              const SizedBox(height: 16),
-              Wrap(
-                spacing: 12,
-                runSpacing: 12,
-                children: [
-                  ShadcnButton(
-                    text: 'Aguarde',
-                    loading: true,
-                    onPressed: () => _showMessage(context, 'Botão de carregamento clicado!'),
-                  ),
-                  ShadcnButton(
-                    text: 'Carregando',
-                    loading: true,
-                    variant: ShadcnButtonVariant.outline,
-                    onPressed: () => _showMessage(context, 'Contorno carregando clicado!'),
-                  ),
-                  ShadcnButton(
-                    text: 'Enviando',
-                    loading: true,
-                    variant: ShadcnButtonVariant.secondary,
-                    onPressed: () => _showMessage(context, 'Botão enviando clicado!'),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          
-          const SizedBox(height: 32),
-          
-          // Botões desabilitados
-          _buildSection(
-            context,
-            'Desabilitado',
-            [
-              const SizedBox(height: 16),
-              Wrap(
-                spacing: 12,
-                runSpacing: 12,
-                children: const [
-                  ShadcnButton(
-                    text: 'Desabilitado',
-                    disabled: true,
-                  ),
-                  ShadcnButton(
-                    text: 'Desabilitado',
-                    disabled: true,
-                    variant: ShadcnButtonVariant.outline,
-                  ),
-                  ShadcnButton(
-                    text: 'Desabilitado',
-                    disabled: true,
-                    variant: ShadcnButtonVariant.secondary,
-                  ),
-                ],
-              ),
-            ],
-          ),
-          
-          const SizedBox(height: 32),
-          
-          // As Button (como link)
-          _buildSection(
-            context,
-            'Como Componente Filho',
-            [
-              const SizedBox(height: 16),
-              const Text('Você pode usar o helper buttonVariant com:'),
-              const SizedBox(height: 12),
-              Wrap(
-                spacing: 12,
-                runSpacing: 12,
-                children: [
-                  InkWell(
-                    onTap: () => _showMessage(context, 'Widget personalizado tocado!'),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary,
-                        borderRadius: BorderRadius.circular(6),
+                  Row(
+                    children: [
+                      ShadcnButton(
+                        text: 'Pequeno',
+                        size: ShadcnButtonSize.sm,
+                        onPressed: () => _showMessage(context, 'Botão pequeno!'),
                       ),
-                      child: Text(
-                        'Widget Personalizado',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      const SizedBox(width: 12),
+                      ShadcnButton(
+                        text: 'Padrão',
+                        size: ShadcnButtonSize.default_,
+                        onPressed: () => _showMessage(context, 'Botão padrão!'),
                       ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => _showMessage(context, 'Botão link ativado!'),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
-                        borderRadius: BorderRadius.circular(6),
+                      const SizedBox(width: 12),
+                      ShadcnButton(
+                        text: 'Grande',
+                        size: ShadcnButtonSize.lg,
+                        onPressed: () => _showMessage(context, 'Botão grande!'),
                       ),
-                      child: Text(
-                        'Como Link',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
+                    ],
                   ),
                 ],
               ),
@@ -276,14 +381,24 @@ class ButtonsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSection(BuildContext context, String title, List<Widget> children) {
+  Widget _buildSection(BuildContext context, String title, String description, List<Widget> children) {
+    final colorScheme = Theme.of(context).colorScheme;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w600,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            color: colorScheme.onSurface,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          description,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: colorScheme.onSurfaceVariant,
           ),
         ),
         ...children,
@@ -292,9 +407,17 @@ class ButtonsPage extends StatelessWidget {
   }
 
   void _showMessage(BuildContext context, String message) {
+    final colorScheme = Theme.of(context).colorScheme;
+    
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
+        content: Text(
+          message,
+          style: TextStyle(
+            color: colorScheme.onInverseSurface,
+          ),
+        ),
+        backgroundColor: colorScheme.inverseSurface,
         duration: const Duration(seconds: 2),
       ),
     );
