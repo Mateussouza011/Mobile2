@@ -9,6 +9,7 @@ import '../../features/tables/tables_page.dart';
 import '../../features/sliders/sliders_page.dart';
 import '../../features/modals/modals_page.dart';
 import '../../features/showcase/showcase_page.dart';
+import '../../features/settings/settings_page.dart';
 
 /// Configuração de rotas usando GoRouter
 class AppRouter {
@@ -95,6 +96,15 @@ class AppRouter {
             name: 'modals',
             pageBuilder: (context, state) => CustomTransitionPage(
               child: const ModalsPage(),
+              transitionsBuilder: _slideTransition,
+            ),
+          ),
+          
+          GoRoute(
+            path: '/settings',
+            name: 'settings',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              child: const SettingsPage(),
               transitionsBuilder: _slideTransition,
             ),
           ),
