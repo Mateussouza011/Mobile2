@@ -88,6 +88,12 @@ class HomePage extends StatelessWidget {
                   icon: Icons.web_asset,
                   onTap: () => context.go('/modals'),
                 ),
+                ComponentCard(
+                  title: 'Configurações',
+                  description: 'Personalize tema, idioma e outras preferências do aplicativo.',
+                  icon: Icons.settings,
+                  onTap: () => context.go('/settings'),
+                ),
               ],
             ),
             
