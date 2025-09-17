@@ -90,7 +90,7 @@ class HomePage extends StatelessWidget {
                 ),
                 ComponentCard(
                   title: 'Configurações',
-                  description: 'Personalize temas, idiomas e outras preferências do aplicativo.',
+                  description: 'Personalize tema, idioma e outras preferências do aplicativo.',
                   icon: Icons.settings,
                   onTap: () => context.go('/settings'),
                 ),

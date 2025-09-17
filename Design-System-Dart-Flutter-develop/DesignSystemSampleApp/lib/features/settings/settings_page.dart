@@ -1,26 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../core/theme/theme_provider.dart';
+import '../../core/providers/theme_provider.dart';
 import '../../ui/widgets/shadcn/shadcn_card.dart';
 
 /// Página de configurações do aplicativo
-class SettingsPage extends StatefulWidget {
+/// Permite alternar tema e selecionar idioma
+class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
-}
-
-class _SettingsPageState extends State<SettingsPage> {
-  String _selectedLanguage = 'Português';
-  final List<String> _languages = ['Português', 'English', 'Español'];
-
-  @override
   Widget build(BuildContext context) {
-    final themeProvider = context.watch<ThemeProvider>();
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -38,324 +30,56 @@ class _SettingsPageState extends State<SettingsPage> {
       body: ListView(
         padding: const EdgeInsets.all(24.0),
         children: [
-          // Descrição
+          // Introdução
           Text(
-            'Personalize a aparência e comportamento do aplicativo.',
-            style: textTheme.bodyLarge?.copyWith(
+            'Personalize sua experiência',
+            style: textTheme.headlineSmall?.copyWith(
+              color: colorScheme.onSurface,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Configure o tema e idioma de acordo com suas preferências.',
+            style: textTheme.bodyMedium?.copyWith(
               color: colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 32),
-
+          
           // Seção Aparência
-          _buildSection(
+          _buildSettingsSection(
             context,
             'Aparência',
-            'Configure o tema visual do aplicativo',
+            'Controle a aparência visual do aplicativo',
             [
+              _buildThemeCard(context),
               const SizedBox(height: 16),
-              
-              // Switch do tema
-              ShadcnCard(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    children: [
-                      Icon(
-                        themeProvider.isDarkMode 
-                            ? Icons.dark_mode 
-                            : Icons.light_mode,
-                        color: colorScheme.primary,
-                        size: 24,
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Tema Escuro',
-                              style: textTheme.titleMedium?.copyWith(
-                                color: colorScheme.onSurface,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              themeProvider.isDarkMode 
-                                  ? 'Modo escuro ativado'
-                                  : 'Modo claro ativado',
-                              style: textTheme.bodyMedium?.copyWith(
-                                color: colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Switch(
-                        value: themeProvider.isDarkMode,
-                        onChanged: (value) {
-                          themeProvider.toggleTheme();
-                          _showMessage(
-                            context,
-                            value ? 'Tema escuro ativado!' : 'Tema claro ativado!',
-                          );
-                        },
-                        activeColor: colorScheme.primary,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Preview do tema atual
-              ShadcnCard(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.preview,
-                            color: colorScheme.primary,
-                            size: 24,
-                          ),
-                          const SizedBox(width: 16),
-                          Text(
-                            'Preview do Tema',
-                            style: textTheme.titleMedium?.copyWith(
-                              color: colorScheme.onSurface,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: colorScheme.surfaceVariant,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: colorScheme.outline,
-                            width: 1,
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Título Principal',
-                              style: textTheme.titleLarge?.copyWith(
-                                color: colorScheme.onSurface,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Este é um exemplo de como o texto aparece no tema atual. '
-                              'Observe o contraste e a legibilidade.',
-                              style: textTheme.bodyMedium?.copyWith(
-                                color: colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                color: colorScheme.primary,
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                'Botão de Exemplo',
-                                style: textTheme.labelLarge?.copyWith(
-                                  color: colorScheme.onPrimary,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              _buildThemeToggle(context),
             ],
           ),
-
+          
           const SizedBox(height: 32),
-
+          
           // Seção Idioma
-          _buildSection(
+          _buildSettingsSection(
             context,
-            'Idioma',
-            'Selecione o idioma da interface',
+            'Idioma e Região',
+            'Selecione seu idioma preferido',
             [
-              const SizedBox(height: 16),
-              
-              ShadcnCard(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.language,
-                        color: colorScheme.primary,
-                        size: 24,
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Idioma da Interface',
-                              style: textTheme.titleMedium?.copyWith(
-                                color: colorScheme.onSurface,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Idioma selecionado: $_selectedLanguage',
-                              style: textTheme.bodyMedium?.copyWith(
-                                color: colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      DropdownButton<String>(
-                        value: _selectedLanguage,
-                        onChanged: (String? newValue) {
-                          if (newValue != null) {
-                            setState(() {
-                              _selectedLanguage = newValue;
-                            });
-                            _showMessage(
-                              context,
-                              'Idioma alterado para: $newValue',
-                            );
-                          }
-                        },
-                        underline: Container(),
-                        dropdownColor: colorScheme.surface,
-                        style: textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.onSurface,
-                        ),
-                        items: _languages.map<DropdownMenuItem<String>>(
-                          (String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          },
-                        ).toList(),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              _buildLanguageCard(context),
             ],
           ),
-
+          
           const SizedBox(height: 32),
-
-          // Seção Informações
-          _buildSection(
+          
+          // Seção Preview
+          _buildSettingsSection(
             context,
-            'Sobre',
-            'Informações do aplicativo',
+            'Preview do Tema',
+            'Visualize como o tema atual aparece',
             [
-              const SizedBox(height: 16),
-              
-              ShadcnCard(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    children: [
-                      _buildInfoRow(
-                        context,
-                        Icons.info_outline,
-                        'Versão',
-                        '1.0.0',
-                      ),
-                      const SizedBox(height: 16),
-                      _buildInfoRow(
-                        context,
-                        Icons.palette_outlined,
-                        'Design System',
-                        'Shadcn/UI',
-                      ),
-                      const SizedBox(height: 16),
-                      _buildInfoRow(
-                        context,
-                        Icons.code,
-                        'Framework',
-                        'Flutter',
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 32),
-
-          // Botões de ação
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () {
-                    themeProvider.setTheme(ThemeMode.system);
-                    _showMessage(context, 'Configurações restauradas!');
-                  },
-                  icon: Icon(
-                    Icons.restore,
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                  label: Text(
-                    'Restaurar Padrão',
-                    style: textTheme.labelLarge?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: colorScheme.outline),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    _showMessage(context, 'Configurações salvas com sucesso!');
-                  },
-                  icon: Icon(
-                    Icons.save,
-                    color: colorScheme.onPrimary,
-                  ),
-                  label: Text(
-                    'Salvar',
-                    style: textTheme.labelLarge?.copyWith(
-                      color: colorScheme.onPrimary,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: colorScheme.primary,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                ),
-              ),
+              _buildThemePreview(context),
             ],
           ),
         ],
@@ -363,15 +87,15 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget _buildSection(
-    BuildContext context,
-    String title,
-    String description,
-    List<Widget> children,
+  Widget _buildSettingsSection(
+    BuildContext context, 
+    String title, 
+    String description, 
+    List<Widget> children
   ) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -389,59 +113,341 @@ class _SettingsPageState extends State<SettingsPage> {
             color: colorScheme.onSurfaceVariant,
           ),
         ),
+        const SizedBox(height: 20),
         ...children,
       ],
     );
   }
 
-  Widget _buildInfoRow(
-    BuildContext context,
-    IconData icon,
-    String label,
-    String value,
-  ) {
+  Widget _buildThemeCard(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-
-    return Row(
-      children: [
-        Icon(
-          icon,
-          color: colorScheme.onSurfaceVariant,
-          size: 20,
-        ),
-        const SizedBox(width: 12),
-        Text(
-          label,
-          style: textTheme.bodyMedium?.copyWith(
-            color: colorScheme.onSurfaceVariant,
+    
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return ShadcnCard(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    themeProvider.isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                    color: colorScheme.primary,
+                    size: 24,
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'Modo ${themeProvider.isDarkMode ? 'Escuro' : 'Claro'}',
+                    style: textTheme.titleMedium?.copyWith(
+                      color: colorScheme.onSurface,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                themeProvider.isDarkMode 
+                  ? 'Interface escura para ambientes com pouca luz'
+                  : 'Interface clara para máxima legibilidade',
+                style: textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 16),
+              
+              // Indicadores visuais do tema
+              Row(
+                children: [
+                  // Amostra de cor primária
+                  Container(
+                    width: 16,
+                    height: 16,
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Primária',
+                    style: textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  
+                  // Amostra de cor secundária
+                  Container(
+                    width: 16,
+                    height: 16,
+                    decoration: BoxDecoration(
+                      color: colorScheme.secondary,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Secundária',
+                    style: textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-        ),
-        const Spacer(),
-        Text(
-          value,
-          style: textTheme.bodyMedium?.copyWith(
-            color: colorScheme.onSurface,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
+        );
+      },
     );
   }
 
-  void _showMessage(BuildContext context, String message) {
+  Widget _buildThemeToggle(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return ShadcnCard(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Alternar Tema',
+                      style: textTheme.titleMedium?.copyWith(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Trocar entre modo claro e escuro',
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+              
+              // Switch personalizado com cores Shadcn
+              Switch(
+                value: themeProvider.isDarkMode,
+                onChanged: (value) {
+                  themeProvider.toggleTheme();
+                  _showThemeChangeMessage(context, themeProvider.isDarkMode);
+                },
+                activeColor: colorScheme.primary,
+                activeTrackColor: colorScheme.primary.withOpacity(0.3),
+                inactiveThumbColor: colorScheme.onSurfaceVariant,
+                inactiveTrackColor: colorScheme.surfaceVariant,
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
+  Widget _buildLanguageCard(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return ShadcnCard(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.language,
+                    color: colorScheme.primary,
+                    size: 24,
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'Idioma do Aplicativo',
+                    style: textTheme.titleMedium?.copyWith(
+                      color: colorScheme.onSurface,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              
+              // Dropdown de idiomas
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(
+                  border: Border.all(color: colorScheme.outline),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: themeProvider.selectedLanguage,
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        themeProvider.setLanguage(newValue);
+                        _showLanguageChangeMessage(context, newValue);
+                      }
+                    },
+                    items: themeProvider.availableLanguages
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: textTheme.bodyMedium?.copyWith(
+                            color: colorScheme.onSurface,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    dropdownColor: colorScheme.surface,
+                    iconEnabledColor: colorScheme.onSurfaceVariant,
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Reinicie o aplicativo para aplicar o novo idioma',
+                style: textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildThemePreview(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    
+    return ShadcnCard(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Preview do Design System',
+            style: textTheme.titleMedium?.copyWith(
+              color: colorScheme.onSurface,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 16),
+          
+          // Exemplo de título
+          Text(
+            'Título Principal',
+            style: textTheme.headlineSmall?.copyWith(
+              color: colorScheme.onSurface,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          
+          // Exemplo de subtítulo
+          Text(
+            'Este é um subtítulo que demonstra a tipografia secundária do aplicativo.',
+            style: textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 16),
+          
+          // Exemplo de texto corpo
+          Text(
+            'Texto do corpo principal com boa legibilidade e contraste adequado para leitura confortável em qualquer tema.',
+            style: textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurface,
+            ),
+          ),
+          const SizedBox(height: 20),
+          
+          // Indicadores de contraste
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceVariant,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '✅ Contraste Verificado',
+                  style: textTheme.labelMedium?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Todos os textos atendem aos padrões de acessibilidade WCAG.',
+                  style: textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showThemeChangeMessage(BuildContext context, bool isDarkMode) {
+    final colorScheme = Theme.of(context).colorScheme;
+    
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          message,
+          'Tema alterado para ${isDarkMode ? 'escuro' : 'claro'}',
           style: TextStyle(
             color: colorScheme.onInverseSurface,
           ),
         ),
         backgroundColor: colorScheme.inverseSurface,
         duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  void _showLanguageChangeMessage(BuildContext context, String language) {
+    final colorScheme = Theme.of(context).colorScheme;
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Idioma alterado para $language',
+          style: TextStyle(
+            color: colorScheme.onInverseSurface,
+          ),
+        ),
+        backgroundColor: colorScheme.inverseSurface,
+        duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
       ),
     );
   }
