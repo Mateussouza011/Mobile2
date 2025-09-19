@@ -71,6 +71,12 @@ class HomePage extends StatelessWidget {
                   onTap: () => context.go('/cards'),
                 ),
                 ComponentCard(
+                  title: 'Cards e Listas',
+                  description: 'Listas estilizadas e cards com ações.',
+                  icon: Icons.list_alt,
+                  onTap: () => context.go('/cards-and-lists'),
+                ),
+                ComponentCard(
                   title: 'Tabela',
                   description: 'Um componente de tabela responsiva.',
                   icon: Icons.table_chart,

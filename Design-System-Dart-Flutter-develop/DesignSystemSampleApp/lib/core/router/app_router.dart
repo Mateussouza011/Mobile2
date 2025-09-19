@@ -5,6 +5,7 @@ import '../../ui/pages/main_layout.dart';
 import '../../features/buttons/buttons_page.dart';
 import '../../features/inputs/inputs_page.dart';
 import '../../features/cards/cards_page.dart';
+import '../../features/cards/cards_and_lists_page.dart';
 import '../../features/tables/tables_page.dart';
 import '../../features/sliders/sliders_page.dart';
 import '../../features/modals/modals_page.dart';
@@ -69,6 +70,15 @@ class AppRouter {
             name: 'cards',
             pageBuilder: (context, state) => CustomTransitionPage(
               child: const CardsPage(),
+              transitionsBuilder: _slideTransition,
+            ),
+          ),
+          
+          GoRoute(
+            path: '/cards-and-lists',
+            name: 'cards-and-lists',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              child: const CardsAndListsPage(),
               transitionsBuilder: _slideTransition,
             ),
           ),
