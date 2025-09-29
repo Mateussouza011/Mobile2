@@ -1,43 +1,208 @@
 import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_button.dart';
 
+<<<<<<< HEAD
+/// Página que demonstra tabelas com design Shadcn/UI
+=======
 /// Página que demonstra tabelas com tema adaptativo
+>>>>>>> baaf4e60e678a42cfff006835c1a6a8e64dc3ea9
 class TablesPage extends StatelessWidget {
   const TablesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+=======
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+>>>>>>> baaf4e60e678a42cfff006835c1a6a8e64dc3ea9
     
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'Tabelas',
+<<<<<<< HEAD
+          style: textTheme.titleLarge?.copyWith(
+            color: colorScheme.onSurface,
+            fontWeight: FontWeight.w600,
+          ),
+=======
           style: theme.textTheme.titleLarge,
+>>>>>>> baaf4e60e678a42cfff006835c1a6a8e64dc3ea9
         ),
         centerTitle: true,
+        backgroundColor: colorScheme.surface,
+        elevation: 0,
+        iconTheme: IconThemeData(color: colorScheme.onSurface),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
+<<<<<<< HEAD
+              'Demonstração de Tabelas',
+              style: textTheme.headlineSmall?.copyWith(
+                color: colorScheme.onSurface,
+                fontWeight: FontWeight.bold,
+=======
               'Tabela com dados e ações, adaptada para light e dark theme.',
               style: theme.textTheme.bodyLarge?.copyWith(
                 color: colorScheme.onSurfaceVariant,
+>>>>>>> baaf4e60e678a42cfff006835c1a6a8e64dc3ea9
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 8),
+            Text(
+              'Tabela com 3 colunas (Nome, Status, Ação) e contraste adequado em ambos os temas.',
+              style: textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 32),
             
+<<<<<<< HEAD
+            Card(
+              color: colorScheme.surface,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+                side: BorderSide(color: colorScheme.outline.withOpacity(0.2)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Tabela de Usuários',
+                      style: textTheme.titleMedium?.copyWith(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(
+                        headingTextStyle: textTheme.labelLarge?.copyWith(
+                          color: colorScheme.onSurface,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        dataTextStyle: textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.onSurface,
+                        ),
+                        columns: const [
+                          DataColumn(label: Text('Nome')),
+                          DataColumn(label: Text('Status')),
+                          DataColumn(label: Text('Ação')),
+                        ],
+                        rows: [
+                          _buildDataRow('João Silva', 'Ativo', colorScheme, context),
+                          _buildDataRow('Maria Santos', 'Inativo', colorScheme, context),
+                          _buildDataRow('Pedro Oliveira', 'Ativo', colorScheme, context),
+                          _buildDataRow('Ana Costa', 'Pendente', colorScheme, context),
+                          _buildDataRow('Carlos Lima', 'Ativo', colorScheme, context),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+=======
             _buildDataTable(context),
+>>>>>>> baaf4e60e678a42cfff006835c1a6a8e64dc3ea9
           ],
         ),
       ),
     );
   }
 
+<<<<<<< HEAD
+  DataRow _buildDataRow(String nome, String status, ColorScheme colorScheme, BuildContext context) {
+    return DataRow(
+      cells: [
+        DataCell(
+          Text(
+            nome,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurface,
+            ),
+          ),
+        ),
+        DataCell(
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: _getStatusColor(status, colorScheme),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              status,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: _getStatusTextColor(status, colorScheme),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ),
+        DataCell(
+          ElevatedButton(
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Ver mais: $nome'),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: colorScheme.primary,
+              foregroundColor: colorScheme.onPrimary,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              minimumSize: const Size(80, 32),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6),
+              ),
+            ),
+            child: const Text('Ver mais'),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Color _getStatusColor(String status, ColorScheme colorScheme) {
+    switch (status) {
+      case 'Ativo':
+        return colorScheme.primary.withOpacity(0.1);
+      case 'Inativo':
+        return colorScheme.error.withOpacity(0.1);
+      case 'Pendente':
+        return colorScheme.secondary.withOpacity(0.1);
+      default:
+        return colorScheme.surfaceVariant;
+    }
+  }
+
+  Color _getStatusTextColor(String status, ColorScheme colorScheme) {
+    switch (status) {
+      case 'Ativo':
+        return colorScheme.primary;
+      case 'Inativo':
+        return colorScheme.error;
+      case 'Pendente':
+        return colorScheme.secondary;
+      default:
+        return colorScheme.onSurfaceVariant;
+    }
+  }
+}
+=======
   Widget _buildDataTable(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -256,3 +421,4 @@ class TablesPage extends StatelessWidget {
     );
   }
 }
+>>>>>>> baaf4e60e678a42cfff006835c1a6a8e64dc3ea9
