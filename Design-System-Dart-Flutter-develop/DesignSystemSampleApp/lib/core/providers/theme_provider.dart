@@ -40,7 +40,7 @@ class ThemeProvider extends ChangeNotifier {
   /// Lista de idiomas disponíveis
   List<String> get availableLanguages => [
     'Português',
-    'English',
-    'Español',
+    'Inglês',
+    'Espanhol',
   ];
 }

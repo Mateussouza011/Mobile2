@@ -4,7 +4,7 @@ import 'input_text_view_model.dart';
 class StyledInputField extends StatefulWidget {
   final InputTextViewModel viewModel;
 
-  const StyledInputField._({Key? key, required this.viewModel}) : super(key: key);
+  const StyledInputField._({super.key, required this.viewModel});
 
   @override
   StyledInputFieldState createState() => StyledInputFieldState();

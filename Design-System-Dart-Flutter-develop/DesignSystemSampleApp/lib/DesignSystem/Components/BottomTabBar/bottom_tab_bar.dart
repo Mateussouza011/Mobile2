@@ -10,7 +10,7 @@ class BottomTabBar extends StatelessWidget {
   final int currentIndex;
   final BottomTabBarDelegate? delegate;
 
-  const BottomTabBar._({super.key, required this.viewModel, required this.currentIndex, this.delegate});
+  const BottomTabBar._({required this.viewModel, required this.currentIndex, this.delegate});
 
   static Widget instantiate({required BottomTabBarViewModel viewModel, required int currentIndex, BottomTabBarDelegate? delegate}) {
     return BottomTabBar._(viewModel: viewModel, currentIndex: currentIndex, delegate: delegate);
