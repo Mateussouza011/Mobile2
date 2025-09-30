@@ -47,7 +47,6 @@ class ActionButton extends StatelessWidget {
       case ActionButtonStyle.tertiary:
         buttonColor = lightTertiaryBrandColor;
         break;
-      default:
     }
 
     return ElevatedButton(

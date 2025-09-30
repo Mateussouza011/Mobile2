@@ -7,7 +7,6 @@ import '../../DesignSystem/Samples/inputFieldSampleScreen/input_field_sample_scr
 import '../../DesignSystem/Samples/linkedLabelSampleScreen/linked_label_sample_screen.dart';
 import '../../DesignSystem/Samples/tabComponentSampleScreen/tab_sample_screen.dart';
 
-/// Página inicial da aplicação
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_button.dart';
+import '../../ui/widgets/shadcn/shadcn_dialog.dart';
 
-/// Página que demonstra modais com design Shadcn/UI
 class ModalsPage extends StatelessWidget {
   const ModalsPage({super.key});
 
@@ -60,7 +60,7 @@ class ModalsPage extends StatelessWidget {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
-        side: BorderSide(color: colorScheme.outline.withOpacity(0.2)),
+        side: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -97,6 +97,41 @@ class ModalsPage extends StatelessWidget {
                   variant: ShadcnButtonVariant.outline,
                   onPressed: () => _showInformationModal(context),
                 ),
+                const SizedBox(height: 16),
+                Text(
+                  'Novos Componentes Shadcn',
+                  style: textTheme.titleMedium?.copyWith(
+                    color: colorScheme.onSurface,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    ShadcnButton(
+                      text: 'Dialog Básico',
+                      variant: ShadcnButtonVariant.secondary,
+                      onPressed: () => _showShadcnDialog(context),
+                    ),
+                    ShadcnButton(
+                      text: 'Alert Dialog',
+                      variant: ShadcnButtonVariant.secondary,
+                      onPressed: () => _showShadcnAlertDialog(context),
+                    ),
+                    ShadcnButton(
+                      text: 'Loading',
+                      variant: ShadcnButtonVariant.secondary,
+                      onPressed: () => _showShadcnLoadingDialog(context),
+                    ),
+                    ShadcnButton(
+                      text: 'Bottom Sheet',
+                      variant: ShadcnButtonVariant.secondary,
+                      onPressed: () => _showShadcnBottomSheet(context),
+                    ),
+                  ],
+                ),
               ],
             ),
           ],
@@ -117,7 +152,7 @@ class ModalsPage extends StatelessWidget {
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: colorScheme.outline.withOpacity(0.2)),
+          side: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
         ),
         title: Text(
           'Confirmar Ação',
@@ -167,14 +202,14 @@ class ModalsPage extends StatelessWidget {
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: colorScheme.outline.withOpacity(0.2)),
+          side: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
         ),
         title: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: colorScheme.primary.withOpacity(0.1),
+                color: colorScheme.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
@@ -216,10 +251,10 @@ class ModalsPage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: colorScheme.primaryContainer.withOpacity(0.5),
+                color: colorScheme.primaryContainer.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: colorScheme.primary.withOpacity(0.2),
+                  color: colorScheme.primary.withValues(alpha: 0.2),
                 ),
               ),
               child: Row(
@@ -255,6 +290,127 @@ class ModalsPage extends StatelessWidget {
         ],
         actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       ),
+    );
+  }
+
+  void _showShadcnDialog(BuildContext context) {
+    ShadcnDialog.show(
+      context: context,
+      dialog: ShadcnDialog(
+        title: 'Dialog Shadcn',
+        description: 'Este é um exemplo do novo componente ShadcnDialog com design moderno.',
+        icon: Icon(Icons.star, color: Theme.of(context).colorScheme.primary),
+        content: Container(
+          height: 150,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Conteúdo personalizado do dialog'),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text('Design System aprimorado!'),
+                ),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          ShadcnButton(
+            text: 'Cancelar',
+            variant: ShadcnButtonVariant.outline,
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          ShadcnButton(
+            text: 'Confirmar',
+            onPressed: () {
+              Navigator.of(context).pop();
+              _showSnackBarMessage(context, 'Dialog Shadcn confirmado!');
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showShadcnAlertDialog(BuildContext context) {
+    ShadcnAlertDialog.show(
+      context: context,
+      title: 'Alert Shadcn',
+      description: 'Este é um exemplo do ShadcnAlertDialog com botões estilizados.',
+      confirmText: 'Sim, continuar',
+      cancelText: 'Cancelar',
+    ).then((confirmed) {
+      if (confirmed == true) {
+        _showSnackBarMessage(context, 'Alert confirmado!');
+      } else {
+        _showSnackBarMessage(context, 'Alert cancelado');
+      }
+    });
+  }
+
+  void _showShadcnLoadingDialog(BuildContext context) {
+    ShadcnLoadingDialog.show(
+      context: context,
+      title: 'Carregando dados...',
+      description: 'Por favor, aguarde enquanto processamos sua solicitação.',
+    );
+
+    // Simular carregamento
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.of(context).pop();
+      _showSnackBarMessage(context, 'Carregamento concluído!');
+    });
+  }
+
+  void _showShadcnBottomSheet(BuildContext context) {
+    ShadcnBottomSheetDialog.show(
+      context: context,
+      title: 'Opções Avançadas',
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: Icon(Icons.edit, color: Theme.of(context).colorScheme.primary),
+            title: Text('Editar'),
+            subtitle: Text('Modificar este item'),
+            onTap: () {
+              Navigator.of(context).pop();
+              _showSnackBarMessage(context, 'Editar selecionado');
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.share, color: Theme.of(context).colorScheme.secondary),
+            title: Text('Compartilhar'),
+            subtitle: Text('Enviar para outros'),
+            onTap: () {
+              Navigator.of(context).pop();
+              _showSnackBarMessage(context, 'Compartilhar selecionado');
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.delete, color: Colors.red),
+            title: Text('Excluir'),
+            subtitle: Text('Remover permanentemente'),
+            onTap: () {
+              Navigator.of(context).pop();
+              _showSnackBarMessage(context, 'Excluir selecionado');
+            },
+          ),
+        ],
+      ),
+      actions: [
+        ShadcnButton(
+          text: 'Fechar',
+          variant: ShadcnButtonVariant.outline,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ],
     );
   }
 

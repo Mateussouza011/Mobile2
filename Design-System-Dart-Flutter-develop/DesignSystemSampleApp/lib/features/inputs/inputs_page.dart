@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_input.dart';
+import '../../ui/widgets/shadcn/shadcn_form.dart';
+import '../../ui/widgets/shadcn/shadcn_file_upload.dart';
+import '../../ui/widgets/shadcn/shadcn_slider.dart';
 import '../../ui/widgets/shadcn/shadcn_button.dart';
 
-/// Página que demonstra diferentes tipos de inputs Shadcn/UI
 class InputsPage extends StatefulWidget {
   const InputsPage({super.key});
 
@@ -12,19 +14,14 @@ class InputsPage extends StatefulWidget {
 
 class _InputsPageState extends State<InputsPage> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
   final _disabledController = TextEditingController(text: 'Campo desabilitado');
-  
   bool _obscurePassword = true;
-  bool _isFormSubmitting = false;
+  double _volumeValue = 50.0;
+  double _temperatureValue = 22.0;
+  RangeValues _priceRange = const RangeValues(100, 500);
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
     _disabledController.dispose();
     super.dispose();
   }
@@ -36,7 +33,7 @@ class _InputsPageState extends State<InputsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Showcase de Inputs',
+          'Inputs & Forms',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             color: colorScheme.onSurface,
             fontWeight: FontWeight.w600,
@@ -50,46 +47,30 @@ class _InputsPageState extends State<InputsPage> {
       body: ListView(
         padding: const EdgeInsets.all(24.0),
         children: [
-          // Descrição
-          Text(
-            'Demonstração completa dos inputs Shadcn/UI com validação e diferentes estados.',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 32),
-          
           // Inputs Básicos
           _buildSection(
             context,
-            'Tipos de Input',
-            'Inputs básicos: texto, email, senha com toggle de visibilidade',
+            'Inputs Básicos',
+            'Diferentes tipos e variações de campos de entrada',
             [
               const SizedBox(height: 20),
               ShadcnInput(
-                label: 'Texto Simples',
-                placeholder: 'Digite qualquer texto',
-                helperText: 'Campo de texto livre sem validação',
-                onChanged: (value) {
-                  if (value.isNotEmpty && value.length == 1) {
-                    _showMessage(context, 'Começou a digitar!');
-                  }
-                },
+                label: 'Nome Completo',
+                placeholder: 'Digite seu nome...',
+                prefixIcon: Icon(Icons.person_outline, color: colorScheme.onSurfaceVariant),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               
               ShadcnInput.email(
                 label: 'Email',
                 placeholder: 'exemplo@email.com',
-                helperText: 'Validação automática de formato de email',
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               
               ShadcnInput(
                 label: 'Senha',
                 placeholder: 'Digite sua senha',
                 obscureText: _obscurePassword,
-                helperText: 'Clique no ícone para mostrar/ocultar',
                 suffixIcon: IconButton(
                   icon: Icon(
                     _obscurePassword ? Icons.visibility_off : Icons.visibility,
@@ -99,338 +80,345 @@ class _InputsPageState extends State<InputsPage> {
                     setState(() {
                       _obscurePassword = !_obscurePassword;
                     });
-                    _showMessage(context, _obscurePassword ? 'Senha oculta' : 'Senha visível');
                   },
                 ),
+              ),
+              const SizedBox(height: 16),
+              
+              ShadcnInput.search(
+                placeholder: 'Buscar produtos...',
               ),
             ],
           ),
           
+          const SizedBox(height: 32),
+          
+          // Campos com Máscara
+          _buildSection(
+            context,
+            'Campos com Máscara',
+            'Inputs especializados com formatação automática',
+            [
+              const SizedBox(height: 20),
+              ShadcnCpfInput(
+                placeholder: '000.000.000-00',
+              ),
+              const SizedBox(height: 16),
+              
+              ShadcnCnpjInput(
+                placeholder: '00.000.000/0000-00',
+              ),
+              const SizedBox(height: 16),
+              
+              ShadcnPhoneInput(
+                placeholder: '(00) 00000-0000',
+              ),
+              const SizedBox(height: 16),
+              
+              ShadcnCepInput(
+                placeholder: '00000-000',
+                onAddressFound: (address) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Endereço encontrado: ${address['street']}'),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+
           const SizedBox(height: 32),
           
           // Estados dos Inputs
           _buildSection(
             context,
             'Estados dos Inputs',
-            'Demonstração de estados: normal, focus, error e disabled',
+            'Diferentes estados visuais e de interação',
             [
               const SizedBox(height: 20),
               
-              // Estado normal
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: colorScheme.surfaceVariant.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Estado Normal',
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: colorScheme.onSurface,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    ShadcnInput(
-                      placeholder: 'Campo em estado normal',
-                      helperText: 'Texto visível em ambos os temas',
-                    ),
-                  ],
-                ),
+              // Normal
+              ShadcnInput(
+                label: 'Estado Normal',
+                placeholder: 'Campo normal',
+                helperText: 'Este campo está em estado normal',
               ),
-              
               const SizedBox(height: 16),
               
-              // Estado desabilitado
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: colorScheme.surfaceVariant.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Estado Desabilitado',
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: colorScheme.onSurface,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    ShadcnInput(
-                      controller: _disabledController,
-                      enabled: false,
-                      helperText: 'Campo desabilitado com texto visível',
-                    ),
-                  ],
-                ),
+              // Desabilitado
+              ShadcnInput(
+                label: 'Estado Desabilitado',
+                controller: _disabledController,
+                enabled: false,
+                helperText: 'Este campo está desabilitado',
               ),
-            ],
-          ),
-          
-          const SizedBox(height: 32),
-          
-          // Exemplo de Formulário
-          _buildSection(
-            context,
-            'Formulário Completo',
-            'Exemplo prático: Nome + Email + Botão "Enviar" com validação',
-            [
-              const SizedBox(height: 20),
-              Form(
-                key: _formKey,
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: colorScheme.surface,
-                    border: Border.all(color: colorScheme.outline),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Cadastro de Usuário',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: colorScheme.onSurface,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      
-                      // Campo Nome
-                      ShadcnInput(
-                        controller: _nameController,
-                        label: 'Nome Completo',
-                        placeholder: 'Digite seu nome completo',
-                        prefixIcon: Icon(
-                          Icons.person_outline,
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Nome é obrigatório';
-                          }
-                          if (value.length < 2) {
-                            return 'Nome deve ter pelo menos 2 caracteres';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      
-                      // Campo Email
-                      ShadcnInput(
-                        controller: _emailController,
-                        label: 'Email',
-                        placeholder: 'seuemail@exemplo.com',
-                        inputType: ShadcnInputType.email,
-                        prefixIcon: Icon(
-                          Icons.email_outlined,
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Email é obrigatório';
-                          }
-                          if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                            return 'Digite um email válido';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      
-                      // Campo Senha do Formulário
-                      ShadcnInput(
-                        controller: _passwordController,
-                        label: 'Senha',
-                        placeholder: 'Crie uma senha segura',
-                        obscureText: true,
-                        prefixIcon: Icon(
-                          Icons.lock_outline,
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Senha é obrigatória';
-                          }
-                          if (value.length < 6) {
-                            return 'Senha deve ter pelo menos 6 caracteres';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 24),
-                      
-                      // Botões do formulário
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ShadcnButton(
-                              text: 'Limpar',
-                              variant: ShadcnButtonVariant.outline,
-                              onPressed: _isFormSubmitting ? null : () {
-                                _nameController.clear();
-                                _emailController.clear();
-                                _passwordController.clear();
-                                _showMessage(context, 'Formulário limpo!');
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: ShadcnButton(
-                              text: _isFormSubmitting ? 'Enviando...' : 'Enviar',
-                              loading: _isFormSubmitting,
-                              onPressed: _isFormSubmitting ? null : _submitForm,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          
-          const SizedBox(height: 32),
-          
-          // Teste de Visibilidade
-          _buildSection(
-            context,
-            'Teste de Visibilidade',
-            'Verificação de legibilidade em temas claro e escuro',
-            [
-              const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: colorScheme.surface,
-                  border: Border.all(color: colorScheme.outline),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      'Todos os textos abaixo devem estar visíveis:',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurface,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    
-                    ShadcnInput(
-                      placeholder: 'Placeholder visível no tema atual',
-                      helperText: 'Texto de ajuda visível',
-                    ),
-                    const SizedBox(height: 16),
-                    
-                    ShadcnInput(
-                      label: 'Label visível',
-                      placeholder: 'Input com label',
-                      prefixIcon: Icon(
-                        Icons.visibility,
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    
-                    ShadcnInput(
-                      enabled: false,
-                      placeholder: 'Campo desabilitado visível',
-                      helperText: 'Texto de ajuda para campo desabilitado',
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          
-          const SizedBox(height: 32),
-          
-          // Inputs Avançados
-          _buildSection(
-            context,
-            'Inputs Avançados',
-            'Busca, área de texto e inputs com ícones',
-            [
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               
-              // Input de busca
-              ShadcnInput.search(
-                placeholder: 'Buscar qualquer coisa...',
-                onChanged: (value) {
-                  if (value.length > 2) {
-                    _showMessage(context, 'Buscando: $value');
-                  }
-                },
+              // Com erro
+              ShadcnInput(
+                label: 'Estado de Erro',
+                placeholder: 'Campo com erro',
+                errorText: 'Este campo contém um erro',
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               
               // Área de texto
               ShadcnInput(
                 label: 'Comentários',
-                placeholder: 'Digite seus comentários aqui...',
+                placeholder: 'Digite seus comentários...',
                 maxLines: 4,
-                helperText: 'Área de texto expandida para comentários longos',
+                helperText: 'Máximo de 500 caracteres',
               ),
+            ],
+          ),
+
+          const SizedBox(height: 32),
+          
+          // Formulário Completo
+          _buildSection(
+            context,
+            'Formulário Completo',
+            'Exemplo de formulário com validação',
+            [
+              const SizedBox(height: 20),
+              ShadcnForm(
+                formKey: _formKey,
+                child: Column(
+                  children: [
+                    ShadcnFormField(
+                      name: 'nome',
+                      label: 'Nome',
+                      placeholder: 'Digite seu nome',
+                      required: true,
+                      prefixIcon: Icon(Icons.person_outline),
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    ShadcnFormField(
+                      name: 'email',
+                      label: 'Email',
+                      placeholder: 'Digite seu email',
+                      required: true,
+                      keyboardType: TextInputType.emailAddress,
+                      prefixIcon: Icon(Icons.email_outlined),
+                      validator: (value) {
+                        if (value != null && !value.contains('@')) {
+                          return 'Email inválido';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    ShadcnFormField(
+                      name: 'telefone',
+                      label: 'Telefone',
+                      placeholder: '(00) 00000-0000',
+                      keyboardType: TextInputType.phone,
+                      prefixIcon: Icon(Icons.phone_outlined),
+                    ),
+                    const SizedBox(height: 24),
+                    
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ShadcnButton(
+                            text: 'Limpar',
+                            variant: ShadcnButtonVariant.outline,
+                            onPressed: () {
+                              _formKey.currentState?.reset();
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: ShadcnButton(
+                            text: 'Validar',
+                            onPressed: () {
+                              if (_formKey.currentState?.validate() ?? false) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Formulário válido!')),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 32),
+          
+          // Upload de Arquivos
+          _buildSection(
+            context,
+            'Upload de Arquivos',
+            'Componentes para seleção e upload de arquivos',
+            [
+              const SizedBox(height: 20),
+              ShadcnFileUpload(
+                label: 'Upload Simples',
+                description: 'Selecione um arquivo para upload',
+                type: ShadcnFileUploadType.single,
+                acceptedFileTypes: ['pdf', 'jpg', 'png', 'docx'],
+                maxFileSize: 5,
+                onFileSelected: (file) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Arquivo selecionado: ${file.path}')),
+                  );
+                },
+              ),
+              const SizedBox(height: 24),
+              
+              ShadcnFileUpload(
+                label: 'Upload Múltiplo',
+                description: 'Arraste e solte ou clique para selecionar múltiplos arquivos',
+                type: ShadcnFileUploadType.dragDrop,
+                maxFiles: 5,
+                maxFileSize: 10,
+                onFilesSelected: (files) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('${files.length} arquivo(s) selecionado(s)')),
+                  );
+                },
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 32),
+          
+          // Sliders e Controles
+          _buildSection(
+            context,
+            'Sliders e Controles',
+            'Controles deslizantes para valores numéricos',
+            [
+              const SizedBox(height: 20),
+              ShadcnVolumeSlider(
+                value: _volumeValue,
+                onChanged: (value) {
+                  setState(() {
+                    _volumeValue = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 24),
+              
+              ShadcnTemperatureSlider(
+                value: _temperatureValue,
+                onChanged: (value) {
+                  setState(() {
+                    _temperatureValue = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 24),
+              
+              ShadcnPriceRangeSlider(
+                values: _priceRange,
+                min: 0,
+                max: 1000,
+                onChanged: (values) {
+                  setState(() {
+                    _priceRange = values;
+                  });
+                },
+              ),
+              const SizedBox(height: 24),
+              
+              // Slider customizado
+              ShadcnSlider.single(
+                value: 75,
+                onChanged: (value) {},
+                min: 0,
+                max: 100,
+                divisions: 10,
+                label: 'Progresso',
+                labelFormatter: (value) => '${value.toInt()}%',
+                showTicks: true,
+                leadingWidget: Icon(Icons.speed, color: colorScheme.primary),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 32),
+          
+          // Variantes Visuais
+          _buildSection(
+            context,
+            'Variantes Visuais',
+            'Diferentes estilos e tamanhos de inputs',
+            [
               const SizedBox(height: 20),
               
-              // Input com ícones múltiplos
+              // Tamanhos
+              Text(
+                'Tamanhos',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 12),
+              
               ShadcnInput(
-                label: 'Localização',
-                placeholder: 'Digite sua cidade',
-                prefixIcon: Icon(
-                  Icons.location_on_outlined,
-                  color: colorScheme.onSurfaceVariant,
+                label: 'Pequeno',
+                placeholder: 'Input pequeno',
+                size: ShadcnInputSize.sm,
+              ),
+              const SizedBox(height: 16),
+              
+              ShadcnInput(
+                label: 'Padrão',
+                placeholder: 'Input padrão',
+                size: ShadcnInputSize.default_,
+              ),
+              const SizedBox(height: 16),
+              
+              ShadcnInput(
+                label: 'Grande',
+                placeholder: 'Input grande',
+                size: ShadcnInputSize.lg,
+              ),
+              const SizedBox(height: 24),
+              
+              // Variantes
+              Text(
+                'Estilos',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
                 ),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    Icons.my_location,
-                    color: colorScheme.primary,
-                  ),
-                  onPressed: () {
-                    _showMessage(context, 'Detectando localização...');
-                  },
-                ),
-                helperText: 'Clique no ícone para detectar automaticamente',
+              ),
+              const SizedBox(height: 12),
+              
+              ShadcnInput(
+                label: 'Outlined (Padrão)',
+                placeholder: 'Input com borda',
+                variant: ShadcnInputVariant.outlined,
+              ),
+              const SizedBox(height: 16),
+              
+              ShadcnInput(
+                label: 'Filled',
+                placeholder: 'Input preenchido',
+                variant: ShadcnInputVariant.filled,
+              ),
+              const SizedBox(height: 16),
+              
+              ShadcnInput(
+                label: 'Underlined',
+                placeholder: 'Input com linha',
+                variant: ShadcnInputVariant.underlined,
               ),
             ],
           ),
         ],
       ),
     );
-  }
-
-  void _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isFormSubmitting = true;
-      });
-      
-      // Simular envio
-      await Future.delayed(const Duration(seconds: 2));
-      
-      setState(() {
-        _isFormSubmitting = false;
-      });
-      
-      _showMessage(context, 'Cadastro realizado com sucesso! ✅');
-      
-      // Limpar formulário após sucesso
-      _nameController.clear();
-      _emailController.clear();
-      _passwordController.clear();
-    } else {
-      _showMessage(context, 'Por favor, corrija os erros no formulário');
-    }
   }
 
   Widget _buildSection(BuildContext context, String title, String description, List<Widget> children) {
@@ -446,32 +434,17 @@ class _InputsPageState extends State<InputsPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 8),
-        Text(
-          description,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: colorScheme.onSurfaceVariant,
+        if (description.isNotEmpty) ...[
+          const SizedBox(height: 4),
+          Text(
+            description,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
           ),
-        ),
+        ],
         ...children,
       ],
-    );
-  }
-
-  void _showMessage(BuildContext context, String message) {
-    final colorScheme = Theme.of(context).colorScheme;
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: TextStyle(
-            color: colorScheme.onInverseSurface,
-          ),
-        ),
-        backgroundColor: colorScheme.inverseSurface,
-        duration: const Duration(seconds: 2),
-      ),
     );
   }
 }
