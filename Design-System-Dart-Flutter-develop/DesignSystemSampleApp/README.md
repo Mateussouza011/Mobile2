@@ -122,7 +122,7 @@ flutter run -d linux      # Linux
 
 ## 🏗️ Estrutura do Projeto
 
-```
+```text
 lib/
 ├── 📂 core/                      # Configurações centrais
 │   ├── 📂 providers/            # Gerenciamento de estado
@@ -204,7 +204,7 @@ flutter build ios --release
 flutter build ipa
 ```
 
-### 🌐 Web
+### 🌐 Web Build
 
 ```bash
 # Build para produção
@@ -297,7 +297,7 @@ Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalh
 
 ## 👨‍💻 Autor
 
-**Mateus Souza**
+### Mateus Souza
 
 - GitHub: [@Mateussouza011](https://github.com/Mateussouza011)
 

@@ -7,7 +7,7 @@ class TabComponent extends StatefulWidget {
   final TabViewModel tabViewModel;
   final TabDelegate? delegate;
 
-  const TabComponent._({super.key, required this.tabViewModel, this.delegate});
+  const TabComponent._({required this.tabViewModel, this.delegate});
 
   @override
   State<TabComponent> createState() => _TabComponentState();

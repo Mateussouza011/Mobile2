@@ -34,7 +34,6 @@ class ActionButton extends StatelessWidget {
         horizontalPadding = 16;
         iconSize = 16;
         break;
-      default:
     }
 
     switch (viewModel.style) {

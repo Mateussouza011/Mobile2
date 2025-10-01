@@ -8,8 +8,29 @@ class ProgressPage extends StatefulWidget {
   State<ProgressPage> createState() => _ProgressPageState();
 }
 
-class _ProgressPageState extends State<ProgressPage> {
+class _ProgressPageState extends State<ProgressPage> with TickerProviderStateMixin {
   double _progress = 0.6;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+    _animation = Tween<double>(begin: 0, end: 0.85).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+    _animationController.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,17 +57,87 @@ class _ProgressPageState extends State<ProgressPage> {
           
           _buildSection(
             context,
-            'Básico',
-            '',
+            'Progress Linear',
+            'Diferentes estilos de barras de progresso',
             [
               const SizedBox(height: 20),
-              ShadcnProgress(value: _progress),
-              const SizedBox(height: 8),
-              Text(
-                '${(_progress * 100).round()}%',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Básico', style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(height: 8),
+                  ShadcnProgress.linear(value: 50),
+                  const SizedBox(height: 16),
+                  
+                  Text('Com animação', style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(height: 8),
+                  AnimatedBuilder(
+                    animation: _animation,
+                    builder: (context, child) {
+                      return ShadcnProgress.linear(
+                        value: _animation.value * 100,
+                        animated: true,
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  
+                  Text('Indeterminado', style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(height: 8),
+                  const ShadcnProgress.indeterminate(
+                    type: ShadcnProgressType.linear,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 32),
+          
+          _buildSection(
+            context,
+            'Progress Circular',
+            'Indicadores circulares de progresso',
+            [
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    children: [
+                      Text('Básico', style: Theme.of(context).textTheme.bodySmall),
+                      const SizedBox(height: 8),
+                      ShadcnProgress.circular(value: 65),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Text('Com texto', style: Theme.of(context).textTheme.bodySmall),
+                      const SizedBox(height: 8),
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          ShadcnProgress.circular(value: 80),
+                          Text(
+                            '80%',
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Text('Indeterminado', style: Theme.of(context).textTheme.bodySmall),
+                      const SizedBox(height: 8),
+                      const ShadcnProgress.indeterminate(
+                        type: ShadcnProgressType.circular,
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ],
           ),
@@ -56,7 +147,7 @@ class _ProgressPageState extends State<ProgressPage> {
           _buildSection(
             context,
             'Tamanhos',
-            '',
+            'Diferentes tamanhos disponíveis',
             [
               const SizedBox(height: 20),
               Column(
@@ -64,17 +155,17 @@ class _ProgressPageState extends State<ProgressPage> {
                 children: [
                   Text('Pequeno', style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 8),
-                  ShadcnProgress(value: 0.4, height: 4),
+                  ShadcnProgress.linear(value: 40, size: ShadcnProgressSize.sm),
                   const SizedBox(height: 16),
                   
-                  Text('Médio', style: Theme.of(context).textTheme.bodySmall),
+                  Text('Padrão', style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 8),
-                  ShadcnProgress(value: 0.6, height: 8),
+                  ShadcnProgress.linear(value: 60, size: ShadcnProgressSize.default_),
                   const SizedBox(height: 16),
                   
                   Text('Grande', style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 8),
-                  ShadcnProgress(value: 0.8, height: 12),
+                  ShadcnProgress.linear(value: 80, size: ShadcnProgressSize.lg),
                 ],
               ),
             ],
@@ -84,30 +175,85 @@ class _ProgressPageState extends State<ProgressPage> {
           
           _buildSection(
             context,
-            'Cores',
-            '',
+            'Progress por Etapas',
+            'Progresso dividido em etapas específicas',
+            [
+              const SizedBox(height: 20),
+              ShadcnStepProgress(
+                totalSteps: 4,
+                stepLabels: const [
+                  'Informações Pessoais',
+                  'Endereço',
+                  'Pagamento',
+                  'Confirmação',
+                ],
+                currentStep: 2,
+              ),
+              const SizedBox(height: 20),
+              ShadcnStepProgress(
+                totalSteps: 4,
+                stepLabels: const [
+                  'Upload',
+                  'Processamento',
+                  'Validação',
+                  'Concluído',
+                ],
+                currentStep: 1,
+                variant: ShadcnProgressVariant.success,
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 32),
+          
+          _buildSection(
+            context,
+            'Controle Interativo',
+            'Controle manual do progresso',
             [
               const SizedBox(height: 20),
               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Primário', style: Theme.of(context).textTheme.bodySmall),
-                  const SizedBox(height: 8),
-                  ShadcnProgress(value: 0.5, color: colorScheme.primary),
+                  ShadcnProgress.linear(
+                    value: _progress * 100,
+                    showPercentage: true,
+                  ),
                   const SizedBox(height: 16),
-                  
-                  Text('Sucesso', style: Theme.of(context).textTheme.bodySmall),
-                  const SizedBox(height: 8),
-                  ShadcnProgress(value: 0.7, color: Colors.green),
-                  const SizedBox(height: 16),
-                  
-                  Text('Aviso', style: Theme.of(context).textTheme.bodySmall),
-                  const SizedBox(height: 8),
-                  ShadcnProgress(value: 0.3, color: Colors.orange),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _progress = (_progress - 0.1).clamp(0.0, 1.0);
+                          });
+                        },
+                        child: const Text('-10%'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _progress = 0.0;
+                          });
+                        },
+                        child: const Text('Reset'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _progress = (_progress + 0.1).clamp(0.0, 1.0);
+                          });
+                        },
+                        child: const Text('+10%'),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ],
           ),
+          
+          const SizedBox(height: 32),
         ],
       ),
     );
@@ -126,6 +272,15 @@ class _ProgressPageState extends State<ProgressPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        if (description.isNotEmpty) ...[
+          const SizedBox(height: 4),
+          Text(
+            description,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
         ...children,
       ],
     );

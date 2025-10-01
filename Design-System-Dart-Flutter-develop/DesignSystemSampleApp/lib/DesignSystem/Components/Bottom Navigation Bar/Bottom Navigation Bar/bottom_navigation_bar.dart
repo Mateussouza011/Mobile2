@@ -72,8 +72,6 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         return 16;
       case ActionBottomBarOptionSize.small:
         return 12;
-      default:
-        return 16;
     }
   }
 }

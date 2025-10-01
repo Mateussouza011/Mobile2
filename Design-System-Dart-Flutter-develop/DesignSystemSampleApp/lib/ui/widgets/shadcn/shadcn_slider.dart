@@ -13,7 +13,7 @@ class ShadcnSlider extends StatefulWidget {
   final double max;
   final int? divisions;
   final String? label;
-  final String? Function(double)? labelFormatter;
+  final String Function(double)? labelFormatter;
   final ValueChanged<double>? onChanged;
   final ValueChanged<RangeValues>? onRangeChanged;
   final ValueChanged<double>? onChangeStart;

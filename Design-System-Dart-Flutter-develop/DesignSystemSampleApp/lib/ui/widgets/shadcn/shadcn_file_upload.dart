@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'dart:io';
 
 enum ShadcnFileUploadType {
@@ -55,7 +55,6 @@ class ShadcnFileUpload extends StatefulWidget {
 class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
   List<UploadedFile> _uploadedFiles = [];
   bool _isDragOver = false;
-  ShadcnFileUploadStatus _status = ShadcnFileUploadStatus.idle;
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +112,7 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
                 ),
                 child: Column(
                   children: [
-                    // Ícone
+                    // Ãcone
                     widget.icon ?? Icon(
                       _getUploadIcon(),
                       size: 48,
@@ -139,7 +138,7 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
                     
                     const SizedBox(height: 8),
                     
-                    // Informações de formato
+                    // InformaÃ§Ãµes de formato
                     if (widget.acceptedFileTypes != null) ...[
                       Text(
                         'Formatos aceitos: ${widget.acceptedFileTypes!.join(', ')}',
@@ -152,7 +151,7 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
                     if (widget.maxFileSize != null) ...[
                       const SizedBox(height: 4),
                       Text(
-                        'Tamanho máximo: ${widget.maxFileSize}MB',
+                        'Tamanho mÃ¡ximo: ${widget.maxFileSize}MB',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: colorScheme.onSurfaceVariant,
                         ),
@@ -168,7 +167,7 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
         // Lista de arquivos selecionados
         if (_uploadedFiles.isNotEmpty) ...[
           const SizedBox(height: 16),
-          ...Lis‌t.generate(_uploadedFiles.length, (index) {
+          ...List.generate(_uploadedFiles.length, (index) {
             final file = _uploadedFiles[index];
             return _buildFileItem(file, index);
           }),
@@ -190,7 +189,7 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
       ),
       child: Row(
         children: [
-          // Ícone do arquivo
+          // Ãcone do arquivo
           Icon(
             _getFileIcon(file.name),
             color: _getStatusColor(file.status),
@@ -198,7 +197,7 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
           ),
           const SizedBox(width: 12),
           
-          // Informações do arquivo
+          // InformaÃ§Ãµes do arquivo
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,7 +232,7 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
             ),
           ),
           
-          // Progress indicator ou botão de remover
+          // Progress indicator ou botÃ£o de remover
           if (file.status == ShadcnFileUploadStatus.uploading) ...[
             SizedBox(
               width: 20,
@@ -340,8 +339,8 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
   }
 
   void _selectFiles() async {
-    // Simular seleção de arquivos
-    // Na implementação real, usaria file_picker ou similar
+    // Simular seleÃ§Ã£o de arquivos
+    // Na implementaÃ§Ã£o real, usaria file_picker ou similar
     
     final mockFiles = [
       File('documento.pdf'),
@@ -353,7 +352,7 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
 
   void _handleFileSelected(List<File> files) {
     for (final file in files) {
-      // Validações
+      // ValidaÃ§Ãµes
       if (!_validateFile(file)) continue;
       
       final uploadedFile = UploadedFile(
@@ -390,13 +389,13 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
     // Validar tipo de arquivo
     if (widget.acceptedFileTypes != null && 
         !widget.acceptedFileTypes!.contains(extension)) {
-      widget.onError?.call('Tipo de arquivo não aceito: $extension');
+      widget.onError?.call('Tipo de arquivo nÃ£o aceito: $extension');
       return false;
     }
     
-    // Validar número máximo de arquivos
+    // Validar nÃºmero mÃ¡ximo de arquivos
     if (widget.maxFiles != null && _uploadedFiles.length >= widget.maxFiles!) {
-      widget.onError?.call('Número máximo de arquivos excedido');
+      widget.onError?.call('NÃºmero mÃ¡ximo de arquivos excedido');
       return false;
     }
     
