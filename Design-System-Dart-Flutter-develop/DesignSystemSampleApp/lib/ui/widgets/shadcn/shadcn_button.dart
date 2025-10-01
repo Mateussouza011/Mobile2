@@ -204,8 +204,8 @@ class ShadcnButton extends StatelessWidget {
     
     // Estado desabilitado ou loading
     if (disabled || loading) {
-      bgColor = bgColor.withOpacity(0.5);
-      fgColor = fgColor.withOpacity(0.5);
+      bgColor = bgColor.withValues(alpha: 0.5);
+      fgColor = fgColor.withValues(alpha: 0.5);
     }
 
     // Widget de conteúdo
@@ -224,7 +224,7 @@ class ShadcnButton extends StatelessWidget {
             : null,
         boxShadow: boxShadow ?? (elevation != null ? [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: elevation!,
             offset: Offset(0, elevation! / 2),
           )
@@ -270,7 +270,7 @@ class ShadcnButton extends StatelessWidget {
       case ShadcnButtonVariant.ghost:
         return Colors.transparent;
       case ShadcnButtonVariant.secondary:
-        return colorScheme.surfaceVariant;
+        return colorScheme.surfaceContainerHighest;
       case ShadcnButtonVariant.link:
         return Colors.transparent;
     }

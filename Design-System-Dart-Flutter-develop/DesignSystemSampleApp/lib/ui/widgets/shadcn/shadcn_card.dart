@@ -448,7 +448,7 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
     
     // Estados visuais
     if (!widget.enabled) {
-      bgColor = bgColor.withOpacity(0.5);
+      bgColor = bgColor.withValues(alpha: 0.5);
     }
     
     if (widget.selected) {
@@ -456,11 +456,11 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
     }
     
     if (_isHovered && widget.onTap != null) {
-      bgColor = Color.alphaBlend(colorScheme.primary.withOpacity(0.04), bgColor);
+      bgColor = Color.alphaBlend(colorScheme.primary.withValues(alpha: 0.04), bgColor);
     }
     
     if (_isPressed) {
-      bgColor = Color.alphaBlend(colorScheme.primary.withOpacity(0.08), bgColor);
+      bgColor = Color.alphaBlend(colorScheme.primary.withValues(alpha: 0.08), bgColor);
     }
 
     // Construir conteúdo do card
@@ -488,7 +488,7 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
         ),
         boxShadow: widget.boxShadow ?? (elevationFinal > 0 ? [
           BoxShadow(
-            color: (widget.shadowColor ?? Colors.black).withOpacity(0.1),
+            color: (widget.shadowColor ?? Colors.black).withValues(alpha: 0.1),
             blurRadius: elevationFinal,
             offset: Offset(0, elevationFinal / 2),
           ),
@@ -827,7 +827,7 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
       case ShadcnCardVariant.elevated:
         return colorScheme.surface;
       case ShadcnCardVariant.filled:
-        return colorScheme.surfaceVariant;
+        return colorScheme.surfaceContainerHighest;
       case ShadcnCardVariant.ghost:
         return Colors.transparent;
       default:
@@ -842,7 +842,7 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
       case ShadcnCardVariant.ghost:
         return Colors.transparent;
       default:
-        return colorScheme.outline.withOpacity(0.2);
+        return colorScheme.outline.withValues(alpha: 0.2);
     }
   }
 

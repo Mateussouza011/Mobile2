@@ -494,7 +494,7 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
     Color borderColorNormal = widget.borderColor ?? _getBorderColor(colorScheme);
     Color borderColorFocused = widget.focusedBorderColor ?? colorScheme.primary;
     Color borderColorError = widget.errorBorderColor ?? colorScheme.error;
-    Color textColorFinal = widget.textColor ?? (widget.enabled ? colorScheme.onSurface : colorScheme.onSurface.withOpacity(0.5));
+    Color textColorFinal = widget.textColor ?? (widget.enabled ? colorScheme.onSurface : colorScheme.onSurface.withValues(alpha: 0.5));
     Color hintColorFinal = widget.hintColor ?? colorScheme.onSurfaceVariant;
     Color labelColorFinal = widget.labelColor ?? colorScheme.onSurface;
     
@@ -535,7 +535,7 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
         borderRadius: borderRadius,
         boxShadow: widget.boxShadow ?? (widget.elevation != null ? [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: widget.elevation!,
             offset: Offset(0, widget.elevation! / 2),
           )
@@ -589,7 +589,7 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
           focusedBorder: _getBorder(borderRadius, borderColorFocused, borderWidthFocused),
           errorBorder: _getBorder(borderRadius, borderColorError, borderWidthNormal),
           focusedErrorBorder: _getBorder(borderRadius, borderColorError, borderWidthFocused),
-          disabledBorder: _getBorder(borderRadius, borderColorNormal.withOpacity(0.5), borderWidthNormal),
+          disabledBorder: _getBorder(borderRadius, borderColorNormal.withValues(alpha: 0.5), borderWidthNormal),
           errorText: finalError,
           errorStyle: widget.errorStyle ?? theme.textTheme.bodySmall?.copyWith(
             color: colorScheme.error,
@@ -649,7 +649,7 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
   Color _getBackgroundColor(ColorScheme colorScheme) {
     switch (widget.variant) {
       case ShadcnInputVariant.filled:
-        return colorScheme.surfaceVariant;
+        return colorScheme.surfaceContainerHighest;
       case ShadcnInputVariant.borderless:
         return Colors.transparent;
       default:

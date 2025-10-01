@@ -3,8 +3,6 @@ import 'package:provider/provider.dart';
 import '../../core/providers/theme_provider.dart';
 import '../../ui/widgets/shadcn/shadcn_card.dart';
 
-/// Página de configurações do aplicativo
-/// Permite alternar tema e selecionar idioma
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
@@ -245,9 +243,9 @@ class SettingsPage extends StatelessWidget {
                   _showThemeChangeMessage(context, themeProvider.isDarkMode);
                 },
                 activeColor: colorScheme.primary,
-                activeTrackColor: colorScheme.primary.withOpacity(0.3),
+                activeTrackColor: colorScheme.primary.withValues(alpha: 0.3),
                 inactiveThumbColor: colorScheme.onSurfaceVariant,
-                inactiveTrackColor: colorScheme.surfaceVariant,
+                inactiveTrackColor: colorScheme.surfaceContainerHighest,
               ),
             ],
           ),
@@ -388,7 +386,7 @@ class SettingsPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: colorScheme.surfaceVariant,
+              color: colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(

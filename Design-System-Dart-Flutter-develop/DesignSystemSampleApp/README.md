@@ -14,28 +14,33 @@ Um aplicativo de demonstração completo implementando o sistema de design **Sha
 ## 🚀 Páginas Implementadas
 
 ### 📋 **CardsPage**
+
 - ✅ Lista de 5 itens estilizados (ListTile)
 - ✅ Cards com imagem, título, descrição e botões de ação
 - ✅ Contraste adequado em ambos os temas
 
 ### 📊 **TablePage**
+
 - ✅ Tabela com 3 colunas (Nome, Status, Ação)
 - ✅ 5 linhas de dados simulados
 - ✅ Botões "Ver mais" funcionais
 - ✅ Status coloridos com indicadores visuais
 
 ### 🎚️ **SlidersPage**
+
 - ✅ Slider simples (0-100)
 - ✅ Slider com valores pré-definidos (0, 25, 50, 75, 100)
 - ✅ Slider estilizado com label de valor atual
 - ✅ Labels adaptáveis ao tema
 
 ### 🪟 **ModalsPage**
+
 - ✅ Modal de confirmação (Confirmar/Cancelar)
 - ✅ Modal informativo (texto + botão Ok)
 - ✅ Contraste adequado nos modais
 
 ### ⚙️ **SettingsPage**
+
 - ✅ Switch para alternar modo escuro/claro
 - ✅ Dropdown de seleção de idioma
 - ✅ Card de preview do tema atual
@@ -52,31 +57,37 @@ Um aplicativo de demonstração completo implementando o sistema de design **Sha
 - **VS Code** ou **IntelliJ IDEA** (recomendado)
 
 ### 📱 Para desenvolvimento Android
+
 - Android SDK (API level 21 ou superior)
 - Emulador Android ou dispositivo físico
 
 ### 🍎 Para desenvolvimento iOS
+
 - macOS 10.15 ou superior
 - Xcode 12.0 ou superior
 - iOS Simulator ou dispositivo físico
 
 ### 🌐 Para desenvolvimento Web
+
 - Chrome ou Edge (recomendado para debugging)
 
 ## 🔧 Instalação
 
 ### 1️⃣ Clone o repositório
+
 ```bash
 git clone https://github.com/Mateussouza011/Mobile2.git
 cd Mobile2/Design-System-Dart-Flutter-develop/DesignSystemSampleApp
 ```
 
 ### 2️⃣ Instale as dependências
+
 ```bash
 flutter pub get
 ```
 
 ### 3️⃣ Verifique a configuração do Flutter
+
 ```bash
 flutter doctor
 ```
@@ -84,21 +95,25 @@ flutter doctor
 ### 4️⃣ Execute o aplicativo
 
 #### 📱 Android
+
 ```bash
 flutter run -d android
 ```
 
 #### 🍎 iOS
+
 ```bash
 flutter run -d ios
 ```
 
 #### 🌐 Web
+
 ```bash
 flutter run -d web-server --web-port 8080
 ```
 
 #### 🖥️ Desktop (Windows/macOS/Linux)
+
 ```bash
 flutter run -d windows    # Windows
 flutter run -d macos      # macOS
@@ -107,7 +122,7 @@ flutter run -d linux      # Linux
 
 ## 🏗️ Estrutura do Projeto
 
-```
+```text
 lib/
 ├── 📂 core/                      # Configurações centrais
 │   ├── 📂 providers/            # Gerenciamento de estado
@@ -136,6 +151,7 @@ lib/
 ### 🎯 Cores Principais
 
 #### 🌞 Tema Claro
+
 - **Primary**: `#171717` (Neutro escuro)
 - **Secondary**: `#F5F5F5` (Neutro claro)
 - **Background**: `#FFFFFF` (Branco)
@@ -143,6 +159,7 @@ lib/
 - **Error**: `#EF4444` (Vermelho)
 
 #### 🌙 Tema Escuro
+
 - **Primary**: `#FAFAFA` (Neutro claro)
 - **Secondary**: `#262626` (Neutro escuro)
 - **Background**: `#0A0A0A` (Preto)
@@ -150,12 +167,14 @@ lib/
 - **Error**: `#7F1D1D` (Vermelho escuro)
 
 ### 🔤 Tipografia
+
 - **Fonte**: Inter (via Google Fonts)
 - **Pesos**: 400, 500, 600, 700, 800
 - **Tamanhos**: 10px - 36px
 - **Espaçamento**: Otimizado para legibilidade
 
 ### 🧩 Componentes
+
 - **ShadcnButton**: Botão com variantes (default, outline, ghost)
 - **ShadcnCard**: Card com bordas e elevação customizadas
 - **Inputs**: Campos de entrada estilizados
@@ -164,6 +183,7 @@ lib/
 ## 🚀 Build e Deploy
 
 ### 📱 Android APK
+
 ```bash
 # Debug APK
 flutter build apk --debug
@@ -175,6 +195,7 @@ flutter build apk --release
 ```
 
 ### 🍎 iOS IPA
+
 ```bash
 # Apenas no macOS
 flutter build ios --release
@@ -183,7 +204,8 @@ flutter build ios --release
 flutter build ipa
 ```
 
-### 🌐 Web
+### 🌐 Web Build
+
 ```bash
 # Build para produção
 flutter build web --release
@@ -192,6 +214,7 @@ flutter build web --release
 ```
 
 ### 🖥️ Desktop
+
 ```bash
 # Windows
 flutter build windows --release
@@ -206,6 +229,7 @@ flutter build linux --release
 ## 🧪 Testes
 
 ### 🏃‍♂️ Executar Testes
+
 ```bash
 # Todos os testes
 flutter test
@@ -220,17 +244,21 @@ flutter drive --target=test_driver/app.dart
 ## 🔍 Debugging
 
 ### 🐛 Debug Mode
+
 ```bash
 flutter run --debug
 ```
 
 ### 📊 Performance Profiling
+
 ```bash
 flutter run --profile
 ```
 
 ### 🔧 Hot Reload
+
 Durante o desenvolvimento, use:
+
 - **r**: Hot reload
 - **R**: Hot restart
 - **q**: Quit
@@ -269,7 +297,8 @@ Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalh
 
 ## 👨‍💻 Autor
 
-**Mateus Souza**
+### Mateus Souza
+
 - GitHub: [@Mateussouza011](https://github.com/Mateussouza011)
 
 ## 🙏 Agradecimentos

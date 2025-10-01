@@ -19,13 +19,17 @@ class MainLayout extends StatelessWidget {
   }
 
   Widget _buildCustomBottomBar(BuildContext context) {
+    final currentRoute = GoRouterState.of(context).uri.path;
+    final isHomePage = currentRoute == '/';
+    final isSettingsPage = currentRoute == '/settings';
+    
     return Container(
       height: 80,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         border: Border(
           top: BorderSide(
-            color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
             width: 1,
           ),
         ),
@@ -44,14 +48,48 @@ class MainLayout extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.home,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: isHomePage 
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.onSurfaceVariant,
                       size: 24,
                     ),
                     const SizedBox(height: 4),
                     Text(
                       'Início',
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
+                        color: isHomePage 
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            InkWell(
+              onTap: () => context.go('/settings'),
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.settings,
+                      color: isSettingsPage 
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.onSurfaceVariant,
+                      size: 24,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Configurações',
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: isSettingsPage 
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w500,
                       ),
                     ),

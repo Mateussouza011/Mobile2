@@ -11,6 +11,11 @@ import '../../features/sliders/sliders_page.dart';
 import '../../features/modals/modals_page.dart';
 import '../../features/showcase/showcase_page.dart';
 import '../../features/settings/settings_page.dart';
+import '../../features/badges/badges_page.dart';
+import '../../features/progress/progress_page.dart';
+import '../../features/avatars/avatars_page.dart';
+import '../../features/forms/forms_page.dart';
+import '../../features/alerts/alerts_page.dart';
 
 /// Configuração de rotas usando GoRouter
 class AppRouter {
@@ -115,6 +120,52 @@ class AppRouter {
             name: 'settings',
             pageBuilder: (context, state) => CustomTransitionPage(
               child: const SettingsPage(),
+              transitionsBuilder: _slideTransition,
+            ),
+          ),
+          
+          // Novos componentes
+          GoRoute(
+            path: '/badges',
+            name: 'badges',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              child: const BadgesPage(),
+              transitionsBuilder: _slideTransition,
+            ),
+          ),
+          
+          GoRoute(
+            path: '/progress',
+            name: 'progress',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              child: const ProgressPage(),
+              transitionsBuilder: _slideTransition,
+            ),
+          ),
+          
+          GoRoute(
+            path: '/avatars',
+            name: 'avatars',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              child: const AvatarsPage(),
+              transitionsBuilder: _slideTransition,
+            ),
+          ),
+          
+          GoRoute(
+            path: '/forms',
+            name: 'forms',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              child: const FormsPage(),
+              transitionsBuilder: _slideTransition,
+            ),
+          ),
+          
+          GoRoute(
+            path: '/alerts',
+            name: 'alerts',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              child: const AlertsPage(),
               transitionsBuilder: _slideTransition,
             ),
           ),

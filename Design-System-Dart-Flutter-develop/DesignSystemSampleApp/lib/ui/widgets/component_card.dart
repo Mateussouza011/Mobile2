@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
-/// Widget de card para representar um componente
 class ComponentCard extends StatelessWidget {
   final String title;
-  final String description;
+  final String? description;
   final IconData icon;
   final VoidCallback onTap;
 
   const ComponentCard({
     super.key,
     required this.title,
-    required this.description,
+    this.description,
     required this.icon,
     required this.onTap,
   });
@@ -30,7 +29,7 @@ class ComponentCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -50,15 +49,17 @@ class ComponentCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               
-              const SizedBox(height: 4),
-              
-              // Descrição
-              Text(
-                description,
-                style: Theme.of(context).textTheme.bodySmall,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
+              if (description != null) ...[
+                const SizedBox(height: 4),
+                
+                // Descrição
+                Text(
+                  description!,
+                  style: Theme.of(context).textTheme.bodySmall,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ],
           ),
         ),

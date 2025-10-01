@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import '../../widgets/buttons/custom_button.dart';
 import '../../core/theme/colors.dart';
 
-/// Página de login da aplicação
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 

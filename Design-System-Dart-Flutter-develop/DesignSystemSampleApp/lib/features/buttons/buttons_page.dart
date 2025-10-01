@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_button.dart';
 
-/// Página que demonstra diferentes tipos de botões Shadcn/UI
 class ButtonsPage extends StatefulWidget {
   const ButtonsPage({super.key});
 
@@ -17,7 +16,7 @@ class _ButtonsPageState extends State<ButtonsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Showcase de Botões',
+          'Botões',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             color: colorScheme.onSurface,
             fontWeight: FontWeight.w600,
@@ -31,20 +30,11 @@ class _ButtonsPageState extends State<ButtonsPage> {
       body: ListView(
         padding: const EdgeInsets.all(24.0),
         children: [
-          // Descrição
-          Text(
-            'Demonstração completa dos botões Shadcn/UI com todos os estados visuais.',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 32),
-          
-          // Botões Principais
+          // Variantes
           _buildSection(
             context,
-            'Variantes Principais',
-            'Botões primário, secundário e destrutivo com contraste adequado',
+            'Variantes',
+            '',
             [
               const SizedBox(height: 20),
               Row(
@@ -53,7 +43,7 @@ class _ButtonsPageState extends State<ButtonsPage> {
                     child: ShadcnButton(
                       text: 'Primário',
                       variant: ShadcnButtonVariant.default_,
-                      onPressed: () => _showMessage(context, 'Botão primário ativo!'),
+                      onPressed: () {},
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -61,7 +51,7 @@ class _ButtonsPageState extends State<ButtonsPage> {
                     child: ShadcnButton(
                       text: 'Secundário',
                       variant: ShadcnButtonVariant.secondary,
-                      onPressed: () => _showMessage(context, 'Botão secundário ativo!'),
+                      onPressed: () {},
                     ),
                   ),
                 ],
@@ -73,7 +63,7 @@ class _ButtonsPageState extends State<ButtonsPage> {
                     child: ShadcnButton(
                       text: 'Destrutivo',
                       variant: ShadcnButtonVariant.destructive,
-                      onPressed: () => _showMessage(context, 'Ação destrutiva confirmada!'),
+                      onPressed: () {},
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -81,7 +71,7 @@ class _ButtonsPageState extends State<ButtonsPage> {
                     child: ShadcnButton(
                       text: 'Outline',
                       variant: ShadcnButtonVariant.outline,
-                      onPressed: () => _showMessage(context, 'Botão outline ativo!'),
+                      onPressed: () {},
                     ),
                   ),
                 ],
@@ -91,11 +81,11 @@ class _ButtonsPageState extends State<ButtonsPage> {
           
           const SizedBox(height: 32),
           
-          // Botões com Ícones
+          // Com Ícones
           _buildSection(
             context,
-            'Botões com Ícones',
-            'Botões com ícones mantendo contraste e legibilidade',
+            'Com Ícones',
+            '',
             [
               const SizedBox(height: 20),
               Row(
@@ -107,7 +97,7 @@ class _ButtonsPageState extends State<ButtonsPage> {
                         Icons.download,
                         color: colorScheme.onPrimary,
                       ),
-                      onPressed: () => _showMessage(context, 'Download iniciado!'),
+                      onPressed: () {},
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -119,7 +109,7 @@ class _ButtonsPageState extends State<ButtonsPage> {
                         color: colorScheme.onSurfaceVariant,
                       ),
                       variant: ShadcnButtonVariant.outline,
-                      onPressed: () => _showMessage(context, 'Mensagem enviada!'),
+                      onPressed: () {},
                     ),
                   ),
                 ],
@@ -130,55 +120,42 @@ class _ButtonsPageState extends State<ButtonsPage> {
                   Icons.favorite,
                   color: colorScheme.onPrimary,
                 ),
-                onPressed: () => _showMessage(context, 'Favoritado!'),
+                onPressed: () {},
               ),
             ],
           ),
           
           const SizedBox(height: 32),
           
-          // Estados de Botões
+          // Estados
           _buildSection(
             context,
-            'Estados dos Botões',
-            'Demonstração de estados: ativo, hover, loading e desabilitado',
+            'Estados',
+            '',
             [
               const SizedBox(height: 20),
+              
               // Estado normal
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: colorScheme.surfaceVariant.withOpacity(0.3),
+                  color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Estado Normal',
+                      'Normal',
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         color: colorScheme.onSurface,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ShadcnButton(
-                            text: 'Ativo',
-                            onPressed: () => _showMessage(context, 'Botão ativo!'),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: ShadcnButton(
-                            text: 'Ghost',
-                            variant: ShadcnButtonVariant.ghost,
-                            onPressed: () => _showMessage(context, 'Ghost ativo!'),
-                          ),
-                        ),
-                      ],
+                    ShadcnButton(
+                      text: 'Ativo',
+                      onPressed: () {},
                     ),
                   ],
                 ),
@@ -190,39 +167,24 @@ class _ButtonsPageState extends State<ButtonsPage> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: colorScheme.surfaceVariant.withOpacity(0.3),
+                  color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Estado Loading',
+                      'Loading',
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         color: colorScheme.onSurface,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ShadcnButton(
-                            text: 'Carregando...',
-                            loading: true,
-                            onPressed: null,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: ShadcnButton(
-                            text: 'Processando...',
-                            loading: true,
-                            variant: ShadcnButtonVariant.secondary,
-                            onPressed: null,
-                          ),
-                        ),
-                      ],
+                    ShadcnButton(
+                      text: 'Carregando...',
+                      loading: true,
+                      onPressed: null,
                     ),
                   ],
                 ),
@@ -234,105 +196,24 @@ class _ButtonsPageState extends State<ButtonsPage> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: colorScheme.surfaceVariant.withOpacity(0.3),
+                  color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Estado Desabilitado',
+                      'Desabilitado',
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         color: colorScheme.onSurface,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ShadcnButton(
-                            text: 'Desabilitado',
-                            disabled: true,
-                            onPressed: null,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: ShadcnButton(
-                            text: 'Indisponível',
-                            disabled: true,
-                            variant: ShadcnButtonVariant.outline,
-                            onPressed: null,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          
-          const SizedBox(height: 32),
-          
-          // Teste de Contraste
-          _buildSection(
-            context,
-            'Teste de Contraste',
-            'Verificação da legibilidade em temas claro e escuro',
-            [
-              const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: colorScheme.surface,
-                  border: Border.all(color: colorScheme.outline),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      'Todos os botões abaixo devem ter texto legível:',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurface,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Wrap(
-                      spacing: 12,
-                      runSpacing: 12,
-                      children: [
-                        ShadcnButton(
-                          text: 'Primário',
-                          size: ShadcnButtonSize.sm,
-                          onPressed: () => _showMessage(context, 'Contraste OK - Primário'),
-                        ),
-                        ShadcnButton(
-                          text: 'Secundário',
-                          variant: ShadcnButtonVariant.secondary,
-                          size: ShadcnButtonSize.sm,
-                          onPressed: () => _showMessage(context, 'Contraste OK - Secundário'),
-                        ),
-                        ShadcnButton(
-                          text: 'Outline',
-                          variant: ShadcnButtonVariant.outline,
-                          size: ShadcnButtonSize.sm,
-                          onPressed: () => _showMessage(context, 'Contraste OK - Outline'),
-                        ),
-                        ShadcnButton(
-                          text: 'Ghost',
-                          variant: ShadcnButtonVariant.ghost,
-                          size: ShadcnButtonSize.sm,
-                          onPressed: () => _showMessage(context, 'Contraste OK - Ghost'),
-                        ),
-                        ShadcnButton(
-                          text: 'Destrutivo',
-                          variant: ShadcnButtonVariant.destructive,
-                          size: ShadcnButtonSize.sm,
-                          onPressed: () => _showMessage(context, 'Contraste OK - Destrutivo'),
-                        ),
-                      ],
+                    ShadcnButton(
+                      text: 'Desabilitado',
+                      disabled: true,
+                      onPressed: null,
                     ),
                   ],
                 ),
@@ -345,32 +226,28 @@ class _ButtonsPageState extends State<ButtonsPage> {
           // Tamanhos
           _buildSection(
             context,
-            'Diferentes Tamanhos',
-            'Botões em tamanhos pequeno, padrão e grande',
+            'Tamanhos',
+            '',
             [
               const SizedBox(height: 20),
-              Column(
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      ShadcnButton(
-                        text: 'Pequeno',
-                        size: ShadcnButtonSize.sm,
-                        onPressed: () => _showMessage(context, 'Botão pequeno!'),
-                      ),
-                      const SizedBox(width: 12),
-                      ShadcnButton(
-                        text: 'Padrão',
-                        size: ShadcnButtonSize.default_,
-                        onPressed: () => _showMessage(context, 'Botão padrão!'),
-                      ),
-                      const SizedBox(width: 12),
-                      ShadcnButton(
-                        text: 'Grande',
-                        size: ShadcnButtonSize.lg,
-                        onPressed: () => _showMessage(context, 'Botão grande!'),
-                      ),
-                    ],
+                  ShadcnButton(
+                    text: 'Pequeno',
+                    size: ShadcnButtonSize.sm,
+                    onPressed: () {},
+                  ),
+                  const SizedBox(width: 12),
+                  ShadcnButton(
+                    text: 'Padrão',
+                    size: ShadcnButtonSize.default_,
+                    onPressed: () {},
+                  ),
+                  const SizedBox(width: 12),
+                  ShadcnButton(
+                    text: 'Grande',
+                    size: ShadcnButtonSize.lg,
+                    onPressed: () {},
                   ),
                 ],
               ),
@@ -394,32 +271,8 @@ class _ButtonsPageState extends State<ButtonsPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 8),
-        Text(
-          description,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: colorScheme.onSurfaceVariant,
-          ),
-        ),
         ...children,
       ],
-    );
-  }
-
-  void _showMessage(BuildContext context, String message) {
-    final colorScheme = Theme.of(context).colorScheme;
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: TextStyle(
-            color: colorScheme.onInverseSurface,
-          ),
-        ),
-        backgroundColor: colorScheme.inverseSurface,
-        duration: const Duration(seconds: 2),
-      ),
     );
   }
 }

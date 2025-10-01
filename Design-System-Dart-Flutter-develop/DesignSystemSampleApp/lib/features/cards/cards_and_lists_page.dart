@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_card.dart';
 import '../../ui/widgets/shadcn/shadcn_button.dart';
 
-/// Página que demonstra cards e listas estilizados
 class CardsAndListsPage extends StatelessWidget {
   const CardsAndListsPage({super.key});
 
@@ -94,7 +93,7 @@ class CardsAndListsPage extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: colorScheme.outline.withOpacity(0.2),
+          color: colorScheme.outline.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -111,7 +110,7 @@ class CardsAndListsPage extends StatelessWidget {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: colorScheme.primary.withOpacity(0.1),
+                    color: colorScheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Icon(
@@ -142,7 +141,7 @@ class CardsAndListsPage extends StatelessWidget {
               if (!isLast)
                 Divider(
                   height: 1,
-                  color: colorScheme.outline.withOpacity(0.1),
+                  color: colorScheme.outline.withValues(alpha: 0.1),
                   indent: 72,
                 ),
             ],
@@ -188,7 +187,7 @@ class CardsAndListsPage extends StatelessWidget {
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
