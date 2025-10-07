@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_progress.dart';
+import '../../ui/widgets/shadcn/shadcn_skeleton.dart';
 
 class ProgressPage extends StatefulWidget {
   const ProgressPage({super.key});
@@ -10,6 +11,7 @@ class ProgressPage extends StatefulWidget {
 
 class _ProgressPageState extends State<ProgressPage> with TickerProviderStateMixin {
   double _progress = 0.6;
+  bool _showSkeleton = true;
   late AnimationController _animationController;
   late Animation<double> _animation;
 
@@ -66,7 +68,7 @@ class _ProgressPageState extends State<ProgressPage> with TickerProviderStateMix
                 children: [
                   Text('Básico', style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 8),
-                  ShadcnProgress.linear(value: 50),
+                  const ShadcnProgress.linear(value: 50),
                   const SizedBox(height: 16),
                   
                   Text('Com animação', style: Theme.of(context).textTheme.bodySmall),
@@ -107,7 +109,7 @@ class _ProgressPageState extends State<ProgressPage> with TickerProviderStateMix
                     children: [
                       Text('Básico', style: Theme.of(context).textTheme.bodySmall),
                       const SizedBox(height: 8),
-                      ShadcnProgress.circular(value: 65),
+                      const ShadcnProgress.circular(value: 65),
                     ],
                   ),
                   Column(
@@ -117,7 +119,7 @@ class _ProgressPageState extends State<ProgressPage> with TickerProviderStateMix
                       Stack(
                         alignment: Alignment.center,
                         children: [
-                          ShadcnProgress.circular(value: 80),
+                          const ShadcnProgress.circular(value: 80),
                           Text(
                             '80%',
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -155,17 +157,17 @@ class _ProgressPageState extends State<ProgressPage> with TickerProviderStateMix
                 children: [
                   Text('Pequeno', style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 8),
-                  ShadcnProgress.linear(value: 40, size: ShadcnProgressSize.sm),
+                  const ShadcnProgress.linear(value: 40, size: ShadcnProgressSize.sm),
                   const SizedBox(height: 16),
                   
                   Text('Padrão', style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 8),
-                  ShadcnProgress.linear(value: 60, size: ShadcnProgressSize.default_),
+                  const ShadcnProgress.linear(value: 60, size: ShadcnProgressSize.default_),
                   const SizedBox(height: 16),
                   
                   Text('Grande', style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 8),
-                  ShadcnProgress.linear(value: 80, size: ShadcnProgressSize.lg),
+                  const ShadcnProgress.linear(value: 80, size: ShadcnProgressSize.lg),
                 ],
               ),
             ],
@@ -179,9 +181,9 @@ class _ProgressPageState extends State<ProgressPage> with TickerProviderStateMix
             'Progresso dividido em etapas específicas',
             [
               const SizedBox(height: 20),
-              ShadcnStepProgress(
+              const ShadcnStepProgress(
                 totalSteps: 4,
-                stepLabels: const [
+                stepLabels: [
                   'Informações Pessoais',
                   'Endereço',
                   'Pagamento',
@@ -190,9 +192,9 @@ class _ProgressPageState extends State<ProgressPage> with TickerProviderStateMix
                 currentStep: 2,
               ),
               const SizedBox(height: 20),
-              ShadcnStepProgress(
+              const ShadcnStepProgress(
                 totalSteps: 4,
-                stepLabels: const [
+                stepLabels: [
                   'Upload',
                   'Processamento',
                   'Validação',
@@ -250,6 +252,120 @@ class _ProgressPageState extends State<ProgressPage> with TickerProviderStateMix
                   ),
                 ],
               ),
+            ],
+          ),
+          
+          const SizedBox(height: 32),
+          
+          _buildSection(
+            context,
+            'Skeleton & Placeholders',
+            'Estados de carregamento e placeholders',
+            [
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  const Text('Mostrar Skeleton:'),
+                  const SizedBox(width: 16),
+                  Switch(
+                    value: _showSkeleton,
+                    onChanged: (value) => setState(() => _showSkeleton = value),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              
+              if (_showSkeleton) ...[
+                // Templates de skeleton
+                const Text('Template Lista:', style: TextStyle(fontWeight: FontWeight.w500)),
+                const SizedBox(height: 8),
+                ShadcnSkeletonTemplates.listItem(),
+                const SizedBox(height: 16),
+                
+                const Text('Template Perfil do Usuário:', style: TextStyle(fontWeight: FontWeight.w500)),
+                const SizedBox(height: 8),
+                ShadcnSkeletonTemplates.userProfile(),
+                const SizedBox(height: 16),
+                
+                const Text('Template Card de Produto:', style: TextStyle(fontWeight: FontWeight.w500)),
+                const SizedBox(height: 8),
+                ShadcnSkeletonTemplates.productCard(),
+                const SizedBox(height: 16),
+                
+                const Text('Skeletons Customizados:', style: TextStyle(fontWeight: FontWeight.w500)),
+                const SizedBox(height: 8),
+                const Row(
+                  children: [
+                    ShadcnSkeleton.avatar(width: 40, height: 40),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ShadcnSkeleton.text(
+                            width: double.infinity,
+                            height: 16,
+                          ),
+                          SizedBox(height: 8),
+                          ShadcnSkeleton.text(
+                            width: 200,
+                            height: 14,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ] else ...[
+                // Conteúdo real
+                Row(
+                  children: [
+                    const CircleAvatar(
+                      radius: 24,
+                      backgroundColor: Colors.blue,
+                      child: Icon(Icons.person, color: Colors.white),
+                    ),
+                    const SizedBox(width: 16),
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('João Silva', style: TextStyle(fontWeight: FontWeight.bold)),
+                          SizedBox(height: 8),
+                          Text('Desenvolvedor Flutter experiente'),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Icon(Icons.favorite, color: Colors.red.shade300),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Conteúdo carregado com sucesso!',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Os dados foram carregados e estão prontos para uso.',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ],
           ),
           

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../shared/colors.dart';
 import 'bottom_tab_bar_view_model.dart';

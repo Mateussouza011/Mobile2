@@ -140,7 +140,7 @@ class TablesPage extends StatelessWidget {
                   ),
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),

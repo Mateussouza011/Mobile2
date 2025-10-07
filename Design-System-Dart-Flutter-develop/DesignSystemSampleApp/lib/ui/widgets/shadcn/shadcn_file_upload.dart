@@ -88,8 +88,8 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
         GestureDetector(
           onTap: widget.enabled ? _selectFiles : null,
           child: DragTarget<File>(
-            onWillAccept: (data) => widget.enabled,
-            onAccept: (file) => _handleFileSelected([file]),
+            onWillAcceptWithDetails: (data) => widget.enabled,
+            onAcceptWithDetails: (details) => _handleFileSelected([details.data]),
             onMove: (details) => setState(() => _isDragOver = true),
             onLeave: (details) => setState(() => _isDragOver = false),
             builder: (context, candidateData, rejectedData) {

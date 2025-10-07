@@ -33,23 +33,22 @@ class AvatarsPage extends StatelessWidget {
             '',
             [
               const SizedBox(height: 20),
-              Row(
+              const Wrap(
+                spacing: 16.0,
+                runSpacing: 16.0,
                 children: [
                   ShadcnAvatar(
                     initials: 'AB',
                     size: ShadcnAvatarSize.sm,
                   ),
-                  const SizedBox(width: 16),
                   ShadcnAvatar(
                     initials: 'CD',
                     size: ShadcnAvatarSize.md,
                   ),
-                  const SizedBox(width: 16),
                   ShadcnAvatar(
                     initials: 'EF',
                     size: ShadcnAvatarSize.lg,
                   ),
-                  const SizedBox(width: 16),
                   ShadcnAvatar(
                     initials: 'GH',
                     size: ShadcnAvatarSize.xl,
@@ -67,18 +66,18 @@ class AvatarsPage extends StatelessWidget {
             '',
             [
               const SizedBox(height: 20),
-              Row(
+              Wrap(
+                spacing: 16.0,
+                runSpacing: 16.0,
                 children: [
                   ShadcnAvatar(
                     initials: 'JD',
                     backgroundColor: colorScheme.primary.withValues(alpha: 0.1),
                   ),
-                  const SizedBox(width: 16),
                   ShadcnAvatar(
                     initials: 'MS',
                     backgroundColor: colorScheme.secondary.withValues(alpha: 0.1),
                   ),
-                  const SizedBox(width: 16),
                   ShadcnAvatar(
                     initials: 'AL',
                     backgroundColor: colorScheme.tertiary.withValues(alpha: 0.1),
@@ -96,10 +95,11 @@ class AvatarsPage extends StatelessWidget {
             '',
             [
               const SizedBox(height: 20),
-              Row(
+              const Wrap(
+                spacing: 16.0,
+                runSpacing: 16.0,
                 children: [
                   ShadcnAvatar(),
-                  const SizedBox(width: 16),
                   ShadcnAvatar(size: ShadcnAvatarSize.lg),
                 ],
               ),

@@ -15,22 +15,22 @@ class _SelectsPageState extends State<SelectsPage> {
   String? _selectedFramework;
 
   final List<ShadcnSelectOption<String>> _countries = [
-    ShadcnSelectOption(
+    const ShadcnSelectOption(
       value: 'br', 
       label: 'Brasil',
       icon: Icon(Icons.flag, size: 16),
     ),
-    ShadcnSelectOption(
+    const ShadcnSelectOption(
       value: 'us', 
       label: 'Estados Unidos',
       icon: Icon(Icons.flag, size: 16),
     ),
-    ShadcnSelectOption(
+    const ShadcnSelectOption(
       value: 'ca', 
       label: 'Canadá',
       icon: Icon(Icons.flag, size: 16),
     ),
-    ShadcnSelectOption(
+    const ShadcnSelectOption(
       value: 'mx', 
       label: 'México',
       icon: Icon(Icons.flag, size: 16),
@@ -38,35 +38,35 @@ class _SelectsPageState extends State<SelectsPage> {
   ];
 
   final List<ShadcnSelectOption<String>> _cities = [
-    ShadcnSelectOption(value: 'sp', label: 'São Paulo'),
-    ShadcnSelectOption(value: 'rj', label: 'Rio de Janeiro'),
-    ShadcnSelectOption(value: 'mg', label: 'Belo Horizonte'),
-    ShadcnSelectOption(value: 'rs', label: 'Porto Alegre'),
-    ShadcnSelectOption(value: 'pr', label: 'Curitiba'),
+    const ShadcnSelectOption(value: 'sp', label: 'São Paulo'),
+    const ShadcnSelectOption(value: 'rj', label: 'Rio de Janeiro'),
+    const ShadcnSelectOption(value: 'mg', label: 'Belo Horizonte'),
+    const ShadcnSelectOption(value: 'rs', label: 'Porto Alegre'),
+    const ShadcnSelectOption(value: 'pr', label: 'Curitiba'),
   ];
 
   final List<ShadcnSelectOption<String>> _languages = [
-    ShadcnSelectOption(
+    const ShadcnSelectOption(
       value: 'pt', 
       label: 'Português',
       icon: Icon(Icons.language, size: 16),
     ),
-    ShadcnSelectOption(
+    const ShadcnSelectOption(
       value: 'en', 
       label: 'English',
       icon: Icon(Icons.language, size: 16),
     ),
-    ShadcnSelectOption(
+    const ShadcnSelectOption(
       value: 'es', 
       label: 'Español',
       icon: Icon(Icons.language, size: 16),
     ),
-    ShadcnSelectOption(
+    const ShadcnSelectOption(
       value: 'fr', 
       label: 'Français',
       icon: Icon(Icons.language, size: 16),
     ),
-    ShadcnSelectOption(
+    const ShadcnSelectOption(
       value: 'de', 
       label: 'Deutsch',
       icon: Icon(Icons.language, size: 16),
@@ -74,14 +74,14 @@ class _SelectsPageState extends State<SelectsPage> {
   ];
 
   final List<ShadcnSelectOption<String>> _frameworks = [
-    ShadcnSelectOption(value: 'flutter', label: 'Flutter'),
-    ShadcnSelectOption(value: 'react', label: 'React'),
-    ShadcnSelectOption(value: 'vue', label: 'Vue.js'),
-    ShadcnSelectOption(value: 'angular', label: 'Angular'),
-    ShadcnSelectOption(value: 'svelte', label: 'Svelte'),
-    ShadcnSelectOption(value: 'next', label: 'Next.js'),
-    ShadcnSelectOption(value: 'nuxt', label: 'Nuxt.js'),
-    ShadcnSelectOption(value: 'gatsby', label: 'Gatsby'),
+    const ShadcnSelectOption(value: 'flutter', label: 'Flutter'),
+    const ShadcnSelectOption(value: 'react', label: 'React'),
+    const ShadcnSelectOption(value: 'vue', label: 'Vue.js'),
+    const ShadcnSelectOption(value: 'angular', label: 'Angular'),
+    const ShadcnSelectOption(value: 'svelte', label: 'Svelte'),
+    const ShadcnSelectOption(value: 'next', label: 'Next.js'),
+    const ShadcnSelectOption(value: 'nuxt', label: 'Nuxt.js'),
+    const ShadcnSelectOption(value: 'gatsby', label: 'Gatsby'),
   ];
 
   @override
@@ -123,7 +123,7 @@ class _SelectsPageState extends State<SelectsPage> {
                     _selectedCountry = value;
                   });
                 },
-                prefixIcon: Icon(Icons.public, size: 20),
+                prefixIcon: const Icon(Icons.public, size: 20),
               ),
               
               const SizedBox(height: 16),
@@ -139,7 +139,7 @@ class _SelectsPageState extends State<SelectsPage> {
                   });
                 },
                 helperText: 'Escolha sua cidade atual',
-                prefixIcon: Icon(Icons.location_city, size: 20),
+                prefixIcon: const Icon(Icons.location_city, size: 20),
               ),
             ],
           ),
@@ -181,7 +181,7 @@ class _SelectsPageState extends State<SelectsPage> {
                 },
                 searchable: true,
                 searchHint: 'Buscar framework...',
-                prefixIcon: Icon(Icons.code, size: 20),
+                prefixIcon: const Icon(Icons.code, size: 20),
               ),
             ],
           ),

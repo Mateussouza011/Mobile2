@@ -1,8 +1,23 @@
 import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_badge.dart';
+import '../../ui/widgets/shadcn/shadcn_chip.dart';
 
-class BadgesPage extends StatelessWidget {
+class BadgesPage extends StatefulWidget {
   const BadgesPage({super.key});
+
+  @override
+  State<BadgesPage> createState() => _BadgesPageState();
+}
+
+class _BadgesPageState extends State<BadgesPage> {
+  final Set<String> _selectedChips = {};
+  final List<String> _inputChips = ['Flutter', 'Dart', 'Mobile'];
+
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +48,7 @@ class BadgesPage extends StatelessWidget {
             'Diferentes estilos de badges',
             [
               const SizedBox(height: 20),
-              Wrap(
+              const Wrap(
                 spacing: 8,
                 runSpacing: 8,
                 children: [
@@ -74,7 +89,7 @@ class BadgesPage extends StatelessWidget {
             'Diferentes tamanhos de badges',
             [
               const SizedBox(height: 20),
-              Wrap(
+              const Wrap(
                 spacing: 8,
                 runSpacing: 8,
                 alignment: WrapAlignment.start,
@@ -105,7 +120,7 @@ class BadgesPage extends StatelessWidget {
             'Badges com ícones',
             [
               const SizedBox(height: 20),
-              Wrap(
+              const Wrap(
                 spacing: 8,
                 runSpacing: 8,
                 children: [
@@ -167,7 +182,7 @@ class BadgesPage extends StatelessWidget {
                   ),
                   ShadcnBadge(
                     text: 'Flutter',
-                    icon: Icon(Icons.code),
+                    icon: const Icon(Icons.code),
                     variant: ShadcnBadgeVariant.outline,
                     showCloseButton: true,
                     onTap: () {
@@ -194,7 +209,7 @@ class BadgesPage extends StatelessWidget {
             'Badges para indicar status',
             [
               const SizedBox(height: 20),
-              Wrap(
+              const Wrap(
                 spacing: 8,
                 runSpacing: 8,
                 children: [
@@ -224,7 +239,7 @@ class BadgesPage extends StatelessWidget {
             'Badges com números e contadores',
             [
               const SizedBox(height: 20),
-              Wrap(
+              const Wrap(
                 spacing: 8,
                 runSpacing: 8,
                 children: [
@@ -245,30 +260,155 @@ class BadgesPage extends StatelessWidget {
             'Badges que aparecem sobre outros elementos',
             [
               const SizedBox(height: 20),
-              Wrap(
+              const Wrap(
                 spacing: 16,
                 runSpacing: 16,
                 children: [
                   ShadcnDotBadge(
-                    child: Icon(Icons.notifications, size: 32),
                     count: '3',
+                    child: Icon(Icons.notifications, size: 32),
                   ),
                   ShadcnDotBadge(
-                    child: Icon(Icons.message, size: 32),
                     count: '12',
                     badgeColor: Colors.green,
+                    child: Icon(Icons.message, size: 32),
                   ),
                   ShadcnDotBadge(
-                    child: Icon(Icons.shopping_cart, size: 32),
                     count: '99+',
                     badgeColor: Colors.orange,
+                    child: Icon(Icons.shopping_cart, size: 32),
                   ),
                   ShadcnDotBadge(
+                    showBadge: true,
                     child: CircleAvatar(
                       radius: 20,
                       child: Text('JD'),
                     ),
-                    showBadge: true,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 32),
+          
+          _buildSection(
+            context,
+            'Chips & Tags',
+            'Componentes interativos para seleção e filtros',
+            [
+              const SizedBox(height: 20),
+              
+              // Chips de filtro
+              const Text('Chips de Filtro:'),
+              const SizedBox(height: 12),
+              ShadcnChipGroup(
+                chips: [
+                  ShadcnChip.filter(
+                    label: 'Todos',
+                    selected: _selectedChips.contains('all'),
+                    onSelected: (selected) {
+                      setState(() {
+                        if (selected) {
+                          _selectedChips.add('all');
+                        } else {
+                          _selectedChips.remove('all');
+                        }
+                      });
+                    },
+                  ),
+                  ShadcnChip.filter(
+                    label: 'Frontend',
+                    icon: const Icon(Icons.web, size: 16),
+                    selected: _selectedChips.contains('frontend'),
+                    onSelected: (selected) {
+                      setState(() {
+                        if (selected) {
+                          _selectedChips.add('frontend');
+                        } else {
+                          _selectedChips.remove('frontend');
+                        }
+                      });
+                    },
+                  ),
+                  ShadcnChip.filter(
+                    label: 'Backend',
+                    variant: ShadcnChipVariant.secondary,
+                    selected: _selectedChips.contains('backend'),
+                    onSelected: (selected) {
+                      setState(() {
+                        if (selected) {
+                          _selectedChips.add('backend');
+                        } else {
+                          _selectedChips.remove('backend');
+                        }
+                      });
+                    },
+                  ),
+                  ShadcnChip.filter(
+                    label: 'Design',
+                    variant: ShadcnChipVariant.outline,
+                    selected: _selectedChips.contains('design'),
+                    onSelected: (selected) {
+                      setState(() {
+                        if (selected) {
+                          _selectedChips.add('design');
+                        } else {
+                          _selectedChips.remove('design');
+                        }
+                      });
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              
+              // Chips de entrada (removíveis)
+              const Text('Tags Removíveis:'),
+              const SizedBox(height: 12),
+              ShadcnChipGroup(
+                chips: _inputChips.map((chip) => ShadcnChip.input(
+                  label: chip,
+                  onDeleted: () {
+                    setState(() {
+                      _inputChips.remove(chip);
+                    });
+                    _showMessage('Tag "$chip" removida');
+                  },
+                )).toList(),
+              ),
+              const SizedBox(height: 16),
+              
+              // Chips de ação
+              const Text('Chips de Ação:'),
+              const SizedBox(height: 12),
+              ShadcnChipGroup(
+                chips: [
+                  ShadcnChip.action(
+                    label: 'Adicionar Tag',
+                    icon: const Icon(Icons.add, size: 16),
+                    variant: ShadcnChipVariant.outline,
+                    onPressed: () {
+                      setState(() {
+                        _inputChips.add('Nova Tag ${_inputChips.length + 1}');
+                      });
+                      _showMessage('Nova tag adicionada!');
+                    },
+                  ),
+                  ShadcnChip.action(
+                    label: 'Sucesso',
+                    variant: ShadcnChipVariant.success,
+                    onPressed: () => _showMessage('Ação de sucesso!'),
+                  ),
+                  ShadcnChip.action(
+                    label: 'Aviso',
+                    variant: ShadcnChipVariant.warning,
+                    onPressed: () => _showMessage('Aviso acionado!'),
+                  ),
+                  ShadcnChip.action(
+                    label: 'Erro',
+                    variant: ShadcnChipVariant.destructive,
+                    onPressed: () => _showMessage('Erro simulado!'),
                   ),
                 ],
               ),

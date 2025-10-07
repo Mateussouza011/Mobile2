@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_input.dart';
 import '../../ui/widgets/shadcn/shadcn_form.dart';
-import '../../ui/widgets/shadcn/shadcn_file_upload.dart';
-import '../../ui/widgets/shadcn/shadcn_slider.dart';
 import '../../ui/widgets/shadcn/shadcn_button.dart';
 
 class InputsPage extends StatefulWidget {
@@ -16,9 +14,6 @@ class _InputsPageState extends State<InputsPage> {
   final _formKey = GlobalKey<FormState>();
   final _disabledController = TextEditingController(text: 'Campo desabilitado');
   bool _obscurePassword = true;
-  double _volumeValue = 50.0;
-  double _temperatureValue = 22.0;
-  RangeValues _priceRange = const RangeValues(100, 500);
 
   @override
   void dispose() {
@@ -61,7 +56,7 @@ class _InputsPageState extends State<InputsPage> {
               ),
               const SizedBox(height: 16),
               
-              ShadcnInput.email(
+              const ShadcnInput.email(
                 label: 'Email',
                 placeholder: 'exemplo@email.com',
               ),
@@ -85,7 +80,7 @@ class _InputsPageState extends State<InputsPage> {
               ),
               const SizedBox(height: 16),
               
-              ShadcnInput.search(
+              const ShadcnInput.search(
                 placeholder: 'Buscar produtos...',
               ),
             ],
@@ -100,17 +95,17 @@ class _InputsPageState extends State<InputsPage> {
             'Inputs especializados com formatação automática',
             [
               const SizedBox(height: 20),
-              ShadcnCpfInput(
+              const ShadcnCpfInput(
                 placeholder: '000.000.000-00',
               ),
               const SizedBox(height: 16),
               
-              ShadcnCnpjInput(
+              const ShadcnCnpjInput(
                 placeholder: '00.000.000/0000-00',
               ),
               const SizedBox(height: 16),
               
-              ShadcnPhoneInput(
+              const ShadcnPhoneInput(
                 placeholder: '(00) 00000-0000',
               ),
               const SizedBox(height: 16),
@@ -139,7 +134,7 @@ class _InputsPageState extends State<InputsPage> {
               const SizedBox(height: 20),
               
               // Normal
-              ShadcnInput(
+              const ShadcnInput(
                 label: 'Estado Normal',
                 placeholder: 'Campo normal',
                 helperText: 'Este campo está em estado normal',
@@ -156,7 +151,7 @@ class _InputsPageState extends State<InputsPage> {
               const SizedBox(height: 16),
               
               // Com erro
-              ShadcnInput(
+              const ShadcnInput(
                 label: 'Estado de Erro',
                 placeholder: 'Campo com erro',
                 errorText: 'Este campo contém um erro',
@@ -164,7 +159,7 @@ class _InputsPageState extends State<InputsPage> {
               const SizedBox(height: 16),
               
               // Área de texto
-              ShadcnInput(
+              const ShadcnInput(
                 label: 'Comentários',
                 placeholder: 'Digite seus comentários...',
                 maxLines: 4,
@@ -186,7 +181,7 @@ class _InputsPageState extends State<InputsPage> {
                 formKey: _formKey,
                 child: Column(
                   children: [
-                    ShadcnFormField(
+                    const ShadcnFormField(
                       name: 'nome',
                       label: 'Nome',
                       placeholder: 'Digite seu nome',
@@ -201,7 +196,7 @@ class _InputsPageState extends State<InputsPage> {
                       placeholder: 'Digite seu email',
                       required: true,
                       keyboardType: TextInputType.emailAddress,
-                      prefixIcon: Icon(Icons.email_outlined),
+                      prefixIcon: const Icon(Icons.email_outlined),
                       validator: (value) {
                         if (value != null && !value.contains('@')) {
                           return 'Email inválido';
@@ -211,7 +206,7 @@ class _InputsPageState extends State<InputsPage> {
                     ),
                     const SizedBox(height: 16),
                     
-                    ShadcnFormField(
+                    const ShadcnFormField(
                       name: 'telefone',
                       label: 'Telefone',
                       placeholder: '(00) 00000-0000',
@@ -254,170 +249,72 @@ class _InputsPageState extends State<InputsPage> {
 
           const SizedBox(height: 32),
           
-          // Upload de Arquivos
-          _buildSection(
-            context,
-            'Upload de Arquivos',
-            'Componentes para seleção e upload de arquivos',
-            [
-              const SizedBox(height: 20),
-              ShadcnFileUpload(
-                label: 'Upload Simples',
-                description: 'Selecione um arquivo para upload',
-                type: ShadcnFileUploadType.single,
-                acceptedFileTypes: ['pdf', 'jpg', 'png', 'docx'],
-                maxFileSize: 5,
-                onFileSelected: (file) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Arquivo selecionado: ${file.path}')),
-                  );
-                },
-              ),
-              const SizedBox(height: 24),
-              
-              ShadcnFileUpload(
-                label: 'Upload Múltiplo',
-                description: 'Arraste e solte ou clique para selecionar múltiplos arquivos',
-                type: ShadcnFileUploadType.dragDrop,
-                maxFiles: 5,
-                maxFileSize: 10,
-                onFilesSelected: (files) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('${files.length} arquivo(s) selecionado(s)')),
-                  );
-                },
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 32),
-          
-          // Sliders e Controles
-          _buildSection(
-            context,
-            'Sliders e Controles',
-            'Controles deslizantes para valores numéricos',
-            [
-              const SizedBox(height: 20),
-              ShadcnVolumeSlider(
-                value: _volumeValue,
-                onChanged: (value) {
-                  setState(() {
-                    _volumeValue = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 24),
-              
-              ShadcnTemperatureSlider(
-                value: _temperatureValue,
-                onChanged: (value) {
-                  setState(() {
-                    _temperatureValue = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 24),
-              
-              ShadcnPriceRangeSlider(
-                values: _priceRange,
-                min: 0,
-                max: 1000,
-                onChanged: (values) {
-                  setState(() {
-                    _priceRange = values;
-                  });
-                },
-              ),
-              const SizedBox(height: 24),
-              
-              // Slider customizado
-              ShadcnSlider.single(
-                value: 75,
-                onChanged: (value) {},
-                min: 0,
-                max: 100,
-                divisions: 10,
-                label: 'Progresso',
-                labelFormatter: (value) => '${value.toInt()}%',
-                showTicks: true,
-                leadingWidget: Icon(Icons.speed, color: colorScheme.primary),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 32),
-          
-          // Variantes Visuais
-          _buildSection(
-            context,
-            'Variantes Visuais',
-            'Diferentes estilos e tamanhos de inputs',
-            [
-              const SizedBox(height: 20),
-              
-              // Tamanhos
-              Text(
-                'Tamanhos',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 12),
-              
-              ShadcnInput(
-                label: 'Pequeno',
-                placeholder: 'Input pequeno',
-                size: ShadcnInputSize.sm,
-              ),
-              const SizedBox(height: 16),
-              
-              ShadcnInput(
-                label: 'Padrão',
-                placeholder: 'Input padrão',
-                size: ShadcnInputSize.default_,
-              ),
-              const SizedBox(height: 16),
-              
-              ShadcnInput(
-                label: 'Grande',
-                placeholder: 'Input grande',
-                size: ShadcnInputSize.lg,
-              ),
-              const SizedBox(height: 24),
-              
-              // Variantes
-              Text(
-                'Estilos',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 12),
-              
-              ShadcnInput(
-                label: 'Outlined (Padrão)',
-                placeholder: 'Input com borda',
-                variant: ShadcnInputVariant.outlined,
-              ),
-              const SizedBox(height: 16),
-              
-              ShadcnInput(
-                label: 'Filled',
-                placeholder: 'Input preenchido',
-                variant: ShadcnInputVariant.filled,
-              ),
-              const SizedBox(height: 16),
-              
-              ShadcnInput(
-                label: 'Underlined',
-                placeholder: 'Input com linha',
-                variant: ShadcnInputVariant.underlined,
-              ),
-            ],
-          ),
+          // Inputs Avançados
+          _buildAdvancedInputs(context),
         ],
       ),
+    );
+  }
+
+  Widget _buildAdvancedInputs(BuildContext context) {
+    return _buildSection(
+      context,
+      'Inputs Avançados',
+      'Inputs especializados com validações customizadas',
+      [
+        const SizedBox(height: 20),
+        
+        // Input padrão simples
+        const ShadcnInput(
+          label: 'Nome',
+          placeholder: 'Digite seu nome',
+        ),
+        const SizedBox(height: 16),
+        
+        // Input para email com validação automática
+        const ShadcnInput.email(
+          label: 'Email',
+        ),
+        const SizedBox(height: 16),
+        
+        // Input para senha com toggle automático
+        const ShadcnInput.password(
+          label: 'Senha',
+          helperText: 'Mínimo 8 caracteres',
+        ),
+        const SizedBox(height: 16),
+        
+        // Input de busca
+        const ShadcnInput.search(
+          placeholder: 'Buscar...',
+        ),
+        const SizedBox(height: 16),
+        
+        // Input com ícones
+        const ShadcnInput(
+          label: 'Localização',
+          placeholder: 'Digite seu endereço',
+          prefixIcon: Icon(Icons.location_on),
+        ),
+        const SizedBox(height: 16),
+        
+        // Input com validação customizada
+        ShadcnInput(
+          label: 'CEP',
+          placeholder: '00000-000',
+          inputType: ShadcnInputType.text,
+          prefixIcon: const Icon(Icons.location_on),
+          customValidator: (value) {
+            if (value == null || value.isEmpty) return null;
+            final cepRegex = RegExp(r'^\d{5}-?\d{3}$');
+            if (!cepRegex.hasMatch(value)) {
+              return 'CEP inválido. Use o formato 00000-000';
+            }
+            return null;
+          },
+          validateOnChange: true,
+        ),
+      ],
     );
   }
 

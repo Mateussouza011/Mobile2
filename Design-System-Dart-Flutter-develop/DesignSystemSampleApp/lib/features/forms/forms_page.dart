@@ -163,7 +163,7 @@ class _FormsPageState extends State<FormsPage> {
                           label: 'Marcado',
                           onChanged: (_) {},
                         ),
-                        ShadcnCheckbox(
+                        const ShadcnCheckbox(
                           value: false,
                           label: 'Desabilitado',
                           onChanged: null,
@@ -212,7 +212,7 @@ class _FormsPageState extends State<FormsPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text('Desabilitado', style: Theme.of(context).textTheme.bodySmall),
-                            ShadcnSwitch(value: false, onChanged: null),
+                            const ShadcnSwitch(value: false, onChanged: null),
                           ],
                         ),
                       ],

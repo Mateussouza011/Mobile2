@@ -10,11 +10,11 @@ import '../../features/tables/tables_page.dart';
 import '../../features/sliders/sliders_page.dart';
 import '../../features/modals/modals_page.dart';
 import '../../features/showcase/showcase_page.dart';
-import '../../features/settings/settings_page.dart';
 import '../../features/badges/badges_page.dart';
 import '../../features/progress/progress_page.dart';
 import '../../features/avatars/avatars_page.dart';
 import '../../features/forms/forms_page.dart';
+import '../../features/navigation/navigation_bars_page.dart';
 import '../../features/alerts/alerts_page.dart';
 
 /// Configuração de rotas usando GoRouter
@@ -46,8 +46,8 @@ class AppRouter {
           GoRoute(
             path: '/showcase',
             name: 'showcase',
-            pageBuilder: (context, state) => CustomTransitionPage(
-              child: const ComponentShowcasePage(),
+            pageBuilder: (context, state) => const CustomTransitionPage(
+              child: ComponentShowcasePage(),
               transitionsBuilder: _slideTransition,
             ),
           ),
@@ -55,8 +55,8 @@ class AppRouter {
           GoRoute(
             path: '/buttons',
             name: 'buttons',
-            pageBuilder: (context, state) => CustomTransitionPage(
-              child: const ButtonsPage(),
+            pageBuilder: (context, state) => const CustomTransitionPage(
+              child: ButtonsPage(),
               transitionsBuilder: _slideTransition,
             ),
           ),
@@ -64,8 +64,8 @@ class AppRouter {
           GoRoute(
             path: '/inputs',
             name: 'inputs',
-            pageBuilder: (context, state) => CustomTransitionPage(
-              child: const InputsPage(),
+            pageBuilder: (context, state) => const CustomTransitionPage(
+              child: InputsPage(),
               transitionsBuilder: _slideTransition,
             ),
           ),
@@ -73,8 +73,8 @@ class AppRouter {
           GoRoute(
             path: '/cards',
             name: 'cards',
-            pageBuilder: (context, state) => CustomTransitionPage(
-              child: const CardsPage(),
+            pageBuilder: (context, state) => const CustomTransitionPage(
+              child: CardsPage(),
               transitionsBuilder: _slideTransition,
             ),
           ),
@@ -82,8 +82,8 @@ class AppRouter {
           GoRoute(
             path: '/cards-and-lists',
             name: 'cards-and-lists',
-            pageBuilder: (context, state) => CustomTransitionPage(
-              child: const CardsAndListsPage(),
+            pageBuilder: (context, state) => const CustomTransitionPage(
+              child: CardsAndListsPage(),
               transitionsBuilder: _slideTransition,
             ),
           ),
@@ -91,8 +91,8 @@ class AppRouter {
           GoRoute(
             path: '/tables',
             name: 'tables',
-            pageBuilder: (context, state) => CustomTransitionPage(
-              child: const TablesPage(),
+            pageBuilder: (context, state) => const CustomTransitionPage(
+              child: TablesPage(),
               transitionsBuilder: _slideTransition,
             ),
           ),
@@ -100,8 +100,8 @@ class AppRouter {
           GoRoute(
             path: '/sliders',
             name: 'sliders',
-            pageBuilder: (context, state) => CustomTransitionPage(
-              child: const SlidersPage(),
+            pageBuilder: (context, state) => const CustomTransitionPage(
+              child: SlidersPage(),
               transitionsBuilder: _slideTransition,
             ),
           ),
@@ -109,17 +109,8 @@ class AppRouter {
           GoRoute(
             path: '/modals',
             name: 'modals',
-            pageBuilder: (context, state) => CustomTransitionPage(
-              child: const ModalsPage(),
-              transitionsBuilder: _slideTransition,
-            ),
-          ),
-          
-          GoRoute(
-            path: '/settings',
-            name: 'settings',
-            pageBuilder: (context, state) => CustomTransitionPage(
-              child: const SettingsPage(),
+            pageBuilder: (context, state) => const CustomTransitionPage(
+              child: ModalsPage(),
               transitionsBuilder: _slideTransition,
             ),
           ),
@@ -128,8 +119,8 @@ class AppRouter {
           GoRoute(
             path: '/badges',
             name: 'badges',
-            pageBuilder: (context, state) => CustomTransitionPage(
-              child: const BadgesPage(),
+            pageBuilder: (context, state) => const CustomTransitionPage(
+              child: BadgesPage(),
               transitionsBuilder: _slideTransition,
             ),
           ),
@@ -137,8 +128,8 @@ class AppRouter {
           GoRoute(
             path: '/progress',
             name: 'progress',
-            pageBuilder: (context, state) => CustomTransitionPage(
-              child: const ProgressPage(),
+            pageBuilder: (context, state) => const CustomTransitionPage(
+              child: ProgressPage(),
               transitionsBuilder: _slideTransition,
             ),
           ),
@@ -146,8 +137,8 @@ class AppRouter {
           GoRoute(
             path: '/avatars',
             name: 'avatars',
-            pageBuilder: (context, state) => CustomTransitionPage(
-              child: const AvatarsPage(),
+            pageBuilder: (context, state) => const CustomTransitionPage(
+              child: AvatarsPage(),
               transitionsBuilder: _slideTransition,
             ),
           ),
@@ -155,8 +146,17 @@ class AppRouter {
           GoRoute(
             path: '/forms',
             name: 'forms',
-            pageBuilder: (context, state) => CustomTransitionPage(
-              child: const FormsPage(),
+            pageBuilder: (context, state) => const CustomTransitionPage(
+              child: FormsPage(),
+              transitionsBuilder: _slideTransition,
+            ),
+          ),
+          
+          GoRoute(
+            path: '/navigation-bars',
+            name: 'navigation-bars',
+            pageBuilder: (context, state) => const CustomTransitionPage(
+              child: NavigationBarsPage(),
               transitionsBuilder: _slideTransition,
             ),
           ),
@@ -164,8 +164,8 @@ class AppRouter {
           GoRoute(
             path: '/alerts',
             name: 'alerts',
-            pageBuilder: (context, state) => CustomTransitionPage(
-              child: const AlertsPage(),
+            pageBuilder: (context, state) => const CustomTransitionPage(
+              child: AlertsPage(),
               transitionsBuilder: _slideTransition,
             ),
           ),

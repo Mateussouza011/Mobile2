@@ -253,48 +253,48 @@ class ShadcnSkeletonTemplates {
         border: Border.all(color: Colors.grey.shade300),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Header com avatar e nome
           Row(
             children: [
-              const ShadcnSkeleton.avatar(width: 40, height: 40),
-              const SizedBox(width: 12),
+              ShadcnSkeleton.avatar(width: 40, height: 40),
+              SizedBox(width: 12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ShadcnSkeleton.text(width: 100),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   ShadcnSkeleton.text(width: 80, height: 12),
                 ],
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           
           // Conteúdo do post
           ShadcnSkeleton.text(width: double.infinity),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           ShadcnSkeleton.text(width: 250),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           ShadcnSkeleton.text(width: 180),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           
           // Imagem
           ShadcnSkeleton.rounded(
             width: double.infinity,
             height: 200,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           
           // Ações
           Row(
             children: [
               ShadcnSkeleton.rounded(width: 60, height: 32),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               ShadcnSkeleton.rounded(width: 60, height: 32),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               ShadcnSkeleton.rounded(width: 60, height: 32),
             ],
           ),
@@ -305,21 +305,21 @@ class ShadcnSkeletonTemplates {
 
   /// Skeleton para item de lista
   static Widget listItem() {
-    return Row(
+    return const Row(
       children: [
-        const ShadcnSkeleton.avatar(width: 48, height: 48),
-        const SizedBox(width: 16),
+        ShadcnSkeleton.avatar(width: 48, height: 48),
+        SizedBox(width: 16),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ShadcnSkeleton.text(width: double.infinity),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               ShadcnSkeleton.text(width: 200, height: 12),
             ],
           ),
         ),
-        const SizedBox(width: 16),
+        SizedBox(width: 16),
         ShadcnSkeleton.rounded(width: 24, height: 24),
       ],
     );
@@ -332,7 +332,7 @@ class ShadcnSkeletonTemplates {
         border: Border.all(color: Colors.grey.shade300),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Imagem do produto
@@ -342,21 +342,21 @@ class ShadcnSkeletonTemplates {
           ),
           
           Padding(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Nome do produto
                 ShadcnSkeleton.text(width: double.infinity),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 
                 // Descrição
                 ShadcnSkeleton.text(width: 120, height: 12),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 
                 // Preço
                 ShadcnSkeleton.text(width: 80, height: 18),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 
                 // Botão
                 ShadcnSkeleton.rounded(
@@ -373,21 +373,21 @@ class ShadcnSkeletonTemplates {
 
   /// Skeleton para perfil de usuário
   static Widget userProfile() {
-    return Column(
+    return const Column(
       children: [
         // Avatar grande
-        const ShadcnSkeleton.avatar(width: 100, height: 100),
-        const SizedBox(height: 16),
+        ShadcnSkeleton.avatar(width: 100, height: 100),
+        SizedBox(height: 16),
         
         // Nome
         ShadcnSkeleton.text(width: 150, height: 20),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         
         // Bio
         ShadcnSkeleton.text(width: 200, height: 14),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         ShadcnSkeleton.text(width: 180, height: 14),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         
         // Estatísticas
         Row(
@@ -396,21 +396,21 @@ class ShadcnSkeletonTemplates {
             Column(
               children: [
                 ShadcnSkeleton.text(width: 30, height: 18),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 ShadcnSkeleton.text(width: 60, height: 12),
               ],
             ),
             Column(
               children: [
                 ShadcnSkeleton.text(width: 30, height: 18),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 ShadcnSkeleton.text(width: 60, height: 12),
               ],
             ),
             Column(
               children: [
                 ShadcnSkeleton.text(width: 30, height: 18),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 ShadcnSkeleton.text(width: 60, height: 12),
               ],
             ),

@@ -349,7 +349,7 @@ class _SelectDropdownState<T> extends State<_SelectDropdown<T>> {
     return GestureDetector(
       onTap: widget.onClose,
       behavior: HitTestBehavior.translucent,
-      child: Container(
+      child: SizedBox(
         width: double.infinity,
         height: double.infinity,
         child: CompositedTransformFollower(

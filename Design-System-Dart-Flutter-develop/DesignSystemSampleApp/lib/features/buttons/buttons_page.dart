@@ -181,7 +181,7 @@ class _ButtonsPageState extends State<ButtonsPage> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    ShadcnButton(
+                    const ShadcnButton(
                       text: 'Carregando...',
                       loading: true,
                       onPressed: null,
@@ -210,7 +210,7 @@ class _ButtonsPageState extends State<ButtonsPage> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    ShadcnButton(
+                    const ShadcnButton(
                       text: 'Desabilitado',
                       disabled: true,
                       onPressed: null,

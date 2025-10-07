@@ -246,15 +246,20 @@ class _ShadcnProgressState extends State<ShadcnProgress> with TickerProviderStat
         ],
         
         // Barra de progresso
-        Container(
-          height: height,
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(height / 2),
-          ),
-          child: widget.value == null 
-              ? _buildIndeterminateLinear(foregroundColor, height)
-              : _buildDeterminateLinear(foregroundColor, height),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            return Container(
+              height: height,
+              width: constraints.maxWidth.isFinite ? constraints.maxWidth : null,
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                borderRadius: BorderRadius.circular(height / 2),
+              ),
+              child: widget.value == null 
+                  ? _buildIndeterminateLinear(foregroundColor, height)
+                  : _buildDeterminateLinear(foregroundColor, height),
+            );
+          },
         ),
       ],
     );
@@ -281,25 +286,45 @@ class _ShadcnProgressState extends State<ShadcnProgress> with TickerProviderStat
   }
 
   Widget _buildIndeterminateLinear(Color foregroundColor, double height) {
-    return AnimatedBuilder(
-      animation: _indeterminateAnimation,
-      builder: (context, child) {
-        return Stack(
-          children: [
-            Positioned(
-              left: -100 + (_indeterminateAnimation.value * 200),
-              child: Container(
-                width: 100,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(height / 2),
+      child: AnimatedBuilder(
+        animation: _indeterminateAnimation,
+        builder: (context, child) {
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              if (!constraints.hasBoundedWidth || constraints.maxWidth.isInfinite) {
+                return const SizedBox.shrink();
+              }
+              
+              final width = constraints.maxWidth;
+              final indicatorWidth = width * 0.3; // 30% da largura total
+              final leftPosition = -indicatorWidth + (_indeterminateAnimation.value * (width + indicatorWidth));
+              
+              return SizedBox(
+                width: width,
                 height: height,
-                decoration: BoxDecoration(
-                  color: foregroundColor.withValues(alpha: 0.8),
-                  borderRadius: BorderRadius.circular(height / 2),
+                child: Stack(
+                  clipBehavior: Clip.hardEdge,
+                  children: [
+                    Positioned(
+                      left: leftPosition,
+                      child: Container(
+                        width: indicatorWidth,
+                        height: height,
+                        decoration: BoxDecoration(
+                          color: foregroundColor.withValues(alpha: 0.8),
+                          borderRadius: BorderRadius.circular(height / 2),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ),
-          ],
-        );
-      },
+              );
+            },
+          );
+        },
+      ),
     );
   }
 

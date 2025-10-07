@@ -441,9 +441,7 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
     }
     
     // Validação padrão por tipo
-    if (error == null) {
-      error = _getDefaultValidation(_controller.text);
-    }
+    error ??= _getDefaultValidation(_controller.text);
     
     // Validação do FormField
     if (error == null && widget.validator != null) {
@@ -708,7 +706,7 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
             if (digits.length >= 11) {
               return TextEditingValue(
                 text: '(${digits.substring(0, 2)}) ${digits.substring(2, 7)}-${digits.substring(7, 11)}',
-                selection: TextSelection.collapsed(offset: 15),
+                selection: const TextSelection.collapsed(offset: 15),
               );
             } else if (digits.length >= 10) {
               return TextEditingValue(

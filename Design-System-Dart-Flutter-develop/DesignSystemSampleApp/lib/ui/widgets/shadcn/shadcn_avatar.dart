@@ -51,42 +51,53 @@ class ShadcnAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     
-    return Container(
+    return SizedBox(
       width: _size,
       height: _size,
-      decoration: BoxDecoration(
-        color: backgroundColor ?? colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(_size / 2),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(_size / 2),
-        child: imageUrl != null
-            ? Image.network(
-                imageUrl!,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => _buildFallback(colorScheme),
-              )
-            : _buildFallback(colorScheme),
+      child: Container(
+        width: _size,
+        height: _size,
+        decoration: BoxDecoration(
+          color: backgroundColor ?? colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(_size / 2),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(_size / 2),
+          child: imageUrl != null
+              ? Image.network(
+                  imageUrl!,
+                  width: _size,
+                  height: _size,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => _buildFallback(colorScheme),
+                )
+              : _buildFallback(colorScheme),
+        ),
       ),
     );
   }
 
   Widget _buildFallback(ColorScheme colorScheme) {
-    return Center(
-      child: initials != null
-          ? Text(
-              initials!.toUpperCase(),
-              style: TextStyle(
+    return SizedBox(
+      width: _size,
+      height: _size,
+      child: Center(
+        child: initials != null
+            ? Text(
+                initials!.toUpperCase(),
+                style: TextStyle(
+                  color: colorScheme.onSurfaceVariant,
+                  fontSize: _fontSize,
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
+              )
+            : Icon(
+                Icons.person,
                 color: colorScheme.onSurfaceVariant,
-                fontSize: _fontSize,
-                fontWeight: FontWeight.w500,
+                size: _size * 0.6,
               ),
-            )
-          : Icon(
-              Icons.person,
-              color: colorScheme.onSurfaceVariant,
-              size: _size * 0.6,
-            ),
+      ),
     );
   }
 }

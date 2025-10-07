@@ -34,25 +34,25 @@ class AlertsPage extends StatelessWidget {
             'Diferentes tipos para diferentes situações',
             [
               const SizedBox(height: 20),
-              ShadcnAlert(
+              const ShadcnAlert(
                 title: 'Informação',
                 description: 'Este é um alert informativo com informações úteis.',
                 type: ShadcnAlertType.info,
               ),
               const SizedBox(height: 16),
-              ShadcnAlert(
+              const ShadcnAlert(
                 title: 'Sucesso',
                 description: 'Operação realizada com sucesso!',
                 type: ShadcnAlertType.success,
               ),
               const SizedBox(height: 16),
-              ShadcnAlert(
+              const ShadcnAlert(
                 title: 'Atenção',
                 description: 'Você deve prestar atenção nesta mensagem.',
                 type: ShadcnAlertType.warning,
               ),
               const SizedBox(height: 16),
-              ShadcnAlert(
+              const ShadcnAlert(
                 title: 'Erro',
                 description: 'Algo deu errado. Por favor, tente novamente.',
                 type: ShadcnAlertType.error,
@@ -68,28 +68,28 @@ class AlertsPage extends StatelessWidget {
             'Diferentes estilos visuais',
             [
               const SizedBox(height: 20),
-              ShadcnAlert(
+              const ShadcnAlert(
                 title: 'Alert Padrão',
                 description: 'Alert com estilo padrão.',
                 type: ShadcnAlertType.info,
                 variant: ShadcnAlertVariant.default_,
               ),
               const SizedBox(height: 16),
-              ShadcnAlert(
+              const ShadcnAlert(
                 title: 'Alert Preenchido',
                 description: 'Alert com fundo colorido.',
                 type: ShadcnAlertType.success,
                 variant: ShadcnAlertVariant.filled,
               ),
               const SizedBox(height: 16),
-              ShadcnAlert(
+              const ShadcnAlert(
                 title: 'Alert Contornado',
                 description: 'Alert apenas com borda.',
                 type: ShadcnAlertType.warning,
                 variant: ShadcnAlertVariant.outlined,
               ),
               const SizedBox(height: 16),
-              ShadcnAlert(
+              const ShadcnAlert(
                 title: 'Alert Minimal',
                 description: 'Alert com estilo minimalista.',
                 type: ShadcnAlertType.error,
@@ -229,7 +229,7 @@ class AlertsPage extends StatelessWidget {
             'Compatibilidade com versão anterior',
             [
               const SizedBox(height: 20),
-              ShadcnAlert(
+              const ShadcnAlert(
                 title: 'Erro',
                 description: 'Ocorreu um erro durante a operação.',
                 icon: Icon(Icons.error_outline),
@@ -246,7 +246,7 @@ class AlertsPage extends StatelessWidget {
             'Alerts sem ícones',
             [
               const SizedBox(height: 20),
-              ShadcnAlert(
+              const ShadcnAlert(
                 title: 'Alert sem ícone',
                 description: 'Este alert não tem ícone.',
                 type: ShadcnAlertType.info,
@@ -263,18 +263,18 @@ class AlertsPage extends StatelessWidget {
             'Alerts com ícones customizados',
             [
               const SizedBox(height: 20),
-              ShadcnAlert(
+              const ShadcnAlert(
                 title: 'Upload Completo',
                 description: 'Seu arquivo foi enviado com sucesso.',
                 type: ShadcnAlertType.success,
-                icon: const Icon(Icons.cloud_upload),
+                icon: Icon(Icons.cloud_upload),
               ),
               const SizedBox(height: 16),
-              ShadcnAlert(
+              const ShadcnAlert(
                 title: 'Bateria Baixa',
                 description: 'Conecte o dispositivo ao carregador.',
                 type: ShadcnAlertType.warning,
-                icon: const Icon(Icons.battery_alert),
+                icon: Icon(Icons.battery_alert),
               ),
             ],
           ),

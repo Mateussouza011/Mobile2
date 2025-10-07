@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../ui/widgets/shadcn/shadcn_slider.dart';
 
 class SlidersPage extends StatefulWidget {
   const SlidersPage({super.key});
@@ -10,6 +11,9 @@ class SlidersPage extends StatefulWidget {
 class _SlidersPageState extends State<SlidersPage> {
   double _basicSlider = 50;
   double _labeledSlider = 30;
+  double _volumeValue = 50.0;
+  double _temperatureValue = 22.0;
+  RangeValues _priceRange = const RangeValues(100, 500);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +23,7 @@ class _SlidersPageState extends State<SlidersPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Sliders',
+          'Controles Deslizantes',
           style: textTheme.titleLarge?.copyWith(
             color: colorScheme.onSurface,
             fontWeight: FontWeight.w600,
@@ -42,8 +46,91 @@ class _SlidersPageState extends State<SlidersPage> {
           
           // Slider com label
           _buildLabeledSlider(context),
+          
+          const SizedBox(height: 32),
+          
+          // Sliders e Controles (seção movida de inputs)
+          _buildSection(
+            context,
+            'Sliders e Controles',
+            'Controles deslizantes para valores numéricos',
+            [
+              const SizedBox(height: 20),
+              ShadcnVolumeSlider(
+                value: _volumeValue,
+                onChanged: (value) {
+                  setState(() {
+                    _volumeValue = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 24),
+              
+              ShadcnTemperatureSlider(
+                value: _temperatureValue,
+                onChanged: (value) {
+                  setState(() {
+                    _temperatureValue = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 24),
+              
+              ShadcnPriceRangeSlider(
+                values: _priceRange,
+                min: 0,
+                max: 1000,
+                onChanged: (values) {
+                  setState(() {
+                    _priceRange = values;
+                  });
+                },
+              ),
+              const SizedBox(height: 24),
+              
+              // Slider customizado
+              ShadcnSlider.single(
+                value: 75,
+                onChanged: (value) {},
+                min: 0,
+                max: 100,
+                divisions: 10,
+                label: 'Progresso',
+                labelFormatter: (value) => '${value.toInt()}%',
+                showTicks: true,
+                leadingWidget: Icon(Icons.speed, color: colorScheme.primary),
+              ),
+            ],
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _buildSection(BuildContext context, String title, String description, List<Widget> children) {
+    final colorScheme = Theme.of(context).colorScheme;
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            color: colorScheme.onSurface,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        if (description.isNotEmpty) ...[
+          const SizedBox(height: 4),
+          Text(
+            description,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+        ...children,
+      ],
     );
   }
 

@@ -559,13 +559,13 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
                 // Progress indeterminado
                 const Text('Loading Indeterminado:'),
                 const SizedBox(height: 12),
-                Row(
+                const Row(
                   children: [
-                    const ShadcnProgress.indeterminate(
+                    ShadcnProgress.indeterminate(
                       type: ShadcnProgressType.linear,
                     ),
-                    const SizedBox(width: 16),
-                    const ShadcnProgress.indeterminate(
+                    SizedBox(width: 16),
+                    ShadcnProgress.indeterminate(
                       type: ShadcnProgressType.circular,
                       size: ShadcnProgressSize.sm,
                     ),
@@ -703,11 +703,11 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
                 const SizedBox(height: 20),
                 
                 // Exemplo de seção com separadores
-                ShadcnSection(
+                const ShadcnSection(
                   title: 'Configurações de Conta',
                   subtitle: 'Gerencie suas preferências pessoais',
                   showTopSeparator: true,
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -740,8 +740,8 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
                 // FAQ Accordion
                 const Text('FAQ Accordion:'),
                 const SizedBox(height: 12),
-                ShadcnFAQAccordion(
-                  faqs: const [
+                const ShadcnFAQAccordion(
+                  faqs: [
                     (question: 'Como usar o Design System?', answer: 'O Design System Flutter fornece componentes reutilizáveis que seguem as diretrizes do Shadcn/UI.'),
                     (question: 'Os componentes são customizáveis?', answer: 'Sim! Todos os componentes oferecem várias propriedades para personalização de cores, tamanhos e comportamentos.'),
                     (question: 'Como contribuir?', answer: 'Você pode contribuir criando issues, enviando pull requests ou sugerindo melhorias na documentação.'),

@@ -5,7 +5,6 @@ import '../../DesignSystem/Samples/actionButtonSampleScreen/action_button_sample
 import '../../DesignSystem/Samples/bottomTabBarSampleScreen/bottom_tab_bar_sample_screen.dart';
 import '../../DesignSystem/Samples/inputFieldSampleScreen/input_field_sample_screen.dart';
 import '../../DesignSystem/Samples/linkedLabelSampleScreen/linked_label_sample_screen.dart';
-import '../../DesignSystem/Samples/tabComponentSampleScreen/tab_sample_screen.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -70,13 +69,13 @@ class HomePage extends StatelessWidget {
                     context,
                     'Action Button',
                     Icons.touch_app,
-                    () => _navigateToComponent(context, ActionButtonPage()),
+                    () => _navigateToComponent(context, const ActionButtonPage()),
                   ),
                   _buildComponentCard(
                     context,
                     'Bottom Tab Bar',
                     Icons.tab,
-                    () => _navigateToComponent(context, BottomTabBarPage()),
+                    () => _navigateToComponent(context, const BottomTabBarPage()),
                   ),
                   _buildComponentCard(
                     context,
@@ -88,13 +87,7 @@ class HomePage extends StatelessWidget {
                     context,
                     'Linked Label',
                     Icons.link,
-                    () => _navigateToComponent(context, LinkedLabelPage()),
-                  ),
-                  _buildComponentCard(
-                    context,
-                    'Tab Component',
-                    Icons.tab_unselected,
-                    () => _navigateToComponent(context, TabPage()),
+                    () => _navigateToComponent(context, const LinkedLabelPage()),
                   ),
                   _buildComponentCard(
                     context,
