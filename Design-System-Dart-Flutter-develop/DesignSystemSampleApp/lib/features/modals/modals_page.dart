@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_button.dart';
 import '../../ui/widgets/shadcn/shadcn_dialog.dart';
-import '../../ui/widgets/shadcn/shadcn_accordion.dart';
 
 class ModalsPage extends StatelessWidget {
   const ModalsPage({super.key});
@@ -48,10 +47,6 @@ class ModalsPage extends StatelessWidget {
           // Seção de Modais
           _buildModalsSection(context),
           
-          const SizedBox(height: 32),
-          
-          // Seção de Navigation & Accordion
-          _buildAccordionSection(context),
         ],
       ),
     );
@@ -417,149 +412,6 @@ class ModalsPage extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ],
-    );
-  }
-
-  Widget _buildAccordionSection(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-    
-    return Card(
-      color: colorScheme.surface,
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-        side: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Navigation & Accordion',
-              style: textTheme.titleMedium?.copyWith(
-                color: colorScheme.onSurface,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Componentes expansíveis para organizar conteúdo de forma hierárquica.',
-              style: textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 24),
-            
-            // FAQ Accordion
-            Text(
-              'FAQ Accordion:',
-              style: textTheme.titleSmall?.copyWith(
-                color: colorScheme.onSurface,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 12),
-            const ShadcnFAQAccordion(
-              faqs: [
-                (question: 'Como usar o Design System?', answer: 'O Design System Flutter fornece componentes reutilizáveis que seguem as diretrizes do Shadcn/UI.'),
-                (question: 'Os componentes são customizáveis?', answer: 'Sim! Todos os componentes oferecem várias propriedades para personalização de cores, tamanhos e comportamentos.'),
-                (question: 'Como contribuir?', answer: 'Você pode contribuir criando issues, enviando pull requests ou sugerindo melhorias na documentação.'),
-                (question: 'É possível usar em produção?', answer: 'O sistema está em desenvolvimento ativo. Recomenda-se testar adequadamente antes do uso em produção.'),
-                (question: 'Suporte a temas?', answer: 'Sim! O sistema suporta temas claro e escuro, com cores que se adaptam automaticamente.'),
-              ],
-            ),
-            const SizedBox(height: 24),
-            
-            // Settings Accordion
-            Text(
-              'Settings Accordion:',
-              style: textTheme.titleSmall?.copyWith(
-                color: colorScheme.onSurface,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 12),
-            ShadcnSettingsAccordion(
-              sections: [
-                (
-                  title: 'Aparência',
-                  description: 'Personalizar tema e layout',
-                  settings: [
-                    ListTile(
-                      title: const Text('Tema Escuro'),
-                      subtitle: const Text('Ativar modo escuro'),
-                      trailing: Switch(value: false, onChanged: (_) {}),
-                    ),
-                    ListTile(
-                      title: const Text('Tamanho da Fonte'),
-                      subtitle: const Text('Ajustar legibilidade'),
-                      trailing: DropdownButton<String>(
-                        value: 'Médio',
-                        items: ['Pequeno', 'Médio', 'Grande'].map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (_) {},
-                      ),
-                    ),
-                    ListTile(
-                      title: const Text('Animações'),
-                      subtitle: const Text('Reduzir movimento'),
-                      trailing: Switch(value: true, onChanged: (_) {}),
-                    ),
-                  ],
-                ),
-                (
-                  title: 'Notificações',
-                  description: 'Controlar alertas e lembretes',
-                  settings: [
-                    ListTile(
-                      title: const Text('Push Notifications'),
-                      subtitle: const Text('Receber notificações push'),
-                      trailing: Switch(value: true, onChanged: (_) {}),
-                    ),
-                    ListTile(
-                      title: const Text('Email Notifications'),
-                      subtitle: const Text('Receber emails informativos'),
-                      trailing: Switch(value: false, onChanged: (_) {}),
-                    ),
-                    ListTile(
-                      title: const Text('SMS Alerts'),
-                      subtitle: const Text('Alertas por mensagem'),
-                      trailing: Switch(value: false, onChanged: (_) {}),
-                    ),
-                  ],
-                ),
-                (
-                  title: 'Privacidade',
-                  description: 'Configurações de segurança e dados',
-                  settings: [
-                    ListTile(
-                      title: const Text('Coleta de Dados'),
-                      subtitle: const Text('Permitir análise de uso'),
-                      trailing: Switch(value: true, onChanged: (_) {}),
-                    ),
-                    ListTile(
-                      title: const Text('Localização'),
-                      subtitle: const Text('Usar localização do dispositivo'),
-                      trailing: Switch(value: false, onChanged: (_) {}),
-                    ),
-                    const ListTile(
-                      title: Text('Gerenciar Dados'),
-                      subtitle: Text('Exportar ou excluir dados'),
-                      trailing: Icon(Icons.arrow_forward_ios, size: 16),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 

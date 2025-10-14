@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_input.dart';
 import '../../ui/widgets/shadcn/shadcn_form.dart';
-import '../../ui/widgets/shadcn/shadcn_button.dart';
 
 class InputsPage extends StatefulWidget {
   const InputsPage({super.key});
@@ -212,34 +211,6 @@ class _InputsPageState extends State<InputsPage> {
                       placeholder: '(00) 00000-0000',
                       keyboardType: TextInputType.phone,
                       prefixIcon: Icon(Icons.phone_outlined),
-                    ),
-                    const SizedBox(height: 24),
-                    
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ShadcnButton(
-                            text: 'Limpar',
-                            variant: ShadcnButtonVariant.outline,
-                            onPressed: () {
-                              _formKey.currentState?.reset();
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: ShadcnButton(
-                            text: 'Validar',
-                            onPressed: () {
-                              if (_formKey.currentState?.validate() ?? false) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Formulário válido!')),
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                      ],
                     ),
                   ],
                 ),
