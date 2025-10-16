@@ -10,7 +10,6 @@ class InputsPage extends StatefulWidget {
 }
 
 class _InputsPageState extends State<InputsPage> {
-  final _formKey = GlobalKey<FormState>();
   final _disabledController = TextEditingController(text: 'Campo desabilitado');
   bool _obscurePassword = true;
 
@@ -27,7 +26,7 @@ class _InputsPageState extends State<InputsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Inputs & Forms',
+          'Inputs',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             color: colorScheme.onSurface,
             fontWeight: FontWeight.w600,
@@ -109,15 +108,8 @@ class _InputsPageState extends State<InputsPage> {
               ),
               const SizedBox(height: 16),
               
-              ShadcnCepInput(
+              const ShadcnCepInput(
                 placeholder: '00000-000',
-                onAddressFound: (address) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Endereço encontrado: ${address['street']}'),
-                    ),
-                  );
-                },
               ),
             ],
           ),
@@ -166,126 +158,8 @@ class _InputsPageState extends State<InputsPage> {
               ),
             ],
           ),
-
-          const SizedBox(height: 32),
-          
-          // Formulário Completo
-          _buildSection(
-            context,
-            'Formulário Completo',
-            'Exemplo de formulário com validação',
-            [
-              const SizedBox(height: 20),
-              ShadcnForm(
-                formKey: _formKey,
-                child: Column(
-                  children: [
-                    const ShadcnFormField(
-                      name: 'nome',
-                      label: 'Nome',
-                      placeholder: 'Digite seu nome',
-                      required: true,
-                      prefixIcon: Icon(Icons.person_outline),
-                    ),
-                    const SizedBox(height: 16),
-                    
-                    ShadcnFormField(
-                      name: 'email',
-                      label: 'Email',
-                      placeholder: 'Digite seu email',
-                      required: true,
-                      keyboardType: TextInputType.emailAddress,
-                      prefixIcon: const Icon(Icons.email_outlined),
-                      validator: (value) {
-                        if (value != null && !value.contains('@')) {
-                          return 'Email inválido';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    
-                    const ShadcnFormField(
-                      name: 'telefone',
-                      label: 'Telefone',
-                      placeholder: '(00) 00000-0000',
-                      keyboardType: TextInputType.phone,
-                      prefixIcon: Icon(Icons.phone_outlined),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 32),
-          
-          // Inputs Avançados
-          _buildAdvancedInputs(context),
         ],
       ),
-    );
-  }
-
-  Widget _buildAdvancedInputs(BuildContext context) {
-    return _buildSection(
-      context,
-      'Inputs Avançados',
-      'Inputs especializados com validações customizadas',
-      [
-        const SizedBox(height: 20),
-        
-        // Input padrão simples
-        const ShadcnInput(
-          label: 'Nome',
-          placeholder: 'Digite seu nome',
-        ),
-        const SizedBox(height: 16),
-        
-        // Input para email com validação automática
-        const ShadcnInput.email(
-          label: 'Email',
-        ),
-        const SizedBox(height: 16),
-        
-        // Input para senha com toggle automático
-        const ShadcnInput.password(
-          label: 'Senha',
-          helperText: 'Mínimo 8 caracteres',
-        ),
-        const SizedBox(height: 16),
-        
-        // Input de busca
-        const ShadcnInput.search(
-          placeholder: 'Buscar...',
-        ),
-        const SizedBox(height: 16),
-        
-        // Input com ícones
-        const ShadcnInput(
-          label: 'Localização',
-          placeholder: 'Digite seu endereço',
-          prefixIcon: Icon(Icons.location_on),
-        ),
-        const SizedBox(height: 16),
-        
-        // Input com validação customizada
-        ShadcnInput(
-          label: 'CEP',
-          placeholder: '00000-000',
-          inputType: ShadcnInputType.text,
-          prefixIcon: const Icon(Icons.location_on),
-          customValidator: (value) {
-            if (value == null || value.isEmpty) return null;
-            final cepRegex = RegExp(r'^\d{5}-?\d{3}$');
-            if (!cepRegex.hasMatch(value)) {
-              return 'CEP inválido. Use o formato 00000-000';
-            }
-            return null;
-          },
-          validateOnChange: true,
-        ),
-      ],
     );
   }
 

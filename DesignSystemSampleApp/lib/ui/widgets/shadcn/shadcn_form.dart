@@ -422,13 +422,12 @@ class ShadcnPhoneInput extends StatelessWidget {
   }
 }
 
-/// Input de CEP com busca automática
-class ShadcnCepInput extends StatefulWidget {
+/// Input de CEP
+class ShadcnCepInput extends StatelessWidget {
   final String? label;
   final String? placeholder;
   final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
-  final ValueChanged<Map<String, String>>? onAddressFound;
   final FormFieldValidator<String>? validator;
 
   const ShadcnCepInput({
@@ -437,75 +436,24 @@ class ShadcnCepInput extends StatefulWidget {
     this.placeholder = '00000-000',
     this.controller,
     this.onChanged,
-    this.onAddressFound,
     this.validator,
   });
-
-  @override
-  State<ShadcnCepInput> createState() => _ShadcnCepInputState();
-}
-
-class _ShadcnCepInputState extends State<ShadcnCepInput> {
-  bool _isLoading = false;
-
-  void _onCepChanged(String value) {
-    widget.onChanged?.call(value);
-    
-    String cep = value.replaceAll(RegExp(r'\D'), '');
-    if (cep.length == 8) {
-      _searchAddress(cep);
-    }
-  }
-
-  Future<void> _searchAddress(String cep) async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      // Simular busca de endereço
-      await Future.delayed(const Duration(seconds: 1));
-      
-      // Mock de dados de endereço
-      final address = {
-        'street': 'Rua das Flores, 123',
-        'district': 'Centro',
-        'city': 'São Paulo',
-        'state': 'SP',
-      };
-      
-      widget.onAddressFound?.call(address);
-    } catch (e) {
-      // Handle error
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return ShadcnFormField(
       name: 'cep',
-      label: widget.label,
-      placeholder: widget.placeholder,
-      controller: widget.controller,
-      onChanged: _onCepChanged,
-      validator: widget.validator,
+      label: label,
+      placeholder: placeholder,
+      controller: controller,
+      onChanged: onChanged,
+      validator: validator,
       keyboardType: TextInputType.number,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
         CepInputFormatter(),
       ],
       prefixIcon: const Icon(Icons.location_on_outlined),
-      suffixIcon: _isLoading 
-          ? const SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            )
-          : null,
     );
   }
 }
