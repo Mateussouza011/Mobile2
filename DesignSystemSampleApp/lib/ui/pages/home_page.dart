@@ -64,13 +64,6 @@ class HomePage extends StatelessWidget {
                   children: [
                     _buildListButton(
                       context,
-                      'Demonstração',
-                      Icons.auto_awesome,
-                      () => context.go('/showcase'),
-                    ),
-                    const SizedBox(height: 12),
-                    _buildListButton(
-                      context,
                       'Botão',
                       Icons.smart_button,
                       () => context.go('/buttons'),

@@ -9,7 +9,6 @@ import '../../features/cards/cards_and_lists_page.dart';
 import '../../features/tables/tables_page.dart';
 import '../../features/sliders/sliders_page.dart';
 import '../../features/modals/modals_page.dart';
-import '../../features/showcase/showcase_page.dart';
 import '../../features/badges/badges_page.dart';
 import '../../features/progress/progress_page.dart';
 import '../../features/avatars/avatars_page.dart';
@@ -43,15 +42,6 @@ class AppRouter {
           ),
           
           // Seções de componentes
-          GoRoute(
-            path: '/showcase',
-            name: 'showcase',
-            pageBuilder: (context, state) => const CustomTransitionPage(
-              child: ComponentShowcasePage(),
-              transitionsBuilder: _slideTransition,
-            ),
-          ),
-          
           GoRoute(
             path: '/buttons',
             name: 'buttons',
