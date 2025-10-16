@@ -152,13 +152,6 @@ class HomePage extends StatelessWidget {
                       Icons.notification_important,
                       () => context.go('/alerts'),
                     ),
-                    const SizedBox(height: 12),
-                    _buildListButton(
-                      context,
-                      '🎨 Delegates (Padrão)',
-                      Icons.architecture,
-                      () => context.go('/delegates'),
-                    ),
                   ],
                 ),
               ),

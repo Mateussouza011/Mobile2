@@ -15,7 +15,6 @@ import '../../features/avatars/avatars_page.dart';
 import '../../features/forms/forms_page.dart';
 import '../../features/navigation/navigation_bars_page.dart';
 import '../../features/alerts/alerts_page.dart';
-import '../../features/delegates/delegates_demo_page.dart';
 
 /// Configuração de rotas usando GoRouter
 class AppRouter {
@@ -157,15 +156,6 @@ class AppRouter {
             name: 'alerts',
             pageBuilder: (context, state) => const CustomTransitionPage(
               child: AlertsPage(),
-              transitionsBuilder: _slideTransition,
-            ),
-          ),
-          
-          GoRoute(
-            path: '/delegates',
-            name: 'delegates',
-            pageBuilder: (context, state) => const CustomTransitionPage(
-              child: DelegatesTestPage(),
               transitionsBuilder: _slideTransition,
             ),
           ),

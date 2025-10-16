@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_input.dart';
 import '../../ui/widgets/shadcn/shadcn_form.dart';
+import '../../ui/widgets/shadcn/shadcn_select.dart';
 
 class InputsPage extends StatefulWidget {
   const InputsPage({super.key});
@@ -10,9 +11,10 @@ class InputsPage extends StatefulWidget {
 }
 
 class _InputsPageState extends State<InputsPage> {
-  final _formKey = GlobalKey<FormState>();
   final _disabledController = TextEditingController(text: 'Campo desabilitado');
   bool _obscurePassword = true;
+  String? _selectedCountry;
+  String? _selectedCity;
 
   @override
   void dispose() {
@@ -27,7 +29,7 @@ class _InputsPageState extends State<InputsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Inputs & Forms',
+          'Inputs',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             color: colorScheme.onSurface,
             fontWeight: FontWeight.w600,
@@ -109,15 +111,109 @@ class _InputsPageState extends State<InputsPage> {
               ),
               const SizedBox(height: 16),
               
-              ShadcnCepInput(
+              const ShadcnCepInput(
                 placeholder: '00000-000',
-                onAddressFound: (address) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Endereço encontrado: ${address['street']}'),
-                    ),
-                  );
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 32),
+          
+          // Dropdowns
+          _buildSection(
+            context,
+            'Dropdowns',
+            'Selects e menus suspensos com busca',
+            [
+              const SizedBox(height: 20),
+              ShadcnSelect<String>(
+                label: 'Selecione um País',
+                placeholder: 'Escolha um país',
+                value: _selectedCountry,
+                prefixIcon: const Icon(Icons.public),
+                options: const [
+                  ShadcnSelectOption(
+                    value: 'br',
+                    label: 'Brasil',
+                    icon: Text('🇧🇷'),
+                  ),
+                  ShadcnSelectOption(
+                    value: 'us',
+                    label: 'Estados Unidos',
+                    icon: Text('🇺🇸'),
+                  ),
+                  ShadcnSelectOption(
+                    value: 'uk',
+                    label: 'Reino Unido',
+                    icon: Text('🇬🇧'),
+                  ),
+                  ShadcnSelectOption(
+                    value: 'fr',
+                    label: 'França',
+                    icon: Text('🇫🇷'),
+                  ),
+                  ShadcnSelectOption(
+                    value: 'de',
+                    label: 'Alemanha',
+                    icon: Text('🇩🇪'),
+                  ),
+                  ShadcnSelectOption(
+                    value: 'jp',
+                    label: 'Japão',
+                    icon: Text('🇯🇵'),
+                  ),
+                  ShadcnSelectOption(
+                    value: 'ca',
+                    label: 'Canadá',
+                    icon: Text('🇨🇦'),
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _selectedCountry = value;
+                  });
                 },
+              ),
+              const SizedBox(height: 16),
+              
+              ShadcnSelect<String>(
+                label: 'Cidade com Busca',
+                placeholder: 'Selecione uma cidade',
+                value: _selectedCity,
+                searchable: true,
+                searchHint: 'Digite para buscar...',
+                prefixIcon: const Icon(Icons.location_city),
+                helperText: 'Use a busca para encontrar rapidamente',
+                options: const [
+                  ShadcnSelectOption(value: 'sp', label: 'São Paulo'),
+                  ShadcnSelectOption(value: 'rj', label: 'Rio de Janeiro'),
+                  ShadcnSelectOption(value: 'bh', label: 'Belo Horizonte'),
+                  ShadcnSelectOption(value: 'bsb', label: 'Brasília'),
+                  ShadcnSelectOption(value: 'salvador', label: 'Salvador'),
+                  ShadcnSelectOption(value: 'fortaleza', label: 'Fortaleza'),
+                  ShadcnSelectOption(value: 'curitiba', label: 'Curitiba'),
+                  ShadcnSelectOption(value: 'recife', label: 'Recife'),
+                  ShadcnSelectOption(value: 'porto_alegre', label: 'Porto Alegre'),
+                  ShadcnSelectOption(value: 'manaus', label: 'Manaus'),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _selectedCity = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              
+              const ShadcnSelect<String>(
+                label: 'Dropdown Desabilitado',
+                placeholder: 'Campo não editável',
+                enabled: false,
+                prefixIcon: Icon(Icons.lock_outline),
+                options: [
+                  ShadcnSelectOption(value: '1', label: 'Opção 1'),
+                  ShadcnSelectOption(value: '2', label: 'Opção 2'),
+                ],
+                helperText: 'Este campo está desabilitado',
               ),
             ],
           ),
@@ -169,58 +265,7 @@ class _InputsPageState extends State<InputsPage> {
 
           const SizedBox(height: 32),
           
-          // Formulário Completo
-          _buildSection(
-            context,
-            'Formulário Completo',
-            'Exemplo de formulário com validação',
-            [
-              const SizedBox(height: 20),
-              ShadcnForm(
-                formKey: _formKey,
-                child: Column(
-                  children: [
-                    const ShadcnFormField(
-                      name: 'nome',
-                      label: 'Nome',
-                      placeholder: 'Digite seu nome',
-                      required: true,
-                      prefixIcon: Icon(Icons.person_outline),
-                    ),
-                    const SizedBox(height: 16),
-                    
-                    ShadcnFormField(
-                      name: 'email',
-                      label: 'Email',
-                      placeholder: 'Digite seu email',
-                      required: true,
-                      keyboardType: TextInputType.emailAddress,
-                      prefixIcon: const Icon(Icons.email_outlined),
-                      validator: (value) {
-                        if (value != null && !value.contains('@')) {
-                          return 'Email inválido';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    
-                    const ShadcnFormField(
-                      name: 'telefone',
-                      label: 'Telefone',
-                      placeholder: '(00) 00000-0000',
-                      keyboardType: TextInputType.phone,
-                      prefixIcon: Icon(Icons.phone_outlined),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 32),
-          
-          // Inputs Avançados
+          // Validações Customizadas
           _buildAdvancedInputs(context),
         ],
       ),
@@ -230,51 +275,18 @@ class _InputsPageState extends State<InputsPage> {
   Widget _buildAdvancedInputs(BuildContext context) {
     return _buildSection(
       context,
-      'Inputs Avançados',
-      'Inputs especializados com validações customizadas',
+      'Validações Customizadas',
+      'Inputs com validações personalizadas em tempo real',
       [
         const SizedBox(height: 20),
         
-        // Input padrão simples
-        const ShadcnInput(
-          label: 'Nome',
-          placeholder: 'Digite seu nome',
-        ),
-        const SizedBox(height: 16),
-        
-        // Input para email com validação automática
-        const ShadcnInput.email(
-          label: 'Email',
-        ),
-        const SizedBox(height: 16),
-        
-        // Input para senha com toggle automático
-        const ShadcnInput.password(
-          label: 'Senha',
-          helperText: 'Mínimo 8 caracteres',
-        ),
-        const SizedBox(height: 16),
-        
-        // Input de busca
-        const ShadcnInput.search(
-          placeholder: 'Buscar...',
-        ),
-        const SizedBox(height: 16),
-        
-        // Input com ícones
-        const ShadcnInput(
-          label: 'Localização',
-          placeholder: 'Digite seu endereço',
-          prefixIcon: Icon(Icons.location_on),
-        ),
-        const SizedBox(height: 16),
-        
-        // Input com validação customizada
+        // Input com validação customizada de CEP
         ShadcnInput(
           label: 'CEP',
           placeholder: '00000-000',
           inputType: ShadcnInputType.text,
           prefixIcon: const Icon(Icons.location_on),
+          helperText: 'Validação automática de formato',
           customValidator: (value) {
             if (value == null || value.isEmpty) return null;
             final cepRegex = RegExp(r'^\d{5}-?\d{3}$');
