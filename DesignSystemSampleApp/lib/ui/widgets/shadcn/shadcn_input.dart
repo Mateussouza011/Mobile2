@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'delegates/shadcn_input_delegate.dart';
 
 /// Tipos de entrada personalizados
 enum ShadcnInputType {
@@ -119,6 +120,9 @@ class ShadcnInput extends StatefulWidget {
   final List<BoxShadow>? boxShadow;
   final double? elevation;
   
+  // Delegate para customização avançada
+  final ShadcnInputDelegate? delegate;
+  
   // Construtor principal
   const ShadcnInput({
     super.key,
@@ -183,6 +187,7 @@ class ShadcnInput extends StatefulWidget {
     this.gradient,
     this.boxShadow,
     this.elevation,
+    this.delegate,
   });
 
   // Construtores nomeados para casos específicos
