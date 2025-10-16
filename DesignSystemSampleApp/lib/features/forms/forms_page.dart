@@ -10,13 +10,13 @@ class FormsPage extends StatefulWidget {
 }
 
 class _FormsPageState extends State<FormsPage> {
-  bool _checkbox1 = false;
-  bool _checkbox2 = true;
-  bool _checkbox3 = false;
+  final bool _checkbox1 = false;
+  final bool _checkbox2 = true;
+  final bool _checkbox3 = false;
   
-  bool _switch1 = false;
-  bool _switch2 = true;
-  bool _switch3 = false;
+  final bool _switch1 = false;
+  final bool _switch2 = true;
+  final bool _switch3 = false;
 
   @override
   Widget build(BuildContext context) {
