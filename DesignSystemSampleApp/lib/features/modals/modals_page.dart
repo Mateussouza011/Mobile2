@@ -174,7 +174,9 @@ class ModalsPage extends StatelessWidget {
             text: 'Cancelar',
             variant: ShadcnButtonVariant.ghost,
             onPressed: () {
-              Navigator.of(context).pop();
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
               _showSnackBarMessage(context, 'Ação cancelada');
             },
           ),
@@ -182,7 +184,9 @@ class ModalsPage extends StatelessWidget {
           ShadcnButton(
             text: 'Confirmar',
             onPressed: () {
-              Navigator.of(context).pop();
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
               _showSnackBarMessage(context, 'Ação confirmada com sucesso!');
             },
           ),
@@ -284,7 +288,9 @@ class ModalsPage extends StatelessWidget {
           ShadcnButton(
             text: 'Ok, entendi',
             onPressed: () {
-              Navigator.of(context).pop();
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
               _showSnackBarMessage(context, 'Modal de informação fechado');
             },
           ),
@@ -325,12 +331,18 @@ class ModalsPage extends StatelessWidget {
           ShadcnButton(
             text: 'Cancelar',
             variant: ShadcnButtonVariant.outline,
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
+            },
           ),
           ShadcnButton(
             text: 'Confirmar',
             onPressed: () {
-              Navigator.of(context).pop();
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
               _showSnackBarMessage(context, 'Dialog Shadcn confirmado!');
             },
           ),
@@ -364,7 +376,9 @@ class ModalsPage extends StatelessWidget {
 
     // Simular carregamento
     Future.delayed(const Duration(seconds: 2), () {
-      Navigator.of(context).pop();
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+      }
       _showSnackBarMessage(context, 'Carregamento concluído!');
     });
   }
@@ -381,7 +395,9 @@ class ModalsPage extends StatelessWidget {
             title: const Text('Editar'),
             subtitle: const Text('Modificar este item'),
             onTap: () {
-              Navigator.of(context).pop();
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
               _showSnackBarMessage(context, 'Editar selecionado');
             },
           ),
@@ -390,7 +406,9 @@ class ModalsPage extends StatelessWidget {
             title: const Text('Compartilhar'),
             subtitle: const Text('Enviar para outros'),
             onTap: () {
-              Navigator.of(context).pop();
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
               _showSnackBarMessage(context, 'Compartilhar selecionado');
             },
           ),
@@ -399,7 +417,9 @@ class ModalsPage extends StatelessWidget {
             title: const Text('Excluir'),
             subtitle: const Text('Remover permanentemente'),
             onTap: () {
-              Navigator.of(context).pop();
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
               _showSnackBarMessage(context, 'Excluir selecionado');
             },
           ),
@@ -409,7 +429,11 @@ class ModalsPage extends StatelessWidget {
         ShadcnButton(
           text: 'Fechar',
           variant: ShadcnButtonVariant.outline,
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            }
+          },
         ),
       ],
     );

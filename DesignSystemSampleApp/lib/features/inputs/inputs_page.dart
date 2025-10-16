@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_input.dart';
 import '../../ui/widgets/shadcn/shadcn_form.dart';
-import '../../ui/widgets/shadcn/shadcn_select.dart';
 
 class InputsPage extends StatefulWidget {
   const InputsPage({super.key});
@@ -13,8 +12,6 @@ class InputsPage extends StatefulWidget {
 class _InputsPageState extends State<InputsPage> {
   final _disabledController = TextEditingController(text: 'Campo desabilitado');
   bool _obscurePassword = true;
-  String? _selectedCountry;
-  String? _selectedCity;
 
   @override
   void dispose() {
@@ -119,107 +116,6 @@ class _InputsPageState extends State<InputsPage> {
 
           const SizedBox(height: 32),
           
-          // Dropdowns
-          _buildSection(
-            context,
-            'Dropdowns',
-            'Selects e menus suspensos com busca',
-            [
-              const SizedBox(height: 20),
-              ShadcnSelect<String>(
-                label: 'Selecione um País',
-                placeholder: 'Escolha um país',
-                value: _selectedCountry,
-                prefixIcon: const Icon(Icons.public),
-                options: const [
-                  ShadcnSelectOption(
-                    value: 'br',
-                    label: 'Brasil',
-                    icon: Text('🇧🇷'),
-                  ),
-                  ShadcnSelectOption(
-                    value: 'us',
-                    label: 'Estados Unidos',
-                    icon: Text('🇺🇸'),
-                  ),
-                  ShadcnSelectOption(
-                    value: 'uk',
-                    label: 'Reino Unido',
-                    icon: Text('🇬🇧'),
-                  ),
-                  ShadcnSelectOption(
-                    value: 'fr',
-                    label: 'França',
-                    icon: Text('🇫🇷'),
-                  ),
-                  ShadcnSelectOption(
-                    value: 'de',
-                    label: 'Alemanha',
-                    icon: Text('🇩🇪'),
-                  ),
-                  ShadcnSelectOption(
-                    value: 'jp',
-                    label: 'Japão',
-                    icon: Text('🇯🇵'),
-                  ),
-                  ShadcnSelectOption(
-                    value: 'ca',
-                    label: 'Canadá',
-                    icon: Text('🇨🇦'),
-                  ),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedCountry = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
-              
-              ShadcnSelect<String>(
-                label: 'Cidade com Busca',
-                placeholder: 'Selecione uma cidade',
-                value: _selectedCity,
-                searchable: true,
-                searchHint: 'Digite para buscar...',
-                prefixIcon: const Icon(Icons.location_city),
-                helperText: 'Use a busca para encontrar rapidamente',
-                options: const [
-                  ShadcnSelectOption(value: 'sp', label: 'São Paulo'),
-                  ShadcnSelectOption(value: 'rj', label: 'Rio de Janeiro'),
-                  ShadcnSelectOption(value: 'bh', label: 'Belo Horizonte'),
-                  ShadcnSelectOption(value: 'bsb', label: 'Brasília'),
-                  ShadcnSelectOption(value: 'salvador', label: 'Salvador'),
-                  ShadcnSelectOption(value: 'fortaleza', label: 'Fortaleza'),
-                  ShadcnSelectOption(value: 'curitiba', label: 'Curitiba'),
-                  ShadcnSelectOption(value: 'recife', label: 'Recife'),
-                  ShadcnSelectOption(value: 'porto_alegre', label: 'Porto Alegre'),
-                  ShadcnSelectOption(value: 'manaus', label: 'Manaus'),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedCity = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
-              
-              const ShadcnSelect<String>(
-                label: 'Dropdown Desabilitado',
-                placeholder: 'Campo não editável',
-                enabled: false,
-                prefixIcon: Icon(Icons.lock_outline),
-                options: [
-                  ShadcnSelectOption(value: '1', label: 'Opção 1'),
-                  ShadcnSelectOption(value: '2', label: 'Opção 2'),
-                ],
-                helperText: 'Este campo está desabilitado',
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 32),
-          
           // Estados dos Inputs
           _buildSection(
             context,
@@ -262,42 +158,8 @@ class _InputsPageState extends State<InputsPage> {
               ),
             ],
           ),
-
-          const SizedBox(height: 32),
-          
-          // Validações Customizadas
-          _buildAdvancedInputs(context),
         ],
       ),
-    );
-  }
-
-  Widget _buildAdvancedInputs(BuildContext context) {
-    return _buildSection(
-      context,
-      'Validações Customizadas',
-      'Inputs com validações personalizadas em tempo real',
-      [
-        const SizedBox(height: 20),
-        
-        // Input com validação customizada de CEP
-        ShadcnInput(
-          label: 'CEP',
-          placeholder: '00000-000',
-          inputType: ShadcnInputType.text,
-          prefixIcon: const Icon(Icons.location_on),
-          helperText: 'Validação automática de formato',
-          customValidator: (value) {
-            if (value == null || value.isEmpty) return null;
-            final cepRegex = RegExp(r'^\d{5}-?\d{3}$');
-            if (!cepRegex.hasMatch(value)) {
-              return 'CEP inválido. Use o formato 00000-000';
-            }
-            return null;
-          },
-          validateOnChange: true,
-        ),
-      ],
     );
   }
 
