@@ -15,10 +15,6 @@ import '../../features/avatars/avatars_page.dart';
 import '../../features/forms/forms_page.dart';
 import '../../features/navigation/navigation_bars_page.dart';
 import '../../features/alerts/alerts_page.dart';
-import '../../features/showcase/component_showcase_page.dart';
-import '../../features/showcase/button_sample_page.dart';
-import '../../features/showcase/input_sample_page.dart';
-import '../../features/showcase/linked_label_sample_page.dart';
 
 /// Configuração de rotas usando GoRouter
 class AppRouter {
@@ -160,43 +156,6 @@ class AppRouter {
             name: 'alerts',
             pageBuilder: (context, state) => const CustomTransitionPage(
               child: AlertsPage(),
-              transitionsBuilder: _slideTransition,
-            ),
-          ),
-          
-          // Design System Showcase
-          GoRoute(
-            path: '/showcase',
-            name: 'showcase',
-            pageBuilder: (context, state) => const CustomTransitionPage(
-              child: ComponentShowcasePage(),
-              transitionsBuilder: _slideTransition,
-            ),
-          ),
-          
-          GoRoute(
-            path: '/showcase/button',
-            name: 'showcase-button',
-            pageBuilder: (context, state) => const CustomTransitionPage(
-              child: ButtonSamplePage(),
-              transitionsBuilder: _slideTransition,
-            ),
-          ),
-          
-          GoRoute(
-            path: '/showcase/input',
-            name: 'showcase-input',
-            pageBuilder: (context, state) => const CustomTransitionPage(
-              child: InputSamplePage(),
-              transitionsBuilder: _slideTransition,
-            ),
-          ),
-          
-          GoRoute(
-            path: '/showcase/linked-label',
-            name: 'showcase-linked-label',
-            pageBuilder: (context, state) => const CustomTransitionPage(
-              child: LinkedLabelSamplePage(),
               transitionsBuilder: _slideTransition,
             ),
           ),
