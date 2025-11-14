@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'tab_delegate.dart';
 
 class TabViewModel {
   final List<Tab> tabs;
