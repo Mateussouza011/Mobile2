@@ -17,9 +17,9 @@ import '../../features/navigation/navigation_bars_page.dart';
 import '../../features/alerts/alerts_page.dart';
 // Diamond Prediction App - Imports
 import '../../features/diamond_prediction/landing/landing_factory.dart';
-import '../../features/diamond_prediction/home/home_factory_new.dart';
-import '../../features/diamond_prediction/prediction/prediction_factory_new.dart';
-import '../../features/diamond_prediction/history/history_factory_new.dart';
+import '../../features/diamond_prediction/home/home_factory.dart';
+import '../../features/diamond_prediction/prediction/prediction_factory.dart';
+import '../../features/diamond_prediction/history/history_factory.dart';
 // Auth - Imports
 import '../../features/auth/login/login_factory.dart';
 import '../../features/auth/register/register_factory.dart';
@@ -244,16 +244,10 @@ class AppRouter {
       GoRoute(
         path: '/diamond-home',
         name: 'diamond-home',
-        pageBuilder: (context, state) {
-          return CustomTransitionPage(
-            child: Builder(
-              builder: (context) {
-                return HomeFactory.create(context);
-              },
-            ),
-            transitionsBuilder: _fadeTransition,
-          );
-        },
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: HomeFactory.create(context),
+          transitionsBuilder: _fadeTransition,
+        ),
       ),
       
       // Predição do Diamond App
@@ -261,11 +255,7 @@ class AppRouter {
         path: '/diamond-prediction',
         name: 'diamond-prediction',
         pageBuilder: (context, state) => CustomTransitionPage(
-          child: Builder(
-            builder: (context) {
-              return PredictionFactory.create(context);
-            },
-          ),
+          child: PredictionFactory.create(context),
           transitionsBuilder: _slideTransition,
         ),
       ),
@@ -275,11 +265,7 @@ class AppRouter {
         path: '/diamond-history',
         name: 'diamond-history',
         pageBuilder: (context, state) => CustomTransitionPage(
-          child: Builder(
-            builder: (context) {
-              return HistoryFactory.create(context);
-            },
-          ),
+          child: HistoryFactory.create(context),
           transitionsBuilder: _slideTransition,
         ),
       ),

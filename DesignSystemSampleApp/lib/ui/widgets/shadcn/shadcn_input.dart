@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../../DesignSystem/Theme/app_theme.dart';
 import 'delegates/shadcn_input_delegate.dart';
 
 /// Tipos de entrada personalizados
@@ -31,14 +32,6 @@ enum ShadcnInputSize {
   sm,
   default_,
   lg,
-}
-
-/// Posições de ícones e widgets
-enum ShadcnInputIconPosition {
-  prefix,
-  suffix,
-  leading,
-  trailing,
 }
 
 /// Componente Input baseado no Shadcn/UI - Versão Genérica e Flexível
@@ -399,6 +392,7 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
   late TextEditingController _controller;
   bool _obscureText = false;
   String? _validationError;
+  bool _isFocused = false;
   
   @override
   void initState() {
@@ -425,6 +419,10 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
   }
 
   void _onFocusChange() {
+    setState(() {
+      _isFocused = _focusNode.hasFocus;
+    });
+    
     if (widget.onFocusChange != null) {
       widget.onFocusChange!(_focusNode.hasFocus);
     }
@@ -497,16 +495,16 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
     
     // Determinar cores baseadas na variante e customização
     Color bgColor = widget.backgroundColor ?? _getBackgroundColor(colorScheme);
-    Color borderColorNormal = widget.borderColor ?? _getBorderColor(colorScheme);
-    Color borderColorFocused = widget.focusedBorderColor ?? colorScheme.primary;
-    Color borderColorError = widget.errorBorderColor ?? colorScheme.error;
-    Color textColorFinal = widget.textColor ?? (widget.enabled ? colorScheme.onSurface : colorScheme.onSurface.withValues(alpha: 0.5));
-    Color hintColorFinal = widget.hintColor ?? colorScheme.onSurfaceVariant;
-    Color labelColorFinal = widget.labelColor ?? colorScheme.onSurface;
+    Color borderColorNormal = widget.borderColor ?? AppColors.border;
+    Color borderColorFocused = widget.focusedBorderColor ?? AppColors.ring;
+    Color borderColorError = widget.errorBorderColor ?? AppColors.destructive;
+    Color textColorFinal = widget.textColor ?? (widget.enabled ? AppColors.onSurface : AppColors.onSurface.withValues(alpha: 0.5));
+    Color hintColorFinal = widget.hintColor ?? AppColors.zinc400;
+    Color labelColorFinal = widget.labelColor ?? AppColors.onSurface;
     
     // Determinar padding e dimensões
     EdgeInsets padding = widget.contentPadding ?? _getContentPadding();
-    BorderRadius borderRadius = widget.borderRadius ?? BorderRadius.circular(6);
+    BorderRadius borderRadius = widget.borderRadius ?? BorderRadius.circular(12);
     double borderWidthNormal = widget.borderWidth ?? 1;
     double borderWidthFocused = widget.focusedBorderWidth ?? 2;
     
@@ -523,7 +521,11 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
     Widget? finalSuffixIcon = widget.suffixIcon;
     if (widget.inputType == ShadcnInputType.password) {
       finalSuffixIcon = IconButton(
-        icon: Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
+        icon: Icon(
+          _obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+          color: AppColors.zinc400,
+          size: 20,
+        ),
         onPressed: () {
           setState(() {
             _obscureText = !_obscureText;
@@ -539,12 +541,12 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
         color: widget.gradient == null ? bgColor : null,
         gradient: widget.gradient,
         borderRadius: borderRadius,
-        boxShadow: widget.boxShadow ?? (widget.elevation != null ? [
+        boxShadow: widget.boxShadow ?? (_isFocused ? [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: widget.elevation!,
-            offset: Offset(0, widget.elevation! / 2),
-          )
+            color: AppColors.ring.withValues(alpha: 0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
         ] : null),
       ),
       child: TextFormField(
@@ -574,13 +576,21 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
         textAlignVertical: widget.textAlignVertical,
         style: widget.textStyle ?? theme.textTheme.bodyMedium?.copyWith(
           color: textColorFinal,
+          fontSize: 15,
         ),
         decoration: InputDecoration(
           hintText: widget.placeholder,
           hintStyle: widget.hintStyle ?? theme.textTheme.bodyMedium?.copyWith(
             color: hintColorFinal,
+            fontSize: 15,
           ),
-          prefixIcon: widget.prefixIcon,
+          prefixIcon: widget.prefixIcon != null ? IconTheme(
+            data: IconThemeData(
+              color: _isFocused ? AppColors.onSurface : AppColors.zinc400,
+              size: 20,
+            ),
+            child: widget.prefixIcon!,
+          ) : null,
           suffixIcon: finalSuffixIcon,
           prefixText: widget.prefixText,
           suffixText: widget.suffixText,
@@ -596,10 +606,7 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
           errorBorder: _getBorder(borderRadius, borderColorError, borderWidthNormal),
           focusedErrorBorder: _getBorder(borderRadius, borderColorError, borderWidthFocused),
           disabledBorder: _getBorder(borderRadius, borderColorNormal.withValues(alpha: 0.5), borderWidthNormal),
-          errorText: finalError,
-          errorStyle: widget.errorStyle ?? theme.textTheme.bodySmall?.copyWith(
-            color: colorScheme.error,
-          ),
+          errorText: null, // Renderizamos o erro manualmente fora do input
         ),
       ),
     );
@@ -622,13 +629,26 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
             style: widget.labelStyle ?? theme.textTheme.labelMedium?.copyWith(
               fontWeight: FontWeight.w500,
               color: labelColorFinal,
+              fontSize: 14,
             ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
         ],
         
         // Input Field
         inputField,
+        
+        // Error Text
+        if (finalError != null) ...[
+          const SizedBox(height: 6),
+          Text(
+            finalError,
+            style: widget.errorStyle ?? theme.textTheme.bodySmall?.copyWith(
+              color: AppColors.destructive,
+              fontSize: 13,
+            ),
+          ),
+        ],
         
         // Helper Text
         if (widget.helperText != null && finalError == null) ...[
@@ -636,7 +656,7 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
           Text(
             widget.helperText!,
             style: widget.helperStyle ?? theme.textTheme.bodySmall?.copyWith(
-              color: colorScheme.onSurfaceVariant,
+              color: AppColors.zinc500,
             ),
           ),
         ],
@@ -655,11 +675,11 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
   Color _getBackgroundColor(ColorScheme colorScheme) {
     switch (widget.variant) {
       case ShadcnInputVariant.filled:
-        return colorScheme.surfaceContainerHighest;
+        return AppColors.zinc100;
       case ShadcnInputVariant.borderless:
         return Colors.transparent;
       default:
-        return colorScheme.surface;
+        return AppColors.surface;
     }
   }
 
@@ -668,20 +688,20 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
       case ShadcnInputVariant.borderless:
         return Colors.transparent;
       case ShadcnInputVariant.underlined:
-        return colorScheme.outline;
+        return AppColors.border;
       default:
-        return colorScheme.outline;
+        return AppColors.border;
     }
   }
 
   EdgeInsets _getContentPadding() {
     switch (widget.size) {
       case ShadcnInputSize.sm:
-        return const EdgeInsets.symmetric(horizontal: 8, vertical: 6);
-      case ShadcnInputSize.lg:
-        return const EdgeInsets.symmetric(horizontal: 16, vertical: 12);
-      default:
         return const EdgeInsets.symmetric(horizontal: 12, vertical: 8);
+      case ShadcnInputSize.lg:
+        return const EdgeInsets.symmetric(horizontal: 16, vertical: 16);
+      default:
+        return const EdgeInsets.symmetric(horizontal: 16, vertical: 12);
     }
   }
 

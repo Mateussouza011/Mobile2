@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../DesignSystem/Theme/app_theme.dart';
 
 /// Variantes do botão Shadcn/UI
 enum ShadcnButtonVariant {
@@ -19,7 +20,7 @@ enum ShadcnButtonSize {
 }
 
 /// Componente Button baseado no Shadcn/UI - Versão Genérica e Flexível
-class ShadcnButton extends StatelessWidget {
+class ShadcnButton extends StatefulWidget {
   // Conteúdo principal
   final String? text;
   final Widget? child;
@@ -187,25 +188,58 @@ class ShadcnButton extends StatelessWidget {
        elevation = null;
 
   @override
+  State<ShadcnButton> createState() => _ShadcnButtonState();
+}
+
+class _ShadcnButtonState extends State<ShadcnButton> with SingleTickerProviderStateMixin {
+  bool _isHovered = false;
+  bool _isPressed = false;
+  late AnimationController _scaleController;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _scaleController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 100),
+    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
+      CurvedAnimation(parent: _scaleController, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scaleController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
     // Determinar cores baseadas na variante ou customização
-    Color bgColor = backgroundColor ?? _getBackgroundColor(colorScheme);
-    Color fgColor = foregroundColor ?? _getForegroundColor(colorScheme);
-    Color? bColor = borderColor ?? _getBorderColor(colorScheme);
+    Color bgColor = widget.backgroundColor ?? _getBackgroundColor(colorScheme);
+    Color fgColor = widget.foregroundColor ?? _getForegroundColor(colorScheme);
+    Color? bColor = widget.borderColor ?? _getBorderColor(colorScheme);
     
     // Determinar tamanho e padding
-    EdgeInsets buttonPadding = padding ?? _getPadding();
-    double buttonHeight = height ?? _getHeight();
+    EdgeInsets buttonPadding = widget.padding ?? _getPadding();
+    double buttonHeight = widget.height ?? _getHeight();
     double fontSize = _getFontSize();
-    BorderRadius buttonBorderRadius = borderRadius ?? BorderRadius.circular(6);
+    BorderRadius buttonBorderRadius = widget.borderRadius ?? BorderRadius.circular(12); // iOS style
     
     // Estado desabilitado ou loading
-    if (disabled || loading) {
+    if (widget.disabled || widget.loading) {
       bgColor = bgColor.withValues(alpha: 0.5);
       fgColor = fgColor.withValues(alpha: 0.5);
+    }
+    
+    // Estado hover/pressed
+    if (_isHovered && !widget.disabled && !widget.loading) {
+      bgColor = Color.alphaBlend(Colors.black.withValues(alpha: 0.1), bgColor);
     }
 
     // Widget de conteúdo
@@ -213,20 +247,20 @@ class ShadcnButton extends StatelessWidget {
 
     // Container principal
     Widget button = Container(
-      width: width,
+      width: widget.width,
       height: buttonHeight,
       decoration: BoxDecoration(
-        color: gradient == null ? bgColor : null,
-        gradient: gradient,
+        color: widget.gradient == null ? bgColor : null,
+        gradient: widget.gradient,
         borderRadius: buttonBorderRadius,
         border: bColor != null 
-            ? Border.all(color: bColor, width: borderWidth ?? 1) 
+            ? Border.all(color: bColor, width: widget.borderWidth ?? 1) 
             : null,
-        boxShadow: boxShadow ?? (elevation != null ? [
+        boxShadow: widget.boxShadow ?? (widget.elevation != null ? [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: elevation!,
-            offset: Offset(0, elevation! / 2),
+            blurRadius: widget.elevation!,
+            offset: Offset(0, widget.elevation! / 2),
           )
         ] : null),
       ),
@@ -234,12 +268,35 @@ class ShadcnButton extends StatelessWidget {
         color: Colors.transparent,
         borderRadius: buttonBorderRadius,
         child: InkWell(
-          onTap: disabled || loading ? null : onPressed,
-          onLongPress: disabled || loading ? null : onLongPress,
-          onHover: onHover,
-          onFocusChange: onFocusChange,
+          onTap: widget.disabled || widget.loading ? null : () {
+            widget.onPressed?.call();
+          },
+          onLongPress: widget.disabled || widget.loading ? null : widget.onLongPress,
+          onHover: (hovered) {
+            setState(() => _isHovered = hovered);
+            widget.onHover?.call(hovered);
+          },
+          onTapDown: (_) {
+            if (!widget.disabled && !widget.loading) {
+              setState(() => _isPressed = true);
+              _scaleController.forward();
+            }
+          },
+          onTapUp: (_) {
+            if (!widget.disabled && !widget.loading) {
+              setState(() => _isPressed = false);
+              _scaleController.reverse();
+            }
+          },
+          onTapCancel: () {
+            if (!widget.disabled && !widget.loading) {
+              setState(() => _isPressed = false);
+              _scaleController.reverse();
+            }
+          },
+          onFocusChange: widget.onFocusChange,
           borderRadius: buttonBorderRadius,
-          autofocus: autofocus,
+          autofocus: widget.autofocus,
           child: Container(
             padding: buttonPadding,
             child: Center(child: buttonChild),
@@ -248,61 +305,57 @@ class ShadcnButton extends StatelessWidget {
       ),
     );
 
-    // Aplicar animação se especificada
-    if (animationDuration != null) {
-      button = AnimatedContainer(
-        duration: animationDuration!,
-        child: button,
-      );
-    }
-
-    return button;
+    // Aplicar animação de escala
+    return ScaleTransition(
+      scale: _scaleAnimation,
+      child: button,
+    );
   }
 
   // Métodos auxiliares para determinar cores baseadas na variante
   Color _getBackgroundColor(ColorScheme colorScheme) {
-    switch (variant) {
+    switch (widget.variant) {
       case ShadcnButtonVariant.default_:
-        return colorScheme.primary;
+        return AppColors.primary;
       case ShadcnButtonVariant.destructive:
-        return colorScheme.error;
+        return AppColors.destructive;
       case ShadcnButtonVariant.outline:
       case ShadcnButtonVariant.ghost:
         return Colors.transparent;
       case ShadcnButtonVariant.secondary:
-        return colorScheme.surfaceContainerHighest;
+        return AppColors.secondary;
       case ShadcnButtonVariant.link:
         return Colors.transparent;
     }
   }
 
   Color _getForegroundColor(ColorScheme colorScheme) {
-    switch (variant) {
+    switch (widget.variant) {
       case ShadcnButtonVariant.default_:
-        return colorScheme.onPrimary;
+        return AppColors.onPrimary;
       case ShadcnButtonVariant.destructive:
-        return colorScheme.onError;
+        return AppColors.onDestructive;
       case ShadcnButtonVariant.outline:
       case ShadcnButtonVariant.ghost:
-        return colorScheme.onSurface;
+        return AppColors.onSurface;
       case ShadcnButtonVariant.secondary:
-        return colorScheme.onSurfaceVariant;
+        return AppColors.onSecondary;
       case ShadcnButtonVariant.link:
-        return colorScheme.primary;
+        return AppColors.primary;
     }
   }
 
   Color? _getBorderColor(ColorScheme colorScheme) {
-    switch (variant) {
+    switch (widget.variant) {
       case ShadcnButtonVariant.outline:
-        return colorScheme.outline;
+        return AppColors.border;
       default:
         return null;
     }
   }
 
   EdgeInsets _getPadding() {
-    switch (size) {
+    switch (widget.size) {
       case ShadcnButtonSize.default_:
         return const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
       case ShadcnButtonSize.sm:
@@ -315,7 +368,7 @@ class ShadcnButton extends StatelessWidget {
   }
 
   double _getHeight() {
-    switch (size) {
+    switch (widget.size) {
       case ShadcnButtonSize.default_:
         return 40;
       case ShadcnButtonSize.sm:
@@ -328,7 +381,7 @@ class ShadcnButton extends StatelessWidget {
   }
 
   double _getFontSize() {
-    switch (size) {
+    switch (widget.size) {
       case ShadcnButtonSize.default_:
         return 14;
       case ShadcnButtonSize.sm:
@@ -342,8 +395,8 @@ class ShadcnButton extends StatelessWidget {
 
   Widget _buildButtonContent(Color fgColor, double fontSize) {
     // Widget de loading personalizado ou padrão
-    if (loading) {
-      return loadingWidget ?? SizedBox(
+    if (widget.loading) {
+      return widget.loadingWidget ?? SizedBox(
         width: 16,
         height: 16,
         child: CircularProgressIndicator(
@@ -354,37 +407,37 @@ class ShadcnButton extends StatelessWidget {
     }
 
     // Botão apenas com ícone
-    if (size == ShadcnButtonSize.icon) {
+    if (widget.size == ShadcnButtonSize.icon) {
       return IconTheme(
         data: IconThemeData(color: fgColor),
-        child: icon ?? const Icon(Icons.add),
+        child: widget.icon ?? const Icon(Icons.add),
       );
     }
 
     // Conteúdo personalizado (child)
-    if (child != null) {
-      return child!;
+    if (widget.child != null) {
+      return widget.child!;
     }
 
     // Layout com texto e ícones
     List<Widget> children = [];
     
     // Ícone à esquerda (leadingIcon)
-    if (leadingIcon != null) {
+    if (widget.leadingIcon != null) {
       children.add(
         IconTheme(
           data: IconThemeData(color: fgColor),
-          child: leadingIcon!,
+          child: widget.leadingIcon!,
         ),
       );
       children.add(const SizedBox(width: 8));
     }
     
     // Texto principal
-    if (text != null) {
+    if (widget.text != null) {
       children.add(
         Text(
-          text!,
+          widget.text!,
           style: TextStyle(
             fontSize: fontSize,
             fontWeight: FontWeight.w500,
@@ -395,23 +448,23 @@ class ShadcnButton extends StatelessWidget {
     }
     
     // Ícone à direita (trailingIcon)
-    if (trailingIcon != null) {
+    if (widget.trailingIcon != null) {
       children.add(const SizedBox(width: 8));
       children.add(
         IconTheme(
           data: IconThemeData(color: fgColor),
-          child: trailingIcon!,
+          child: widget.trailingIcon!,
         ),
       );
     }
     
     // Compatibilidade com ícone antigo (icon) quando não é icon-only
-    if (icon != null && leadingIcon == null && trailingIcon == null && size != ShadcnButtonSize.icon) {
+    if (widget.icon != null && widget.leadingIcon == null && widget.trailingIcon == null && widget.size != ShadcnButtonSize.icon) {
       children.insert(0, IconTheme(
         data: IconThemeData(color: fgColor),
-        child: icon!,
+        child: widget.icon!,
       ));
-      if (text != null) {
+      if (widget.text != null) {
         children.insert(1, const SizedBox(width: 8));
       }
     }

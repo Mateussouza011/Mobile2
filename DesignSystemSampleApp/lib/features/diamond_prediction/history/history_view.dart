@@ -1,312 +1,375 @@
 import 'package:flutter/material.dart';
-import '../../../ui/widgets/shadcn/shadcn_button.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import '../../../DesignSystem/Theme/app_theme.dart';
 import '../../../ui/widgets/shadcn/shadcn_card.dart';
 import 'history_view_model.dart';
 
-/// HistoryView - Tela de histórico de predições
+/// HistoryView - Lista de histórico moderna e minimalista
 /// 
-/// Exibe uma lista de todas as predições realizadas.
-class HistoryView extends StatefulWidget {
-  final HistoryViewModel viewModel;
-  
-  const HistoryView({
-    super.key,
-    required this.viewModel,
-  });
-  
-  @override
-  State<HistoryView> createState() => _HistoryViewState();
-}
+/// Design inspirado no shadcn/iOS com:
+/// - Filtros em chips
+/// - Cards deslizáveis para deletar
+/// - Empty state elegante
+class HistoryView extends StatelessWidget {
+  const HistoryView({super.key});
 
-class _HistoryViewState extends State<HistoryView> {
-  @override
-  void initState() {
-    super.initState();
-    widget.viewModel.onStateChanged = () {
-      if (mounted) {
-        setState(() {});
-      }
-    };
-    // Carrega histórico ao iniciar
-    widget.viewModel.loadHistory();
-  }
-  
-  @override
-  void dispose() {
-    widget.viewModel.dispose();
-    super.dispose();
-  }
-  
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+      ),
+    );
+    
+    final viewModel = context.watch<HistoryViewModel>();
     
     return Scaffold(
-      backgroundColor: colorScheme.surface,
-      appBar: AppBar(
-        title: const Text('Histórico'),
-        backgroundColor: colorScheme.surface,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => widget.viewModel.onBackRequested(
-            sender: widget.viewModel,
-          ),
+      backgroundColor: AppColors.zinc50,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Header
+            _buildHeader(context, viewModel),
+            
+            // Filters
+            _buildFilters(viewModel),
+            
+            // Content
+            Expanded(
+              child: viewModel.isLoading
+                  ? _buildLoading()
+                  : viewModel.filteredItems.isEmpty
+                      ? _buildEmptyState()
+                      : _buildList(viewModel),
+            ),
+          ],
         ),
-        actions: [
-          if (!widget.viewModel.isEmpty)
-            IconButton(
-              icon: const Icon(Icons.delete_outline),
-              onPressed: () => _showClearConfirmation(context),
-              tooltip: 'Limpar histórico',
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context, HistoryViewModel viewModel) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: viewModel.goBack,
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.zinc200),
+              ),
+              child: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: 18,
+                color: AppColors.zinc900,
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Histórico',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.zinc900,
+                  ),
+                ),
+                Text(
+                  '${viewModel.items.length} predições',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.zinc500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (viewModel.items.isNotEmpty)
+            GestureDetector(
+              onTap: viewModel.confirmClearAll,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: AppColors.red50,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Text(
+                  'Limpar',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.red600,
+                  ),
+                ),
+              ),
             ),
         ],
       ),
-      body: _buildBody(context),
     );
   }
-  
-  Widget _buildBody(BuildContext context) {
-    final viewModel = widget.viewModel;
+
+  Widget _buildFilters(HistoryViewModel viewModel) {
+    final filters = [
+      {'key': 'all', 'label': 'Todos'},
+      {'key': 'today', 'label': 'Hoje'},
+      {'key': 'week', 'label': 'Semana'},
+      {'key': 'month', 'label': 'Mês'},
+    ];
     
-    if (viewModel.isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-    
-    if (viewModel.isEmpty) {
-      return _buildEmptyState(context);
-    }
-    
-    return RefreshIndicator(
-      onRefresh: () async {
-        viewModel.onRefreshRequested(sender: viewModel);
-      },
-      child: ListView.builder(
-        padding: const EdgeInsets.all(24),
-        itemCount: viewModel.predictions.length,
-        itemBuilder: (context, index) {
-          final prediction = viewModel.predictions[index];
-          return _buildPredictionCard(context, prediction, index);
-        },
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+      child: Row(
+        children: filters.map((f) {
+          final isSelected = viewModel.filter == f['key'];
+          return Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: GestureDetector(
+              onTap: () => viewModel.updateFilter(f['key']!),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
+                  color: isSelected ? AppColors.zinc900 : Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: isSelected 
+                        ? AppColors.zinc900 
+                        : AppColors.zinc200,
+                  ),
+                ),
+                child: Text(
+                  f['label']!,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: isSelected ? Colors.white : AppColors.zinc600,
+                  ),
+                ),
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
-  
-  Widget _buildEmptyState(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    
+
+  Widget _buildLoading() {
+    return const Center(
+      child: CircularProgressIndicator(
+        color: AppColors.zinc900,
+        strokeWidth: 2,
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.history,
-                size: 64,
-                color: colorScheme.onSurfaceVariant,
-              ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              color: AppColors.zinc100,
+              borderRadius: BorderRadius.circular(24),
             ),
-            const SizedBox(height: 24),
-            Text(
-              'Nenhuma predição ainda',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: colorScheme.onSurface,
-              ),
+            child: const Icon(
+              Icons.history_rounded,
+              size: 40,
+              color: AppColors.zinc400,
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Faça sua primeira predição para ver o histórico aqui',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
+          ),
+          const SizedBox(height: 20),
+          const Text(
+            'Nenhuma predição',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: AppColors.zinc900,
             ),
-            const SizedBox(height: 24),
-            ShadcnButton(
-              text: 'Fazer Predição',
-              leadingIcon: const Icon(Icons.add, size: 18),
-              onPressed: () => widget.viewModel.onBackRequested(
-                sender: widget.viewModel,
-              ),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Suas predições aparecerão aqui',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: AppColors.zinc500,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
-  
-  Widget _buildPredictionCard(
-    BuildContext context,
-    Map<String, dynamic> prediction,
-    int index,
-  ) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final viewModel = widget.viewModel;
-    
-    final price = (prediction['predicted_price'] as num?)?.toDouble() ?? 0.0;
-    final input = prediction['input'] as Map<String, dynamic>?;
-    final timestamp = prediction['timestamp'] as String?;
-    
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+
+  Widget _buildList(HistoryViewModel viewModel) {
+    return ListView.builder(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+      itemCount: viewModel.filteredItems.length,
+      itemBuilder: (context, index) {
+        final item = viewModel.filteredItems[index];
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: _HistoryCard(
+            item: item,
+            viewModel: viewModel,
+            onTap: () => viewModel.openItem(item),
+            onDelete: () => viewModel.confirmDelete(item),
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// Card de histórico com swipe to delete
+class _HistoryCard extends StatelessWidget {
+  final HistoryItem item;
+  final HistoryViewModel viewModel;
+  final VoidCallback onTap;
+  final VoidCallback onDelete;
+
+  const _HistoryCard({
+    required this.item,
+    required this.viewModel,
+    required this.onTap,
+    required this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Dismissible(
+      key: Key(item.id),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 20),
+        decoration: BoxDecoration(
+          color: AppColors.red500,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: const Icon(
+          Icons.delete_outline_rounded,
+          color: Colors.white,
+          size: 24,
+        ),
+      ),
+      onDismissed: (_) => onDelete(),
       child: ShadcnCard(
-        onTap: () => viewModel.onPredictionTapped(
-          sender: viewModel,
-          prediction: prediction,
-        ),
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header com número e data
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        padding: EdgeInsets.zero,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
               children: [
+                // Diamond icon
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
-                  ),
+                  width: 48,
+                  height: 48,
                   decoration: BoxDecoration(
-                    color: colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(12),
+                    color: AppColors.zinc100,
+                    borderRadius: BorderRadius.circular(14),
                   ),
-                  child: Text(
-                    '#${index + 1}',
-                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: colorScheme.onPrimaryContainer,
-                    ),
+                  child: const Icon(
+                    Icons.diamond_outlined,
+                    size: 24,
+                    color: AppColors.zinc900,
                   ),
                 ),
-                if (timestamp != null)
-                  Text(
-                    viewModel.formatDate(timestamp),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
+                const SizedBox(width: 14),
+                
+                // Info
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${item.carat} ct • ${item.cut}',
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.zinc900,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          _buildTag(item.color),
+                          const SizedBox(width: 6),
+                          _buildTag(item.clarity),
+                          const SizedBox(width: 8),
+                          Text(
+                            viewModel.formatDate(item.date),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.zinc500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
+                ),
+                
+                // Price
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      viewModel.formatPrice(item.predictedPrice),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.zinc900,
+                      ),
+                    ),
+                    const Icon(
+                      Icons.chevron_right_rounded,
+                      size: 20,
+                      color: AppColors.zinc400,
+                    ),
+                  ],
+                ),
               ],
             ),
-            
-            const SizedBox(height: 16),
-            
-            // Preço
-            Row(
-              children: [
-                Icon(
-                  Icons.diamond,
-                  color: Colors.purple.shade400,
-                  size: 20,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Preço Estimado:',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const Spacer(),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.blue.shade400, Colors.purple.shade400],
-                    ),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Text(
-                    viewModel.formatPrice(price),
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            
-            // Características
-            if (input != null) ...[
-              const SizedBox(height: 12),
-              const Divider(),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  _buildTag(context, '${input['carat']} ct'),
-                  _buildTag(context, '${input['cut']}'),
-                  _buildTag(context, 'Color ${input['color']}'),
-                  _buildTag(context, '${input['clarity']}'),
-                ],
-              ),
-            ],
-          ],
+          ),
         ),
       ),
     );
   }
-  
-  Widget _buildTag(BuildContext context, String text) {
-    final colorScheme = Theme.of(context).colorScheme;
-    
+
+  Widget _buildTag(String text) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(12),
+        color: AppColors.zinc100,
+        borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
         text,
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-          color: colorScheme.onSurfaceVariant,
+        style: const TextStyle(
+          fontSize: 11,
           fontWeight: FontWeight.w500,
+          color: AppColors.zinc600,
         ),
-      ),
-    );
-  }
-  
-  void _showClearConfirmation(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: colorScheme.surface,
-        title: const Text('Limpar Histórico'),
-        content: const Text(
-          'Tem certeza que deseja apagar todo o histórico de predições? Esta ação não pode ser desfeita.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancelar'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              widget.viewModel.onClearHistoryRequested(
-                sender: widget.viewModel,
-              );
-            },
-            child: Text(
-              'Limpar',
-              style: TextStyle(color: colorScheme.error),
-            ),
-          ),
-        ],
       ),
     );
   }

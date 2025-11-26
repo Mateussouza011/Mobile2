@@ -1,69 +1,134 @@
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 /// Serviço de Banco de Dados Local
 /// 
-/// Gerencia a conexão com o SQLite e operações de banco.
+/// Para WEB: usa armazenamento em memória
+/// Para Mobile/Desktop: usaria SQLite (não implementado ainda)
 class DatabaseService {
-  static Database? _database;
   static final DatabaseService instance = DatabaseService._internal();
+  
+  // Armazenamento em memória para web
+  final Map<String, List<Map<String, dynamic>>> _memoryDb = {
+    'users': [],
+  };
+  
+  int _autoIncrementId = 1;
   
   DatabaseService._internal();
   
-  /// Obtém a instância do banco de dados
-  Future<Database> get database async {
-    if (_database != null) return _database!;
-    _database = await _initDatabase();
-    return _database!;
+  /// Insere um registro na tabela
+  Future<int> insert(String table, Map<String, dynamic> data) async {
+    if (kIsWeb) {
+      // Web: armazenamento em memória
+      final record = Map<String, dynamic>.from(data);
+      record['id'] = _autoIncrementId++;
+      _memoryDb[table]?.add(record);
+      return record['id'] as int;
+    } else {
+      // TODO: Implementar SQLite para mobile/desktop
+      throw UnimplementedError('SQLite não implementado para esta plataforma');
+    }
   }
   
-  /// Inicializa o banco de dados
-  Future<Database> _initDatabase() async {
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, 'diamond_app.db');
-    
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _onCreate,
-      onUpgrade: _onUpgrade,
-    );
+  /// Busca registros na tabela
+  Future<List<Map<String, dynamic>>> query(
+    String table, {
+    String? where,
+    List<dynamic>? whereArgs,
+  }) async {
+    if (kIsWeb) {
+      final records = _memoryDb[table] ?? [];
+      
+      if (where == null || whereArgs == null) {
+        return List.from(records);
+      }
+      
+      // Parsing simples para "column = ?"
+      final match = RegExp(r'(\w+)\s*=\s*\?').firstMatch(where);
+      if (match != null) {
+        final column = match.group(1);
+        final value = whereArgs.first;
+        return records.where((r) => r[column] == value).toList();
+      }
+      
+      return List.from(records);
+    } else {
+      throw UnimplementedError('SQLite não implementado para esta plataforma');
+    }
   }
   
-  /// Cria as tabelas do banco
-  Future<void> _onCreate(Database db, int version) async {
-    await db.execute('''
-      CREATE TABLE users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        full_name TEXT NOT NULL,
-        username TEXT NOT NULL UNIQUE,
-        birth_date TEXT NOT NULL,
-        password_hash TEXT NOT NULL,
-        created_at TEXT NOT NULL
-      )
-    ''');
-    
-    // Índice para busca por username
-    await db.execute('''
-      CREATE INDEX idx_username ON users(username)
-    ''');
+  /// Atualiza registros na tabela
+  Future<int> update(
+    String table,
+    Map<String, dynamic> data, {
+    String? where,
+    List<dynamic>? whereArgs,
+  }) async {
+    if (kIsWeb) {
+      final records = _memoryDb[table] ?? [];
+      int count = 0;
+      
+      if (where != null && whereArgs != null) {
+        final match = RegExp(r'(\w+)\s*=\s*\?').firstMatch(where);
+        if (match != null) {
+          final column = match.group(1);
+          final value = whereArgs.first;
+          
+          for (var record in records) {
+            if (record[column] == value) {
+              record.addAll(data);
+              count++;
+            }
+          }
+        }
+      }
+      
+      return count;
+    } else {
+      throw UnimplementedError('SQLite não implementado para esta plataforma');
+    }
   }
   
-  /// Atualiza o banco em novas versões
-  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    // Futuras migrações aqui
+  /// Deleta registros da tabela
+  Future<int> delete(
+    String table, {
+    String? where,
+    List<dynamic>? whereArgs,
+  }) async {
+    if (kIsWeb) {
+      final records = _memoryDb[table] ?? [];
+      
+      if (where == null) {
+        final count = records.length;
+        records.clear();
+        return count;
+      }
+      
+      final match = RegExp(r'(\w+)\s*=\s*\?').firstMatch(where);
+      if (match != null) {
+        final column = match.group(1);
+        final value = whereArgs?.first;
+        final before = records.length;
+        records.removeWhere((r) => r[column] == value);
+        return before - records.length;
+      }
+      
+      return 0;
+    } else {
+      throw UnimplementedError('SQLite não implementado para esta plataforma');
+    }
   }
   
-  /// Fecha a conexão com o banco
+  /// Fecha a conexão (no-op para memória)
   Future<void> close() async {
-    final db = await database;
-    await db.close();
-    _database = null;
+    // No-op para armazenamento em memória
   }
   
-  /// Limpa todos os dados (para testes)
+  /// Limpa todos os dados
   Future<void> clearAll() async {
-    final db = await database;
-    await db.delete('users');
+    for (var table in _memoryDb.keys) {
+      _memoryDb[table]?.clear();
+    }
+    _autoIncrementId = 1;
   }
 }

@@ -1,36 +1,80 @@
 import 'package:flutter/material.dart';
-import '../../../application/app_coordinator.dart';
-import 'home_service.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import '../../../core/data/services/auth_service.dart';
 import 'home_view_model.dart';
 import 'home_view.dart';
 
 /// HomeFactory - Factory para criação da tela Home/Dashboard
 /// 
 /// Implementa o Factory Pattern para criar e conectar:
-/// Service → ViewModel → View
+/// ViewModel → View
 class HomeFactory {
-  /// Cria uma instância completa da tela Home
-  /// 
-  /// [coordinator] - AppCoordinator para navegação
-  /// [name] - Nome do usuário logado
-  /// [email] - Email do usuário logado
-  static Widget make({
-    required AppCoordinator coordinator,
-    required String name,
-    required String email,
-  }) {
-    // Usa o singleton do serviço para manter estado
-    final service = HomeServiceProvider().service;
+  /// Cria uma instância usando o usuário logado do AuthService
+  static Widget create(BuildContext context) {
+    final authService = AuthService.instance;
+    final user = authService.currentUser;
     
-    // Cria o ViewModel com as dependências
-    final viewModel = HomeViewModel(
-      service: service,
-      coordinator: coordinator,
-      userName: name,
-      userEmail: email,
+    if (user == null) {
+      // Se não há usuário logado, mostra erro
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error_outline, size: 48, color: Colors.red),
+              const SizedBox(height: 16),
+              const Text('Usuário não autenticado'),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => context.go('/'),
+                child: const Text('Voltar ao Login'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    
+    return ChangeNotifierProvider(
+      create: (_) => HomeViewModel(
+        delegate: _HomeDelegateImpl(context, user.fullName),
+      ),
+      child: const HomeView(),
     );
-    
-    // Retorna a View com o ViewModel injetado
-    return HomeView(viewModel: viewModel);
+  }
+}
+
+/// Implementação do Delegate da Home
+class _HomeDelegateImpl implements HomeViewDelegate {
+  final BuildContext context;
+  final String userName;
+  
+  _HomeDelegateImpl(this.context, this.userName);
+  
+  @override
+  void onNewPredictionTapped() {
+    context.push('/diamond-prediction');
+  }
+  
+  @override
+  void onHistoryTapped() {
+    context.push('/diamond-history');
+  }
+  
+  @override
+  void onProfileTapped() {
+    // TODO: Navegar para perfil
+  }
+  
+  @override
+  void onLogoutTapped() {
+    AuthService.instance.logout();
+    context.go('/');
+  }
+  
+  @override
+  void onRecentPredictionTapped(PredictionSummary prediction) {
+    // TODO: Ver detalhes da predição
   }
 }

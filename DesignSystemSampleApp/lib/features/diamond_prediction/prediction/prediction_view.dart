@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../DesignSystem/Theme/app_theme.dart';
 import '../../../ui/widgets/shadcn/shadcn_button.dart';
 import '../../../ui/widgets/shadcn/shadcn_card.dart';
 import '../../../ui/widgets/shadcn/shadcn_select.dart';
@@ -41,23 +42,27 @@ class _PredictionViewState extends State<PredictionView> {
   
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    
     return Scaffold(
-      backgroundColor: colorScheme.surface,
+      backgroundColor: AppColors.zinc50,
       appBar: AppBar(
-        title: const Text('Nova Predição'),
-        backgroundColor: colorScheme.surface,
+        title: const Text(
+          'Nova Predição',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
+        backgroundColor: AppColors.surface,
         elevation: 0,
+        centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+          color: AppColors.zinc900,
           onPressed: () => widget.viewModel.onBackRequested(
             sender: widget.viewModel,
           ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh_rounded),
+            color: AppColors.zinc900,
             onPressed: () => widget.viewModel.onResetRequested(
               sender: widget.viewModel,
             ),
@@ -67,6 +72,7 @@ class _PredictionViewState extends State<PredictionView> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -98,8 +104,6 @@ class _PredictionViewState extends State<PredictionView> {
   }
   
   Widget _buildHeader(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -108,29 +112,39 @@ class _PredictionViewState extends State<PredictionView> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.blue.shade400, Colors.purple.shade400],
+                gradient: const LinearGradient(
+                  colors: [AppColors.blue500, AppColors.purple500],
                 ),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.blue500.withValues(alpha: 0.3),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
-              child: const Icon(Icons.diamond, color: Colors.white),
+              child: const Icon(Icons.diamond_outlined, color: Colors.white, size: 24),
             ),
             const SizedBox(width: 16),
-            Expanded(
+            const Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Calcular Preço',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    style: TextStyle(
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: colorScheme.onSurface,
+                      color: AppColors.zinc900,
+                      letterSpacing: -0.5,
                     ),
                   ),
                   Text(
                     'Insira as características do diamante',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: AppColors.zinc500,
                     ),
                   ),
                 ],
@@ -146,14 +160,15 @@ class _PredictionViewState extends State<PredictionView> {
     final viewModel = widget.viewModel;
     
     return ShadcnCard(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Carat (Slider)
           _buildSliderField(
             context,
-            label: 'Carat (Peso)',
+            label: 'Peso do Diamante',
+            description: 'Quilates (1 ct = 0.2g)',
             value: viewModel.carat,
             min: ApiConstants.minCarat,
             max: ApiConstants.maxCarat,
@@ -177,7 +192,8 @@ class _PredictionViewState extends State<PredictionView> {
               Expanded(
                 child: _buildSliderField(
                   context,
-                  label: 'Depth (%)',
+                  label: 'Profundidade',
+                  description: 'Altura relativa do diamante',
                   value: viewModel.depth,
                   min: ApiConstants.minDepth,
                   max: ApiConstants.maxDepth,
@@ -188,11 +204,12 @@ class _PredictionViewState extends State<PredictionView> {
                   ),
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 24),
               Expanded(
                 child: _buildSliderField(
                   context,
-                  label: 'Table (%)',
+                  label: 'Topo',
+                  description: 'Largura da face superior',
                   value: viewModel.table,
                   min: ApiConstants.minTable,
                   max: ApiConstants.maxTable,
@@ -218,38 +235,54 @@ class _PredictionViewState extends State<PredictionView> {
   Widget _buildSliderField(
     BuildContext context, {
     required String label,
+    String? description,
     required double value,
     required double min,
     required double max,
     required String suffix,
     required ValueChanged<double> onChanged,
   }) {
-    final colorScheme = Theme.of(context).colorScheme;
-    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              label,
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: colorScheme.onSurface,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.zinc900,
+                    ),
+                  ),
+                  if (description != null)
+                    Text(
+                      description,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: AppColors.zinc400,
+                      ),
+                    ),
+                ],
               ),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(12),
+                color: AppColors.zinc100,
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
                 '${value.toStringAsFixed(2)}$suffix',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                style: const TextStyle(
+                  fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: colorScheme.onPrimaryContainer,
+                  color: AppColors.zinc900,
                 ),
               ),
             ),
@@ -274,12 +307,10 @@ class _PredictionViewState extends State<PredictionView> {
       children: [
         // Cut
         ShadcnSelect<String>(
-          label: 'Cut (Corte)',
+          label: 'Qualidade do Corte',
           placeholder: 'Selecione o corte',
           value: viewModel.cut,
-          options: viewModel.cutOptions
-              .map((e) => ShadcnSelectOption(value: e, label: e))
-              .toList(),
+          options: _buildCutOptions(),
           onChanged: (value) {
             if (value != null) {
               viewModel.onCutChanged(sender: viewModel, value: value);
@@ -294,12 +325,10 @@ class _PredictionViewState extends State<PredictionView> {
             // Color
             Expanded(
               child: ShadcnSelect<String>(
-                label: 'Color (Cor)',
+                label: 'Cor',
                 placeholder: 'Cor',
                 value: viewModel.color,
-                options: viewModel.colorOptions
-                    .map((e) => ShadcnSelectOption(value: e, label: e))
-                    .toList(),
+                options: _buildColorOptions(),
                 onChanged: (value) {
                   if (value != null) {
                     viewModel.onColorChanged(sender: viewModel, value: value);
@@ -313,12 +342,10 @@ class _PredictionViewState extends State<PredictionView> {
             // Clarity
             Expanded(
               child: ShadcnSelect<String>(
-                label: 'Clarity (Claridade)',
-                placeholder: 'Claridade',
+                label: 'Pureza',
+                placeholder: 'Pureza',
                 value: viewModel.clarity,
-                options: viewModel.clarityOptions
-                    .map((e) => ShadcnSelectOption(value: e, label: e))
-                    .toList(),
+                options: _buildClarityOptions(),
                 onChanged: (value) {
                   if (value != null) {
                     viewModel.onClarityChanged(sender: viewModel, value: value);
@@ -334,16 +361,23 @@ class _PredictionViewState extends State<PredictionView> {
   
   Widget _buildDimensionsSection(BuildContext context) {
     final viewModel = widget.viewModel;
-    final colorScheme = Theme.of(context).colorScheme;
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Dimensões (mm)',
-          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: colorScheme.onSurface,
+        const Text(
+          'Dimensões do Diamante',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: AppColors.zinc900,
+          ),
+        ),
+        const Text(
+          'Medidas em milímetros (mm)',
+          style: TextStyle(
+            fontSize: 11,
+            color: AppColors.zinc400,
           ),
         ),
         const SizedBox(height: 12),
@@ -352,7 +386,7 @@ class _PredictionViewState extends State<PredictionView> {
             Expanded(
               child: _buildDimensionSlider(
                 context,
-                label: 'X',
+                label: 'Compr.',
                 value: viewModel.x,
                 onChanged: (value) => viewModel.onDimensionsChanged(
                   sender: viewModel,
@@ -366,7 +400,7 @@ class _PredictionViewState extends State<PredictionView> {
             Expanded(
               child: _buildDimensionSlider(
                 context,
-                label: 'Y',
+                label: 'Largura',
                 value: viewModel.y,
                 onChanged: (value) => viewModel.onDimensionsChanged(
                   sender: viewModel,
@@ -380,7 +414,7 @@ class _PredictionViewState extends State<PredictionView> {
             Expanded(
               child: _buildDimensionSlider(
                 context,
-                label: 'Z',
+                label: 'Altura',
                 value: viewModel.z,
                 onChanged: (value) => viewModel.onDimensionsChanged(
                   sender: viewModel,
@@ -402,15 +436,14 @@ class _PredictionViewState extends State<PredictionView> {
     required double value,
     required ValueChanged<double> onChanged,
   }) {
-    final colorScheme = Theme.of(context).colorScheme;
-    
     return Column(
       children: [
         Text(
           '$label: ${value.toStringAsFixed(1)}',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: colorScheme.onSurfaceVariant,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: AppColors.zinc500,
           ),
         ),
         ShadcnSlider.single(
@@ -429,16 +462,10 @@ class _PredictionViewState extends State<PredictionView> {
     
     return ShadcnButton(
       text: viewModel.isLoading ? 'Calculando...' : 'Calcular Preço',
+      size: ShadcnButtonSize.lg,
       leadingIcon: viewModel.isLoading
-          ? const SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Colors.white,
-              ),
-            )
-          : const Icon(Icons.calculate, size: 18),
+          ? null
+          : const Icon(Icons.calculate_outlined, size: 20),
       onPressed: viewModel.isLoading
           ? null
           : () => viewModel.onCalculateRequested(sender: viewModel),
@@ -460,13 +487,20 @@ class _PredictionViewState extends State<PredictionView> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.green.shade400, Colors.teal.shade400],
+              gradient: const LinearGradient(
+                colors: [AppColors.emerald500, AppColors.teal500],
               ),
               shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.emerald500.withValues(alpha: 0.3),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
             child: const Icon(
-              Icons.check,
+              Icons.check_rounded,
               color: Colors.white,
               size: 32,
             ),
@@ -474,10 +508,11 @@ class _PredictionViewState extends State<PredictionView> {
           
           const SizedBox(height: 16),
           
-          Text(
+          const Text(
             'Preço Estimado',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            style: TextStyle(
+              fontSize: 16,
+              color: AppColors.zinc500,
             ),
           ),
           
@@ -485,23 +520,25 @@ class _PredictionViewState extends State<PredictionView> {
           
           // Preço principal
           ShaderMask(
-            shaderCallback: (bounds) => LinearGradient(
-              colors: [Colors.blue.shade400, Colors.purple.shade400],
+            shaderCallback: (bounds) => const LinearGradient(
+              colors: [AppColors.blue600, AppColors.purple600],
             ).createShader(bounds),
             child: Text(
               viewModel.formatPrice(price),
-              style: Theme.of(context).textTheme.displaySmall?.copyWith(
+              style: const TextStyle(
+                fontSize: 40,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
+                letterSpacing: -1,
               ),
             ),
           ),
           
           // Detalhes dos modelos
           if (details != null) ...[
+            const SizedBox(height: 24),
+            const Divider(color: AppColors.zinc200),
             const SizedBox(height: 16),
-            const Divider(),
-            const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -509,6 +546,11 @@ class _PredictionViewState extends State<PredictionView> {
                   context,
                   'Modelo 1',
                   viewModel.formatPrice((details['model1'] as num).toDouble()),
+                ),
+                Container(
+                  width: 1,
+                  height: 40,
+                  color: AppColors.zinc200,
                 ),
                 _buildModelDetail(
                   context,
@@ -524,22 +566,22 @@ class _PredictionViewState extends State<PredictionView> {
   }
   
   Widget _buildModelDetail(BuildContext context, String label, String value) {
-    final colorScheme = Theme.of(context).colorScheme;
-    
     return Column(
       children: [
         Text(
           label,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: colorScheme.onSurfaceVariant,
+          style: const TextStyle(
+            fontSize: 12,
+            color: AppColors.zinc500,
           ),
         ),
         const SizedBox(height: 4),
         Text(
           value,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+          style: const TextStyle(
+            fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: colorScheme.onSurface,
+            color: AppColors.zinc900,
           ),
         ),
       ],
@@ -547,34 +589,35 @@ class _PredictionViewState extends State<PredictionView> {
   }
   
   Widget _buildErrorCard(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    
     return ShadcnCard(
-      backgroundColor: colorScheme.errorContainer,
+      backgroundColor: AppColors.red50,
+      borderColor: AppColors.red200,
       padding: const EdgeInsets.all(20),
       child: Row(
         children: [
-          Icon(
-            Icons.error_outline,
-            color: colorScheme.onErrorContainer,
+          const Icon(
+            Icons.error_outline_rounded,
+            color: AppColors.red600,
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Erro na Predição',
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  style: TextStyle(
+                    fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: colorScheme.onErrorContainer,
+                    color: AppColors.red900,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   widget.viewModel.errorMessage!,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onErrorContainer,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: AppColors.red700,
                   ),
                 ),
               ],
@@ -583,5 +626,64 @@ class _PredictionViewState extends State<PredictionView> {
         ],
       ),
     );
+  }
+  
+  /// Opções de corte com descrições amigáveis para leigos
+  List<ShadcnSelectOption<String>> _buildCutOptions() {
+    const descriptions = {
+      'Fair': 'Básico - Brilho reduzido',
+      'Good': 'Bom - Brilho adequado',
+      'Very Good': 'Muito Bom - Ótimo brilho',
+      'Premium': 'Premium - Brilho excepcional',
+      'Ideal': 'Ideal - Máximo brilho ✨',
+    };
+    
+    return widget.viewModel.cutOptions.map((cut) {
+      return ShadcnSelectOption(
+        value: cut,
+        label: descriptions[cut] ?? cut,
+      );
+    }).toList();
+  }
+  
+  /// Opções de cor com descrições amigáveis para leigos
+  List<ShadcnSelectOption<String>> _buildColorOptions() {
+    const descriptions = {
+      'D': 'D - Incolor (Raro) 💎',
+      'E': 'E - Incolor',
+      'F': 'F - Incolor',
+      'G': 'G - Quase incolor',
+      'H': 'H - Quase incolor',
+      'I': 'I - Levemente amarelado',
+      'J': 'J - Amarelado',
+    };
+    
+    return widget.viewModel.colorOptions.map((color) {
+      return ShadcnSelectOption(
+        value: color,
+        label: descriptions[color] ?? color,
+      );
+    }).toList();
+  }
+  
+  /// Opções de pureza com descrições amigáveis para leigos
+  List<ShadcnSelectOption<String>> _buildClarityOptions() {
+    const descriptions = {
+      'IF': 'IF - Perfeito (Raro) 💎',
+      'VVS1': 'VVS1 - Quase perfeito',
+      'VVS2': 'VVS2 - Mínimas inclusões',
+      'VS1': 'VS1 - Pequenas inclusões',
+      'VS2': 'VS2 - Inclusões leves',
+      'SI1': 'SI1 - Inclusões visíveis',
+      'SI2': 'SI2 - Inclusões notáveis',
+      'I1': 'I1 - Inclusões óbvias',
+    };
+    
+    return widget.viewModel.clarityOptions.map((clarity) {
+      return ShadcnSelectOption(
+        value: clarity,
+        label: descriptions[clarity] ?? clarity,
+      );
+    }).toList();
   }
 }

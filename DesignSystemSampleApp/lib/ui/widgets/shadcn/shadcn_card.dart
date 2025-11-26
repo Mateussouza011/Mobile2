@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../DesignSystem/Theme/app_theme.dart';
 
 /// Variantes visuais do card
 enum ShadcnCardVariant {
@@ -439,12 +440,12 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
     final colorScheme = theme.colorScheme;
     
     // Determinar cores e estilos baseados na variante
-    Color bgColor = widget.backgroundColor ?? _getBackgroundColor(colorScheme);
-    Color borderColorFinal = widget.borderColor ?? _getBorderColor(colorScheme);
-    double elevationFinal = widget.elevation ?? _getElevation();
-    BorderRadius borderRadiusFinal = widget.borderRadius ?? _getBorderRadius();
-    EdgeInsetsGeometry paddingFinal = widget.padding ?? _getPadding();
-    double spacingFinal = widget.spacing ?? _getSpacing();
+    Color bgColor = widget.backgroundColor ?? AppColors.surface;
+    Color borderColorFinal = widget.borderColor ?? AppColors.border;
+    double elevationFinal = widget.elevation ?? 0;
+    BorderRadius borderRadiusFinal = widget.borderRadius ?? BorderRadius.circular(16);
+    EdgeInsetsGeometry paddingFinal = widget.padding ?? const EdgeInsets.all(24);
+    double spacingFinal = widget.spacing ?? 16;
     
     // Estados visuais
     if (!widget.enabled) {
@@ -452,15 +453,15 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
     }
     
     if (widget.selected) {
-      borderColorFinal = colorScheme.primary;
+      borderColorFinal = AppColors.primary;
     }
     
     if (_isHovered && widget.onTap != null) {
-      bgColor = Color.alphaBlend(colorScheme.primary.withValues(alpha: 0.04), bgColor);
+      bgColor = AppColors.zinc50;
     }
     
     if (_isPressed) {
-      bgColor = Color.alphaBlend(colorScheme.primary.withValues(alpha: 0.08), bgColor);
+      bgColor = AppColors.zinc100;
     }
 
     // Construir conteúdo do card
@@ -484,11 +485,11 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
         borderRadius: borderRadiusFinal,
         border: Border.all(
           color: borderColorFinal,
-          width: widget.borderWidth ?? (widget.variant == ShadcnCardVariant.outlined ? 1 : 0),
+          width: widget.borderWidth ?? 1,
         ),
         boxShadow: widget.boxShadow ?? (elevationFinal > 0 ? [
           BoxShadow(
-            color: (widget.shadowColor ?? Colors.black).withValues(alpha: 0.1),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: elevationFinal,
             offset: Offset(0, elevationFinal / 2),
           ),
@@ -549,14 +550,14 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
               child: Container(
                 width: 20,
                 height: 20,
-                decoration: BoxDecoration(
-                  color: colorScheme.primary,
+                decoration: const BoxDecoration(
+                  color: AppColors.primary,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.check,
                   size: 14,
-                  color: colorScheme.onPrimary,
+                  color: AppColors.onPrimary,
                 ),
               ),
             ),
@@ -734,7 +735,7 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
           widget.title!,
           style: widget.titleStyle ?? theme.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.w600,
-            color: colorScheme.onSurface,
+            color: AppColors.onSurface,
           ),
           maxLines: widget.maxTitleLines,
           overflow: widget.titleOverflow,
@@ -748,7 +749,7 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
         Text(
           widget.subtitle!,
           style: widget.subtitleStyle ?? theme.textTheme.titleMedium?.copyWith(
-            color: colorScheme.onSurfaceVariant,
+            color: AppColors.zinc500,
           ),
           maxLines: widget.maxSubtitleLines,
           overflow: widget.subtitleOverflow,
@@ -762,7 +763,7 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
         Text(
           widget.description!,
           style: widget.descriptionStyle ?? theme.textTheme.bodyMedium?.copyWith(
-            color: colorScheme.onSurfaceVariant,
+            color: AppColors.zinc500,
           ),
           maxLines: widget.maxDescriptionLines,
           overflow: widget.descriptionOverflow,
@@ -789,110 +790,48 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
                   widget.title!,
                   style: widget.titleStyle ?? theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: colorScheme.onSurface,
+                    color: AppColors.onSurface,
                   ),
                 ),
               if (widget.subtitle != null)
                 Text(
                   widget.subtitle!,
                   style: widget.subtitleStyle ?? theme.textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
+                    color: AppColors.zinc500,
                   ),
                 ),
             ],
           ),
         ),
-        AnimatedRotation(
-          turns: _isExpanded ? 0.5 : 0,
-          duration: widget.animationDuration ?? const Duration(milliseconds: 200),
-          child: Icon(
-            Icons.keyboard_arrow_down,
-            color: colorScheme.onSurfaceVariant,
-          ),
+        Icon(
+          _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+          color: AppColors.zinc500,
         ),
       ],
     );
   }
 
   Widget _buildLoadingContent() {
-    return Center(
-      child: widget.loadingWidget ?? const CircularProgressIndicator(),
+    return Column(
+      children: [
+        Container(
+          height: 20,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: AppColors.zinc200,
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Container(
+          height: 100,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: AppColors.zinc100,
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
+      ],
     );
-  }
-
-  // Métodos auxiliares para determinar estilos baseados na variante
-
-  Color _getBackgroundColor(ColorScheme colorScheme) {
-    switch (widget.variant) {
-      case ShadcnCardVariant.elevated:
-        return colorScheme.surface;
-      case ShadcnCardVariant.filled:
-        return colorScheme.surfaceContainerHighest;
-      case ShadcnCardVariant.ghost:
-        return Colors.transparent;
-      default:
-        return colorScheme.surface;
-    }
-  }
-
-  Color _getBorderColor(ColorScheme colorScheme) {
-    switch (widget.variant) {
-      case ShadcnCardVariant.outlined:
-        return colorScheme.outline;
-      case ShadcnCardVariant.ghost:
-        return Colors.transparent;
-      default:
-        return colorScheme.outline.withValues(alpha: 0.2);
-    }
-  }
-
-  double _getElevation() {
-    switch (widget.variant) {
-      case ShadcnCardVariant.elevated:
-        return 4;
-      case ShadcnCardVariant.ghost:
-        return 0;
-      default:
-        return 1;
-    }
-  }
-
-  BorderRadius _getBorderRadius() {
-    switch (widget.size) {
-      case ShadcnCardSize.sm:
-        return BorderRadius.circular(6);
-      case ShadcnCardSize.lg:
-        return BorderRadius.circular(12);
-      case ShadcnCardSize.xl:
-        return BorderRadius.circular(16);
-      default:
-        return BorderRadius.circular(8);
-    }
-  }
-
-  EdgeInsets _getPadding() {
-    switch (widget.size) {
-      case ShadcnCardSize.sm:
-        return const EdgeInsets.all(12);
-      case ShadcnCardSize.lg:
-        return const EdgeInsets.all(20);
-      case ShadcnCardSize.xl:
-        return const EdgeInsets.all(24);
-      default:
-        return const EdgeInsets.all(16);
-    }
-  }
-
-  double _getSpacing() {
-    switch (widget.size) {
-      case ShadcnCardSize.sm:
-        return 8;
-      case ShadcnCardSize.lg:
-        return 16;
-      case ShadcnCardSize.xl:
-        return 20;
-      default:
-        return 12;
-    }
   }
 }

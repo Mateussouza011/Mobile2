@@ -1,128 +1,139 @@
-import '../../../application/app_coordinator.dart';
-import 'login_service.dart';
+import 'package:flutter/material.dart';
 
-/// LoginDelegate - Interface para eventos do componente Login
-/// 
-/// Implementa o Delegate Pattern para capturar eventos da View
-/// sem usar callbacks diretamente. Todos os eventos interativos
-/// passam por esta interface.
-abstract class LoginDelegate {
-  /// Chamado quando o usuário solicita login
-  void onLoginRequested({
-    required LoginViewModel sender,
-    required String email,
-    required String password,
-  });
-  
-  /// Chamado quando há mudança no campo de email
-  void onEmailChanged({
-    required LoginViewModel sender,
-    required String email,
-  });
-  
-  /// Chamado quando há mudança no campo de senha
-  void onPasswordChanged({
-    required LoginViewModel sender,
-    required String password,
-  });
+/// Delegate para a tela de Login
+abstract class LoginViewDelegate {
+  void onLoginSuccess();
+  void onLoginError(String message);
+  void onForgotPasswordTapped();
+  void onCreateAccountTapped();
 }
 
-/// LoginViewModel - ViewModel para a tela de Login
+/// ViewModel para a tela de Login
 /// 
-/// Contém a lógica de apresentação e gerencia o estado da tela.
-/// Implementa LoginDelegate para responder aos eventos da View.
-class LoginViewModel implements LoginDelegate {
-  final LoginService service;
-  final AppCoordinator coordinator;
+/// Gerencia estado e lógica do login seguindo MVVM + Delegate
+class LoginViewModel extends ChangeNotifier {
+  final LoginViewDelegate delegate;
   
-  // Estado atual
-  String _email = '';
-  String _password = '';
+  LoginViewModel({required this.delegate});
+  
+  // Controllers
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  
+  // Estado
   bool _isLoading = false;
-  String? _errorMessage;
-  
-  // Callbacks para atualização da UI
-  void Function()? onStateChanged;
-  
-  LoginViewModel({
-    required this.service,
-    required this.coordinator,
-  });
-  
-  // Getters
-  String get email => _email;
-  String get password => _password;
   bool get isLoading => _isLoading;
-  String? get errorMessage => _errorMessage;
-  bool get canSubmit => _email.isNotEmpty && _password.isNotEmpty && !_isLoading;
   
-  /// Realiza o login
-  Future<void> performLogin() async {
-    if (!canSubmit) return;
+  bool _isPasswordVisible = false;
+  bool get isPasswordVisible => _isPasswordVisible;
+  
+  String? _emailError;
+  String? get emailError => _emailError;
+  
+  String? _passwordError;
+  String? get passwordError => _passwordError;
+  
+  bool _rememberMe = false;
+  bool get rememberMe => _rememberMe;
+  
+  /// Alterna visibilidade da senha
+  void togglePasswordVisibility() {
+    _isPasswordVisible = !_isPasswordVisible;
+    notifyListeners();
+  }
+  
+  /// Alterna "lembrar-me"
+  void toggleRememberMe() {
+    _rememberMe = !_rememberMe;
+    notifyListeners();
+  }
+  
+  /// Valida email
+  bool _validateEmail() {
+    final email = emailController.text.trim();
+    if (email.isEmpty) {
+      _emailError = 'Digite seu email';
+      return false;
+    }
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
+      _emailError = 'Email inválido';
+      return false;
+    }
+    _emailError = null;
+    return true;
+  }
+  
+  /// Valida senha
+  bool _validatePassword() {
+    final password = passwordController.text;
+    if (password.isEmpty) {
+      _passwordError = 'Digite sua senha';
+      return false;
+    }
+    if (password.length < 6) {
+      _passwordError = 'Mínimo 6 caracteres';
+      return false;
+    }
+    _passwordError = null;
+    return true;
+  }
+  
+  /// Executa o login
+  Future<void> login() async {
+    // Valida campos
+    final isEmailValid = _validateEmail();
+    final isPasswordValid = _validatePassword();
+    notifyListeners();
+    
+    if (!isEmailValid || !isPasswordValid) {
+      return;
+    }
     
     _isLoading = true;
-    _errorMessage = null;
-    _notifyStateChanged();
+    notifyListeners();
     
     try {
-      final result = await service.login(
-        email: _email,
-        password: _password,
-      );
+      // Simula chamada de API
+      await Future.delayed(const Duration(milliseconds: 1500));
       
-      _isLoading = false;
-      _notifyStateChanged();
-      
-      // Navega para Home com os dados do usuário
-      coordinator.goToHome(
-        name: result['name'] as String,
-        email: result['email'] as String,
-      );
-      
+      // Credenciais de demo
+      if (emailController.text.trim() == 'demo@email.com' && 
+          passwordController.text == '123456') {
+        delegate.onLoginSuccess();
+      } else {
+        delegate.onLoginError('Credenciais inválidas');
+      }
     } catch (e) {
+      delegate.onLoginError('Erro ao fazer login');
+    } finally {
       _isLoading = false;
-      _errorMessage = e.toString().replaceAll('Exception: ', '');
-      _notifyStateChanged();
+      notifyListeners();
     }
   }
   
-  // Implementação do LoginDelegate
+  /// Ação de esqueci a senha
+  void forgotPassword() {
+    delegate.onForgotPasswordTapped();
+  }
   
-  @override
-  void onLoginRequested({
-    required LoginViewModel sender,
-    required String email,
-    required String password,
-  }) {
-    performLogin();
+  /// Ação de criar conta
+  void createAccount() {
+    delegate.onCreateAccountTapped();
+  }
+  
+  /// Limpa erros ao digitar
+  void clearErrors() {
+    if (_emailError != null || _passwordError != null) {
+      _emailError = null;
+      _passwordError = null;
+      notifyListeners();
+    }
   }
   
   @override
-  void onEmailChanged({
-    required LoginViewModel sender,
-    required String email,
-  }) {
-    _email = email;
-    _errorMessage = null;
-    _notifyStateChanged();
-  }
-  
-  @override
-  void onPasswordChanged({
-    required LoginViewModel sender,
-    required String password,
-  }) {
-    _password = password;
-    _errorMessage = null;
-    _notifyStateChanged();
-  }
-  
-  void _notifyStateChanged() {
-    onStateChanged?.call();
-  }
-  
-  /// Limpa o estado do ViewModel
   void dispose() {
-    onStateChanged = null;
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 }

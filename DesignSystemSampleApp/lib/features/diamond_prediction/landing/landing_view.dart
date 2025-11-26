@@ -245,13 +245,13 @@ class _LandingViewState extends State<LandingView>
   }
 
   Widget _buildTrustBadges() {
-    return Row(
+    return const Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _TrustBadge(icon: Icons.verified_outlined, label: 'Verificado'),
-        const SizedBox(width: 24),
+        SizedBox(width: 24),
         _TrustBadge(icon: Icons.lock_outline, label: 'Seguro'),
-        const SizedBox(width: 24),
+        SizedBox(width: 24),
         _TrustBadge(icon: Icons.speed_outlined, label: 'Rápido'),
       ],
     );

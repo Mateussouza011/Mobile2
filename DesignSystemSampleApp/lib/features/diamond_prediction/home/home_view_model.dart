@@ -1,116 +1,135 @@
-import '../../../application/app_coordinator.dart';
-import 'home_service.dart';
+import 'package:flutter/material.dart';
 
-/// HomeDelegate - Interface para eventos do Dashboard
-/// 
-/// Implementa o Delegate Pattern para capturar eventos da View.
-abstract class HomeDelegate {
-  /// Chamado quando usuário quer fazer nova predição
-  void onNewPredictionRequested({required HomeViewModel sender});
-  
-  /// Chamado quando usuário quer ver histórico
-  void onHistoryRequested({required HomeViewModel sender});
-  
-  /// Chamado quando usuário quer fazer logout
-  void onLogoutRequested({required HomeViewModel sender});
-  
-  /// Chamado para recarregar dados do dashboard
-  void onRefreshRequested({required HomeViewModel sender});
+/// Delegate para a Home/Dashboard
+abstract class HomeViewDelegate {
+  void onNewPredictionTapped();
+  void onHistoryTapped();
+  void onProfileTapped();
+  void onLogoutTapped();
+  void onRecentPredictionTapped(PredictionSummary prediction);
 }
 
-/// HomeViewModel - ViewModel para a tela Home/Dashboard
+/// ViewModel para a Home/Dashboard
 /// 
-/// Gerencia o estado e lógica de apresentação do dashboard.
-/// Implementa HomeDelegate para responder aos eventos.
-class HomeViewModel implements HomeDelegate {
-  final HomeService service;
-  final AppCoordinator coordinator;
+/// Gerencia estado e lógica da home seguindo MVVM + Delegate
+class HomeViewModel extends ChangeNotifier {
+  final HomeViewDelegate delegate;
   
-  // Dados do usuário
-  final String userName;
-  final String userEmail;
+  HomeViewModel({required this.delegate}) {
+    _loadData();
+  }
   
-  // Estado do dashboard
-  int _totalPredictions = 0;
-  double _averagePrice = 0.0;
-  Map<String, dynamic>? _lastPrediction;
-  bool _isLoading = false;
-  String? _errorMessage;
-  
-  // Callback para atualização da UI
-  void Function()? onStateChanged;
-  
-  HomeViewModel({
-    required this.service,
-    required this.coordinator,
-    required this.userName,
-    required this.userEmail,
-  });
-  
-  // Getters
-  int get totalPredictions => _totalPredictions;
-  double get averagePrice => _averagePrice;
-  Map<String, dynamic>? get lastPrediction => _lastPrediction;
+  // Estado
+  bool _isLoading = true;
   bool get isLoading => _isLoading;
-  String? get errorMessage => _errorMessage;
-  bool get hasData => _totalPredictions > 0;
   
-  /// Carrega os dados do dashboard
-  Future<void> loadDashboardData() async {
-    _isLoading = true;
-    _errorMessage = null;
-    _notifyStateChanged();
+  String _userName = 'Usuário';
+  String get userName => _userName;
+  
+  // Estatísticas
+  int _totalPredictions = 0;
+  int get totalPredictions => _totalPredictions;
+  
+  double _averagePrice = 0;
+  double get averagePrice => _averagePrice;
+  
+  double _highestPrice = 0;
+  double get highestPrice => _highestPrice;
+  
+  // Predições recentes
+  List<PredictionSummary> _recentPredictions = [];
+  List<PredictionSummary> get recentPredictions => _recentPredictions;
+  
+  /// Carrega dados iniciais
+  Future<void> _loadData() async {
+    await Future.delayed(const Duration(milliseconds: 800));
     
-    try {
-      final data = await service.loadDashboardData();
-      
-      _totalPredictions = data['total_predictions'] as int;
-      _averagePrice = data['average_price'] as double;
-      _lastPrediction = data['last_prediction'] as Map<String, dynamic>?;
-      _isLoading = false;
-      
-      _notifyStateChanged();
-    } catch (e) {
-      _isLoading = false;
-      _errorMessage = 'Erro ao carregar dados: ${e.toString()}';
-      _notifyStateChanged();
+    _userName = 'Demo';
+    _totalPredictions = 12;
+    _averagePrice = 4250.00;
+    _highestPrice = 15890.00;
+    
+    _recentPredictions = [
+      PredictionSummary(
+        id: '1',
+        carat: 1.2,
+        cut: 'Ideal',
+        predictedPrice: 8450.00,
+        date: DateTime.now().subtract(const Duration(hours: 2)),
+      ),
+      PredictionSummary(
+        id: '2',
+        carat: 0.8,
+        cut: 'Premium',
+        predictedPrice: 4200.00,
+        date: DateTime.now().subtract(const Duration(days: 1)),
+      ),
+      PredictionSummary(
+        id: '3',
+        carat: 2.1,
+        cut: 'Very Good',
+        predictedPrice: 15890.00,
+        date: DateTime.now().subtract(const Duration(days: 2)),
+      ),
+    ];
+    
+    _isLoading = false;
+    notifyListeners();
+  }
+  
+  /// Atualiza dados
+  Future<void> refresh() async {
+    _isLoading = true;
+    notifyListeners();
+    await _loadData();
+  }
+  
+  // Ações de navegação
+  void newPrediction() => delegate.onNewPredictionTapped();
+  void viewHistory() => delegate.onHistoryTapped();
+  void openProfile() => delegate.onProfileTapped();
+  void logout() => delegate.onLogoutTapped();
+  void openPrediction(PredictionSummary prediction) => 
+      delegate.onRecentPredictionTapped(prediction);
+  
+  /// Formata valor em moeda
+  String formatPrice(double value) {
+    return '\$${value.toStringAsFixed(2).replaceAllMapped(
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+      (m) => '${m[1]},',
+    )}';
+  }
+  
+  /// Formata data relativa
+  String formatRelativeDate(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+    
+    if (difference.inMinutes < 60) {
+      return 'Há ${difference.inMinutes}min';
+    } else if (difference.inHours < 24) {
+      return 'Há ${difference.inHours}h';
+    } else if (difference.inDays < 7) {
+      return 'Há ${difference.inDays}d';
+    } else {
+      return '${date.day}/${date.month}/${date.year}';
     }
   }
+}
+
+/// Modelo para resumo de predição
+class PredictionSummary {
+  final String id;
+  final double carat;
+  final String cut;
+  final double predictedPrice;
+  final DateTime date;
   
-  // Implementação do HomeDelegate
-  
-  @override
-  void onNewPredictionRequested({required HomeViewModel sender}) {
-    coordinator.goToPrediction();
-  }
-  
-  @override
-  void onHistoryRequested({required HomeViewModel sender}) {
-    coordinator.goToHistory();
-  }
-  
-  @override
-  void onLogoutRequested({required HomeViewModel sender}) {
-    service.clearData();
-    coordinator.logout();
-  }
-  
-  @override
-  void onRefreshRequested({required HomeViewModel sender}) {
-    loadDashboardData();
-  }
-  
-  void _notifyStateChanged() {
-    onStateChanged?.call();
-  }
-  
-  /// Formata preço para exibição
-  String formatPrice(double price) {
-    return '\$${price.toStringAsFixed(2)}';
-  }
-  
-  /// Limpa recursos
-  void dispose() {
-    onStateChanged = null;
-  }
+  const PredictionSummary({
+    required this.id,
+    required this.carat,
+    required this.cut,
+    required this.predictedPrice,
+    required this.date,
+  });
 }
