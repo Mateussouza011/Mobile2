@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'prediction_view_model.dart';
 import 'prediction_delegate.dart';
 import '../../../core/data/models/prediction_model.dart';
@@ -463,7 +464,12 @@ class _ResultModal extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: const Icon(Icons.diamond, size: 40, color: Colors.white),
+                child: SvgPicture.asset(
+                  'assets/images/diamond.svg',
+                  width: 40,
+                  height: 40,
+                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                ),
               ),
               const SizedBox(height: 20),
               

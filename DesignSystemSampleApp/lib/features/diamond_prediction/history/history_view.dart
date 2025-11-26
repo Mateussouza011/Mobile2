@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'history_view_model.dart';
 import 'history_delegate.dart';
 import '../../../ui/widgets/shadcn/shadcn_card.dart';
@@ -181,7 +182,14 @@ class _HistoryViewState extends State<HistoryView> {
                         color: colorScheme.primary.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(Icons.diamond, color: colorScheme.primary, size: 22),
+                      child: Center(
+                        child: SvgPicture.asset(
+                          'assets/images/diamond.svg',
+                          width: 22,
+                          height: 22,
+                          colorFilter: ColorFilter.mode(colorScheme.primary, BlendMode.srcIn),
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Column(

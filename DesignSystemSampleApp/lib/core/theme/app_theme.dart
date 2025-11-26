@@ -5,24 +5,24 @@ import 'package:google_fonts/google_fonts.dart';
 class ShadcnTheme {
   // Cores Shadcn/UI
   static const Color background = Color(0xFFFFFFFF);
-  static const Color foreground = Color(0xFF0A0A0A);
+  static const Color foreground = Color(0xFF0F172A); // Slate 900
   static const Color card = Color(0xFFFFFFFF);
-  static const Color cardForeground = Color(0xFF0A0A0A);
+  static const Color cardForeground = Color(0xFF0F172A);
   static const Color popover = Color(0xFFFFFFFF);
-  static const Color popoverForeground = Color(0xFF0A0A0A);
-  static const Color primary = Color(0xFF171717);
-  static const Color primaryForeground = Color(0xFFFAFAFA);
-  static const Color secondary = Color(0xFFF5F5F5);
-  static const Color secondaryForeground = Color(0xFF171717);
-  static const Color muted = Color(0xFFF5F5F5);
-  static const Color mutedForeground = Color(0xFF737373);
-  static const Color accent = Color(0xFFF5F5F5);
-  static const Color accentForeground = Color(0xFF171717);
+  static const Color popoverForeground = Color(0xFF0F172A);
+  static const Color primary = Color(0xFF0F172A); // Slate 900 (Luxury Dark Blue)
+  static const Color primaryForeground = Color(0xFFF8FAFC); // Slate 50
+  static const Color secondary = Color(0xFFF1F5F9); // Slate 100
+  static const Color secondaryForeground = Color(0xFF0F172A);
+  static const Color muted = Color(0xFFF1F5F9);
+  static const Color mutedForeground = Color(0xFF64748B); // Slate 500
+  static const Color accent = Color(0xFFF1F5F9);
+  static const Color accentForeground = Color(0xFF0F172A);
   static const Color destructive = Color(0xFFEF4444);
   static const Color destructiveForeground = Color(0xFFFEFEFE);
-  static const Color border = Color(0xFFE5E5E5);
-  static const Color input = Color(0xFFE5E5E5);
-  static const Color ring = Color(0xFF171717);
+  static const Color border = Color(0xFFE2E8F0); // Slate 200
+  static const Color input = Color(0xFFE2E8F0);
+  static const Color ring = Color(0xFF0F172A);
   
   // Cores escuras
   static const Color darkBackground = Color(0xFF0A0A0A);

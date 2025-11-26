@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../ui/widgets/shadcn/shadcn_button.dart';
 import '../../../ui/widgets/shadcn/shadcn_card.dart';
 
@@ -44,50 +45,51 @@ class LandingView extends StatelessWidget {
     return Column(
       children: [
         Container(
-          width: isDesktop ? 120 : 100,
-          height: isDesktop ? 120 : 100,
+          width: isDesktop ? 200 : 160,
+          height: isDesktop ? 200 : 160,
+          padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                colorScheme.primary,
-                colorScheme.primary.withOpacity(0.6),
-                Colors.purple.withOpacity(0.6),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(28),
+            shape: BoxShape.circle,
+            color: colorScheme.surface,
             boxShadow: [
               BoxShadow(
-                color: colorScheme.primary.withOpacity(0.4),
-                blurRadius: 30,
-                offset: const Offset(0, 12),
+                color: colorScheme.primary.withOpacity(0.2),
+                blurRadius: 40,
+                offset: const Offset(0, 20),
               ),
             ],
+            border: Border.all(
+              color: colorScheme.surface,
+              width: 4,
+            ),
           ),
-          child: Icon(
-            Icons.diamond_outlined,
-            size: isDesktop ? 56 : 48,
-            color: Colors.white,
+          child: SvgPicture.asset(
+            'assets/images/diamond.svg',
+            fit: BoxFit.contain,
           ),
         ),
-        const SizedBox(height: 32),
+        const SizedBox(height: 40),
         Text(
           'Diamond Price Predictor',
-          style: (isDesktop ? textTheme.headlineLarge : textTheme.headlineMedium)?.copyWith(
-            fontWeight: FontWeight.bold,
+          style: (isDesktop ? textTheme.displaySmall : textTheme.headlineMedium)?.copyWith(
+            fontWeight: FontWeight.w800,
             color: colorScheme.onSurface,
+            letterSpacing: -0.5,
           ),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 16),
-        Text(
-          'Utilize inteligencia artificial para estimar o valor de diamantes com base em suas caracteristicas fisicas.',
-          style: textTheme.bodyLarge?.copyWith(
-            color: colorScheme.onSurfaceVariant,
-            height: 1.6,
+        Container(
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: Text(
+            'Descubra o valor real do seu diamante com nossa Inteligência Artificial avançada. Precisão, rapidez e confiança em cada avaliação.',
+            style: textTheme.bodyLarge?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+              height: 1.6,
+              fontSize: 18,
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
         ),
       ],
     );

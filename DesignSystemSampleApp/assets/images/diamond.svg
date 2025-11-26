@@ -1,0 +1,28 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1E293B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0F172A;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#334155;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E293B;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Top Facets -->
+  <path d="M138.5 56H373.5L426 148H86L138.5 56Z" fill="url(#grad1)" stroke="#475569" stroke-width="4"/>
+  
+  <!-- Bottom Facets -->
+  <path d="M86 148L256 456L426 148H86Z" fill="url(#grad2)" stroke="#475569" stroke-width="4"/>
+  
+  <!-- Inner Lines for 3D effect -->
+  <path d="M138.5 56L256 148L373.5 56" stroke="#64748B" stroke-width="4" stroke-linecap="round"/>
+  <path d="M190 148L256 456L322 148" stroke="#64748B" stroke-width="4" stroke-linecap="round"/>
+  <path d="M256 148V456" stroke="#64748B" stroke-width="4"/>
+  <path d="M86 148H426" stroke="#64748B" stroke-width="4"/>
+  
+  <!-- Shine/Reflection -->
+  <path d="M150 70L180 120" stroke="white" stroke-width="4" stroke-opacity="0.3" stroke-linecap="round"/>
+  <path d="M330 160L280 350" stroke="white" stroke-width="4" stroke-opacity="0.2" stroke-linecap="round"/>
+</svg>

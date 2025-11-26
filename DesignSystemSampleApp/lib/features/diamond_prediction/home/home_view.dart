@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'home_view_model.dart';
 import 'home_delegate.dart';
 import '../../../ui/widgets/shadcn/shadcn_card.dart';
@@ -37,7 +38,12 @@ class _HomeViewState extends State<HomeView> {
           appBar: AppBar(
             title: Row(
               children: [
-                Icon(Icons.diamond_outlined, color: colorScheme.primary),
+                SvgPicture.asset(
+                  'assets/images/diamond.svg',
+                  width: 24,
+                  height: 24,
+                  colorFilter: ColorFilter.mode(colorScheme.primary, BlendMode.srcIn),
+                ),
                 const SizedBox(width: 8),
                 const Text('Diamond Predictor'),
               ],
@@ -98,24 +104,71 @@ class _HomeViewState extends State<HomeView> {
     final user = viewModel.currentUser;
     final greeting = _getGreeting();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '$greeting${user != null ? ', ${user.name.split(' ').first}' : ''}!',
-          style: textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: colorScheme.onSurface,
-          ),
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(32),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            colorScheme.primary,
+            colorScheme.primary.withOpacity(0.8),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
-        const SizedBox(height: 8),
-        Text(
-          'Acompanhe suas previsoes e faca novas consultas de precos de diamantes.',
-          style: textTheme.bodyLarge?.copyWith(
-            color: colorScheme.onSurfaceVariant,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.primary.withOpacity(0.2),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
           ),
-        ),
-      ],
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: SvgPicture.asset(
+                  'assets/images/diamond.svg',
+                  width: 32,
+                  height: 32,
+                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '$greeting${user != null ? ', ${user.name.split(' ').first}' : ''}!',
+                      style: textTheme.headlineSmall?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Pronto para avaliar seus diamantes hoje?',
+                      style: textTheme.bodyLarge?.copyWith(
+                        color: Colors.white.withOpacity(0.8),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -288,7 +341,14 @@ class _HomeViewState extends State<HomeView> {
                       color: colorScheme.primary.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Icon(Icons.diamond, color: colorScheme.primary, size: 20),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        'assets/images/diamond.svg',
+                        width: 20,
+                        height: 20,
+                        colorFilter: ColorFilter.mode(colorScheme.primary, BlendMode.srcIn),
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Column(

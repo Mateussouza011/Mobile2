@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../ui/widgets/shadcn/shadcn_button.dart';
 import '../../../ui/widgets/shadcn/shadcn_input.dart';
 import '../../../ui/widgets/shadcn/shadcn_card.dart';
@@ -115,10 +116,11 @@ class _LoginViewState extends State<LoginView> {
               ),
             ],
           ),
-          child: const Icon(
-            Icons.diamond_outlined,
-            size: 40,
-            color: Colors.white,
+          child: SvgPicture.asset(
+            'assets/images/diamond.svg',
+            width: 40,
+            height: 40,
+            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
           ),
         ),
         
