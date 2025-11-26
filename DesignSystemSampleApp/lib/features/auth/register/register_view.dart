@@ -1,76 +1,87 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
+import '../../../ui/widgets/shadcn/shadcn_button.dart';
+import '../../../ui/widgets/shadcn/shadcn_input.dart';
+import '../../../ui/widgets/shadcn/shadcn_card.dart';
+import '../../../ui/widgets/shadcn/shadcn_alert.dart';
+import '../../../ui/widgets/shadcn/shadcn_checkbox.dart';
 import 'register_view_model.dart';
-import '../../../DesignSystem/Components/calendar/shadcn_calendar.dart';
+import 'register_delegate.dart';
 
-/// RegisterView - Tela de cadastro
 class RegisterView extends StatefulWidget {
-  const RegisterView({super.key});
+  final RegisterViewModel viewModel;
+  final RegisterDelegate delegate;
+
+  const RegisterView({
+    super.key,
+    required this.viewModel,
+    required this.delegate,
+  });
 
   @override
   State<RegisterView> createState() => _RegisterViewState();
 }
 
-class _RegisterViewState extends State<RegisterView> 
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _fadeAnimation;
+class _RegisterViewState extends State<RegisterView> {
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 600),
-      vsync: this,
-    );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
-    _controller.forward();
+    widget.viewModel.addListener(_onViewModelChanged);
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    widget.viewModel.removeListener(_onViewModelChanged);
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  void _onViewModelChanged() {
+    if (mounted) setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-      ),
-    );
-    
-    final viewModel = context.watch<RegisterViewModel>();
-    
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 600;
+    final horizontalPadding = isDesktop ? 48.0 : 24.0;
+    final maxWidth = isDesktop ? 440.0 : double.infinity;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
+      backgroundColor: colorScheme.surface,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: colorScheme.onSurface),
+          onPressed: () => widget.delegate.onGoToLoginPressed(
+            viewModel: widget.viewModel,
+          ),
+        ),
+      ),
       body: SafeArea(
-        child: FadeTransition(
-          opacity: _fadeAnimation,
+        child: Center(
           child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 16),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: maxWidth),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  _buildHeader(textTheme, colorScheme),
                   const SizedBox(height: 24),
-                  _buildBackButton(context),
-                  const SizedBox(height: 32),
-                  _buildHeader(),
-                  const SizedBox(height: 32),
-                  _buildForm(context, viewModel),
-                  const SizedBox(height: 32),
-                  _buildRegisterButton(viewModel),
+                  _buildRegisterCard(colorScheme, textTheme),
                   const SizedBox(height: 24),
-                  _buildLoginLink(viewModel),
-                  const SizedBox(height: 32),
+                  _buildLoginLink(colorScheme, textTheme),
                 ],
               ),
             ),
@@ -80,351 +91,150 @@ class _RegisterViewState extends State<RegisterView>
     );
   }
 
-  Widget _buildBackButton(BuildContext context) {
-    return GestureDetector(
-      onTap: () => Navigator.of(context).pop(),
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFE4E4E7)),
-        ),
-        child: const Icon(
-          Icons.arrow_back_rounded,
-          size: 20,
-          color: Color(0xFF18181B),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
+  Widget _buildHeader(TextTheme textTheme, ColorScheme colorScheme) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Container(
+          width: 64,
+          height: 64,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [colorScheme.primary, colorScheme.primary.withOpacity(0.7)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: const Icon(Icons.person_add_outlined, size: 32, color: Colors.white),
+        ),
+        const SizedBox(height: 16),
         Text(
-          'Criar conta',
-          style: GoogleFonts.inter(
-            fontSize: 28,
-            fontWeight: FontWeight.w600,
-            color: const Color(0xFF18181B),
-            letterSpacing: -0.5,
+          'Criar Conta',
+          style: textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 8),
         Text(
-          'Preencha seus dados para começar',
-          style: GoogleFonts.inter(
-            fontSize: 15,
-            fontWeight: FontWeight.w400,
-            color: const Color(0xFF71717A),
-          ),
+          'Preencha seus dados para comecar',
+          style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant),
         ),
       ],
     );
   }
 
-  Widget _buildForm(BuildContext context, RegisterViewModel viewModel) {
-    return Column(
-      children: [
-        // Nome completo
-        _InputField(
-          controller: viewModel.fullNameController,
-          label: 'Nome completo',
-          hint: 'João da Silva',
-          prefixIcon: Icons.person_outline_rounded,
-          error: viewModel.fullNameError,
-          onChanged: (_) => viewModel.clearErrors(),
-          textInputAction: TextInputAction.next,
-          textCapitalization: TextCapitalization.words,
-        ),
-        const SizedBox(height: 16),
-        
-        // Username
-        _InputField(
-          controller: viewModel.usernameController,
-          label: 'Usuário',
-          hint: 'joao_silva',
-          prefixIcon: Icons.alternate_email_rounded,
-          error: viewModel.usernameError,
-          onChanged: (_) => viewModel.clearErrors(),
-          textInputAction: TextInputAction.next,
-        ),
-        const SizedBox(height: 16),
-        
-        // Data de nascimento - Shadcn Calendar
-        ShadcnCalendar(
-          viewModel: viewModel.calendarViewModel,
-          label: 'Data de nascimento',
-          placeholder: 'Selecione sua data de nascimento',
-          error: viewModel.birthDateError,
-        ),
-        const SizedBox(height: 16),
-        
-        // Senha
-        _InputField(
-          controller: viewModel.passwordController,
-          label: 'Senha',
-          hint: 'Mínimo 6 caracteres',
-          prefixIcon: Icons.lock_outline_rounded,
-          isPassword: true,
-          isPasswordVisible: viewModel.isPasswordVisible,
-          onTogglePassword: viewModel.togglePasswordVisibility,
-          error: viewModel.passwordError,
-          onChanged: (_) => viewModel.clearErrors(),
-          textInputAction: TextInputAction.next,
-        ),
-        const SizedBox(height: 16),
-        
-        // Confirmar senha
-        _InputField(
-          controller: viewModel.confirmPasswordController,
-          label: 'Confirmar senha',
-          hint: 'Repita a senha',
-          prefixIcon: Icons.lock_outline_rounded,
-          isPassword: true,
-          isPasswordVisible: viewModel.isConfirmPasswordVisible,
-          onTogglePassword: viewModel.toggleConfirmPasswordVisibility,
-          error: viewModel.confirmPasswordError,
-          onChanged: (_) => viewModel.clearErrors(),
-          textInputAction: TextInputAction.done,
-          onSubmitted: (_) => viewModel.register(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRegisterButton(RegisterViewModel viewModel) {
-    return _PrimaryButton(
-      label: 'Criar conta',
-      isLoading: viewModel.isLoading,
-      onPressed: viewModel.register,
-    );
-  }
-
-  Widget _buildLoginLink(RegisterViewModel viewModel) {
-    return Center(
-      child: GestureDetector(
-        onTap: viewModel.goToLogin,
-        child: RichText(
-          text: TextSpan(
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: const Color(0xFF71717A),
+  Widget _buildRegisterCard(ColorScheme colorScheme, TextTheme textTheme) {
+    return ShadcnCard(
+      variant: ShadcnCardVariant.outlined,
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (widget.viewModel.errorMessage != null) ...[
+            ShadcnAlert(
+              title: 'Erro',
+              description: widget.viewModel.errorMessage,
+              type: ShadcnAlertType.error,
+              variant: ShadcnAlertVariant.filled,
+              dismissible: true,
+              onDismiss: () => widget.viewModel.setError(null),
             ),
+            const SizedBox(height: 16),
+          ],
+          ShadcnInput(
+            label: 'Nome completo',
+            placeholder: 'Seu nome',
+            controller: _nameController,
+            errorText: widget.viewModel.nameError,
+            enabled: !widget.viewModel.isLoading,
+            prefixIcon: const Icon(Icons.person_outline),
+            onChanged: (value) => widget.delegate.onNameChanged(
+              viewModel: widget.viewModel,
+              name: value,
+            ),
+          ),
+          const SizedBox(height: 16),
+          ShadcnInput.email(
+            label: 'Email',
+            placeholder: 'seu@email.com',
+            controller: _emailController,
+            errorText: widget.viewModel.emailError,
+            enabled: !widget.viewModel.isLoading,
+            onChanged: (value) => widget.delegate.onEmailChanged(
+              viewModel: widget.viewModel,
+              email: value,
+            ),
+          ),
+          const SizedBox(height: 16),
+          ShadcnInput.password(
+            label: 'Senha',
+            placeholder: 'Minimo 6 caracteres',
+            controller: _passwordController,
+            errorText: widget.viewModel.passwordError,
+            enabled: !widget.viewModel.isLoading,
+            onChanged: (value) => widget.delegate.onPasswordChanged(
+              viewModel: widget.viewModel,
+              password: value,
+            ),
+          ),
+          const SizedBox(height: 16),
+          ShadcnInput.password(
+            label: 'Confirmar senha',
+            placeholder: 'Digite a senha novamente',
+            controller: _confirmPasswordController,
+            errorText: widget.viewModel.confirmPasswordError,
+            enabled: !widget.viewModel.isLoading,
+            onChanged: (value) => widget.delegate.onConfirmPasswordChanged(
+              viewModel: widget.viewModel,
+              confirmPassword: value,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(
             children: [
-              const TextSpan(text: 'Já tem uma conta? '),
-              TextSpan(
-                text: 'Entrar',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF18181B),
+              ShadcnCheckbox(
+                value: widget.viewModel.acceptTerms,
+                onChanged: (_) => widget.delegate.onToggleAcceptTerms(
+                  viewModel: widget.viewModel,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'Aceito os termos de uso e politica de privacidade',
+                  style: textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant),
                 ),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Campo de Input customizado
-class _InputField extends StatefulWidget {
-  final TextEditingController controller;
-  final String label;
-  final String hint;
-  final IconData? prefixIcon;
-  final bool isPassword;
-  final bool isPasswordVisible;
-  final VoidCallback? onTogglePassword;
-  final String? error;
-  final ValueChanged<String>? onChanged;
-  final TextInputAction? textInputAction;
-  final ValueChanged<String>? onSubmitted;
-  final TextCapitalization textCapitalization;
-
-  const _InputField({
-    required this.controller,
-    required this.label,
-    required this.hint,
-    this.prefixIcon,
-    this.isPassword = false,
-    this.isPasswordVisible = false,
-    this.onTogglePassword,
-    this.error,
-    this.onChanged,
-    this.textInputAction,
-    this.onSubmitted,
-    this.textCapitalization = TextCapitalization.none,
-  });
-
-  @override
-  State<_InputField> createState() => _InputFieldState();
-}
-
-class _InputFieldState extends State<_InputField> {
-  bool _isFocused = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final hasError = widget.error != null;
-    
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          widget.label,
-          style: GoogleFonts.inter(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: const Color(0xFF18181B),
-          ),
-        ),
-        const SizedBox(height: 8),
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: hasError
-                  ? const Color(0xFFEF4444)
-                  : _isFocused
-                      ? const Color(0xFF18181B)
-                      : const Color(0xFFE4E4E7),
-              width: _isFocused || hasError ? 1.5 : 1,
-            ),
-          ),
-          child: Focus(
-            onFocusChange: (focused) => setState(() => _isFocused = focused),
-            child: TextField(
-              controller: widget.controller,
-              obscureText: widget.isPassword && !widget.isPasswordVisible,
-              onChanged: widget.onChanged,
-              textInputAction: widget.textInputAction,
-              onSubmitted: widget.onSubmitted,
-              textCapitalization: widget.textCapitalization,
-              style: GoogleFonts.inter(
-                fontSize: 15,
-                fontWeight: FontWeight.w400,
-                color: const Color(0xFF18181B),
-              ),
-              decoration: InputDecoration(
-                hintText: widget.hint,
-                hintStyle: GoogleFonts.inter(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w400,
-                  color: const Color(0xFFA1A1AA),
-                ),
-                prefixIcon: widget.prefixIcon != null
-                    ? Icon(
-                        widget.prefixIcon,
-                        size: 20,
-                        color: _isFocused 
-                            ? const Color(0xFF18181B) 
-                            : const Color(0xFFA1A1AA),
-                      )
-                    : null,
-                suffixIcon: widget.isPassword
-                    ? GestureDetector(
-                        onTap: widget.onTogglePassword,
-                        child: Icon(
-                          widget.isPasswordVisible
-                              ? Icons.visibility_off_outlined
-                              : Icons.visibility_outlined,
-                          size: 20,
-                          color: const Color(0xFFA1A1AA),
-                        ),
-                      )
-                    : null,
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 14,
-                ),
-              ),
-            ),
-          ),
-        ),
-        if (hasError) ...[
-          const SizedBox(height: 6),
-          Text(
-            widget.error!,
-            style: GoogleFonts.inter(
-              fontSize: 13,
-              fontWeight: FontWeight.w400,
-              color: const Color(0xFFEF4444),
-            ),
+          const SizedBox(height: 24),
+          ShadcnButton(
+            text: widget.viewModel.isLoading ? 'Criando conta...' : 'Criar conta',
+            loading: widget.viewModel.isLoading,
+            disabled: widget.viewModel.isLoading,
+            onPressed: () => widget.delegate.onRegisterPressed(viewModel: widget.viewModel),
           ),
         ],
-      ],
+      ),
     );
   }
-}
 
-/// Botão Primário
-class _PrimaryButton extends StatefulWidget {
-  final String label;
-  final bool isLoading;
-  final VoidCallback onPressed;
-
-  const _PrimaryButton({
-    required this.label,
-    this.isLoading = false,
-    required this.onPressed,
-  });
-
-  @override
-  State<_PrimaryButton> createState() => _PrimaryButtonState();
-}
-
-class _PrimaryButtonState extends State<_PrimaryButton> {
-  bool _isPressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) => setState(() => _isPressed = true),
-      onTapUp: (_) => setState(() => _isPressed = false),
-      onTapCancel: () => setState(() => _isPressed = false),
-      onTap: widget.isLoading ? null : widget.onPressed,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 100),
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        decoration: BoxDecoration(
-          color: widget.isLoading
-              ? const Color(0xFF52525B)
-              : _isPressed
-                  ? const Color(0xFF27272A)
-                  : const Color(0xFF18181B),
-          borderRadius: BorderRadius.circular(12),
+  Widget _buildLoginLink(ColorScheme colorScheme, TextTheme textTheme) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'Ja tem uma conta? ',
+          style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant),
         ),
-        child: Center(
-          child: widget.isLoading
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                  ),
-                )
-              : Text(
-                  widget.label,
-                  style: GoogleFonts.inter(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
+        ShadcnButton(
+          text: 'Fazer login',
+          variant: ShadcnButtonVariant.link,
+          disabled: widget.viewModel.isLoading,
+          onPressed: () => widget.delegate.onGoToLoginPressed(viewModel: widget.viewModel),
         ),
-      ),
+      ],
     );
   }
 }

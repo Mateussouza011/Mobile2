@@ -213,7 +213,8 @@ class AppRouter {
             builder: (context) {
               return RegisterFactory.create(
                 context: context,
-                onRegisterSuccess: () => context.go('/diamond-home'),
+                // Após cadastro, redireciona para login (não loga automaticamente)
+                onRegisterSuccess: () => context.go('/diamond-login'),
                 onGoToLogin: () => context.go('/diamond-login'),
               );
             },

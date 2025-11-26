@@ -1,111 +1,151 @@
 import 'package:flutter/material.dart';
-import '../../../core/data/services/auth_service.dart';
-
-/// Delegate para a tela de Login
-abstract class LoginDelegate {
-  void onLoginSuccess();
-  void onNavigateToRegister();
-  void onNavigateToForgotPassword();
-  void onShowError(String message);
-  void onShowSuccess(String message);
-}
 
 /// ViewModel para a tela de Login
+/// Contém apenas dados e estados, sem lógica de negócio
 class LoginViewModel extends ChangeNotifier {
-  final LoginDelegate delegate;
-  final AuthService _authService = AuthService.instance;
-  
-  LoginViewModel({required this.delegate});
-  
-  // Controllers
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
-  
-  // Estado
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
-  
+  // Estados do formulário
+  String _email = '';
+  String _password = '';
   bool _isPasswordVisible = false;
-  bool get isPasswordVisible => _isPasswordVisible;
+  bool _rememberMe = false;
   
-  String? _usernameError;
-  String? get usernameError => _usernameError;
-  
+  // Estados de UI
+  bool _isLoading = false;
+  String? _errorMessage;
+  String? _emailError;
   String? _passwordError;
+
+  // Getters
+  String get email => _email;
+  String get password => _password;
+  bool get isPasswordVisible => _isPasswordVisible;
+  bool get rememberMe => _rememberMe;
+  bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
+  String? get emailError => _emailError;
   String? get passwordError => _passwordError;
   
-  /// Alterna visibilidade da senha
+  bool get isFormValid => 
+      _email.isNotEmpty && 
+      _password.isNotEmpty &&
+      _emailError == null &&
+      _passwordError == null;
+
+  // Setters com notificação
+  void setEmail(String value) {
+    _email = value;
+    _validateEmail();
+    _clearGeneralError();
+    notifyListeners();
+  }
+
+  void setPassword(String value) {
+    _password = value;
+    _validatePassword();
+    _clearGeneralError();
+    notifyListeners();
+  }
+
   void togglePasswordVisibility() {
     _isPasswordVisible = !_isPasswordVisible;
     notifyListeners();
   }
-  
-  /// Limpa erros
-  void clearErrors() {
-    if (_usernameError != null || _passwordError != null) {
-      _usernameError = null;
-      _passwordError = null;
-      notifyListeners();
+
+  void toggleRememberMe() {
+    _rememberMe = !_rememberMe;
+    notifyListeners();
+  }
+
+  void setLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
+  void setError(String? message) {
+    _errorMessage = message;
+    notifyListeners();
+  }
+
+  void setEmailError(String? error) {
+    _emailError = error;
+    notifyListeners();
+  }
+
+  void setPasswordError(String? error) {
+    _passwordError = error;
+    notifyListeners();
+  }
+
+  // Validações
+  void _validateEmail() {
+    if (_email.isEmpty) {
+      _emailError = null;
+      return;
+    }
+    
+    final emailRegex = RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    );
+    
+    if (!emailRegex.hasMatch(_email)) {
+      _emailError = 'Email inválido';
+    } else {
+      _emailError = null;
     }
   }
-  
-  /// Valida campos
-  bool _validate() {
-    bool isValid = true;
-    
-    final usernameError = _authService.validateUsername(usernameController.text);
-    if (usernameError != null) {
-      _usernameError = usernameError;
-      isValid = false;
+
+  void _validatePassword() {
+    if (_password.isEmpty) {
+      _passwordError = null;
+      return;
     }
     
-    if (passwordController.text.isEmpty) {
+    if (_password.length < 6) {
+      _passwordError = 'Mínimo 6 caracteres';
+    } else {
+      _passwordError = null;
+    }
+  }
+
+  void _clearGeneralError() {
+    if (_errorMessage != null) {
+      _errorMessage = null;
+    }
+  }
+
+  /// Limpa todos os estados
+  void clear() {
+    _email = '';
+    _password = '';
+    _isPasswordVisible = false;
+    _isLoading = false;
+    _errorMessage = null;
+    _emailError = null;
+    _passwordError = null;
+    notifyListeners();
+  }
+
+  /// Valida todo o formulário antes do submit
+  bool validateForm() {
+    bool isValid = true;
+    
+    if (_email.isEmpty) {
+      _emailError = 'Email é obrigatório';
+      isValid = false;
+    } else {
+      _validateEmail();
+      if (_emailError != null) isValid = false;
+    }
+    
+    if (_password.isEmpty) {
       _passwordError = 'Senha é obrigatória';
       isValid = false;
+    } else {
+      _validatePassword();
+      if (_passwordError != null) isValid = false;
     }
     
     notifyListeners();
     return isValid;
-  }
-  
-  /// Executa o login
-  Future<void> login() async {
-    if (!_validate()) return;
-    
-    _isLoading = true;
-    notifyListeners();
-    
-    try {
-      final result = await _authService.login(
-        usernameController.text.trim(),
-        passwordController.text,
-      );
-      
-      if (result.success) {
-        delegate.onLoginSuccess();
-      } else {
-        delegate.onShowError(result.message ?? 'Erro ao fazer login');
-      }
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
-  }
-  
-  /// Navega para cadastro
-  void goToRegister() {
-    delegate.onNavigateToRegister();
-  }
-  
-  /// Navega para recuperação de senha
-  void goToForgotPassword() {
-    delegate.onNavigateToForgotPassword();
-  }
-  
-  @override
-  void dispose() {
-    usernameController.dispose();
-    passwordController.dispose();
-    super.dispose();
   }
 }

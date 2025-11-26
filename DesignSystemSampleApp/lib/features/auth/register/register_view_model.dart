@@ -1,195 +1,225 @@
 import 'package:flutter/material.dart';
-import '../../../core/data/services/auth_service.dart';
-import '../../../DesignSystem/Components/calendar/calendar_view_model.dart' as calendar;
 
-/// Delegate para a tela de Cadastro
-abstract class RegisterDelegate {
-  void onRegisterSuccess();
-  void onNavigateToLogin();
-  void onShowError(String message);
-  void onShowSuccess(String message);
-}
-
-/// ViewModel para a tela de Cadastro
-class RegisterViewModel extends ChangeNotifier implements calendar.CalendarDelegate {
-  final RegisterDelegate delegate;
-  final AuthService _authService = AuthService.instance;
-  
-  // Calendar ViewModel
-  late final calendar.CalendarViewModel calendarViewModel;
-  
-  RegisterViewModel({required this.delegate}) {
-    final now = DateTime.now();
-    calendarViewModel = calendar.CalendarViewModel(
-      delegate: this,
-      initialDate: null,
-      minDate: DateTime(1900),
-      maxDate: now, // Não pode selecionar data futura
-    );
-  }
-  
-  @override
-  void onDateSelected(DateTime date) {
-    setBirthDate(date);
-  }
-  
-  // Controllers
-  final fullNameController = TextEditingController();
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-  
-  // Estado
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
-  
+/// ViewModel para a tela de Registro
+class RegisterViewModel extends ChangeNotifier {
+  // Estados do formulário
+  String _name = '';
+  String _email = '';
+  String _password = '';
+  String _confirmPassword = '';
   bool _isPasswordVisible = false;
-  bool get isPasswordVisible => _isPasswordVisible;
-  
   bool _isConfirmPasswordVisible = false;
-  bool get isConfirmPasswordVisible => _isConfirmPasswordVisible;
+  bool _acceptTerms = false;
   
-  DateTime? _birthDate;
-  DateTime? get birthDate => _birthDate;
-  
-  // Erros
-  String? _fullNameError;
-  String? get fullNameError => _fullNameError;
-  
-  String? _usernameError;
-  String? get usernameError => _usernameError;
-  
-  String? _birthDateError;
-  String? get birthDateError => _birthDateError;
-  
+  // Estados de UI
+  bool _isLoading = false;
+  String? _errorMessage;
+  String? _successMessage;
+  String? _nameError;
+  String? _emailError;
   String? _passwordError;
-  String? get passwordError => _passwordError;
-  
   String? _confirmPasswordError;
+
+  // Getters
+  String get name => _name;
+  String get email => _email;
+  String get password => _password;
+  String get confirmPassword => _confirmPassword;
+  bool get isPasswordVisible => _isPasswordVisible;
+  bool get isConfirmPasswordVisible => _isConfirmPasswordVisible;
+  bool get acceptTerms => _acceptTerms;
+  bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
+  String? get successMessage => _successMessage;
+  String? get nameError => _nameError;
+  String? get emailError => _emailError;
+  String? get passwordError => _passwordError;
   String? get confirmPasswordError => _confirmPasswordError;
   
-  /// Alterna visibilidade da senha
+  bool get isFormValid => 
+      _name.isNotEmpty && 
+      _email.isNotEmpty && 
+      _password.isNotEmpty &&
+      _confirmPassword.isNotEmpty &&
+      _acceptTerms &&
+      _nameError == null &&
+      _emailError == null &&
+      _passwordError == null &&
+      _confirmPasswordError == null;
+
+  // Setters
+  void setName(String value) {
+    _name = value;
+    _validateName();
+    _clearErrors();
+    notifyListeners();
+  }
+
+  void setEmail(String value) {
+    _email = value;
+    _validateEmail();
+    _clearErrors();
+    notifyListeners();
+  }
+
+  void setPassword(String value) {
+    _password = value;
+    _validatePassword();
+    _validateConfirmPassword();
+    _clearErrors();
+    notifyListeners();
+  }
+
+  void setConfirmPassword(String value) {
+    _confirmPassword = value;
+    _validateConfirmPassword();
+    _clearErrors();
+    notifyListeners();
+  }
+
   void togglePasswordVisibility() {
     _isPasswordVisible = !_isPasswordVisible;
     notifyListeners();
   }
-  
-  /// Alterna visibilidade da confirmação de senha
+
   void toggleConfirmPasswordVisibility() {
     _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
     notifyListeners();
   }
-  
-  /// Define a data de nascimento
-  void setBirthDate(DateTime date) {
-    _birthDate = date;
-    _birthDateError = null;
+
+  void toggleAcceptTerms() {
+    _acceptTerms = !_acceptTerms;
     notifyListeners();
   }
-  
-  /// Formata a data de nascimento para exibição
-  String get formattedBirthDate {
-    if (_birthDate == null) return '';
-    return '${_birthDate!.day.toString().padLeft(2, '0')}/'
-           '${_birthDate!.month.toString().padLeft(2, '0')}/'
-           '${_birthDate!.year}';
+
+  void setLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
   }
-  
-  /// Limpa todos os erros
-  void clearErrors() {
-    _fullNameError = null;
-    _usernameError = null;
-    _birthDateError = null;
+
+  void setError(String? message) {
+    _errorMessage = message;
+    _successMessage = null;
+    notifyListeners();
+  }
+
+  void setSuccess(String? message) {
+    _successMessage = message;
+    _errorMessage = null;
+    notifyListeners();
+  }
+
+  // Validações
+  void _validateName() {
+    if (_name.isEmpty) {
+      _nameError = null;
+      return;
+    }
+    
+    if (_name.trim().length < 2) {
+      _nameError = 'Nome muito curto';
+    } else {
+      _nameError = null;
+    }
+  }
+
+  void _validateEmail() {
+    if (_email.isEmpty) {
+      _emailError = null;
+      return;
+    }
+    
+    final emailRegex = RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    );
+    
+    if (!emailRegex.hasMatch(_email)) {
+      _emailError = 'Email inválido';
+    } else {
+      _emailError = null;
+    }
+  }
+
+  void _validatePassword() {
+    if (_password.isEmpty) {
+      _passwordError = null;
+      return;
+    }
+    
+    if (_password.length < 6) {
+      _passwordError = 'Mínimo 6 caracteres';
+    } else {
+      _passwordError = null;
+    }
+  }
+
+  void _validateConfirmPassword() {
+    if (_confirmPassword.isEmpty) {
+      _confirmPasswordError = null;
+      return;
+    }
+    
+    if (_confirmPassword != _password) {
+      _confirmPasswordError = 'Senhas não conferem';
+    } else {
+      _confirmPasswordError = null;
+    }
+  }
+
+  void _clearErrors() {
+    if (_errorMessage != null) {
+      _errorMessage = null;
+    }
+  }
+
+  bool validateForm() {
+    bool isValid = true;
+    
+    if (_name.isEmpty) {
+      _nameError = 'Nome é obrigatório';
+      isValid = false;
+    }
+    
+    if (_email.isEmpty) {
+      _emailError = 'Email é obrigatório';
+      isValid = false;
+    }
+    
+    if (_password.isEmpty) {
+      _passwordError = 'Senha é obrigatória';
+      isValid = false;
+    }
+    
+    if (_confirmPassword.isEmpty) {
+      _confirmPasswordError = 'Confirme sua senha';
+      isValid = false;
+    }
+    
+    if (!_acceptTerms) {
+      _errorMessage = 'Você deve aceitar os termos de uso';
+      isValid = false;
+    }
+    
+    notifyListeners();
+    return isValid && _nameError == null && _emailError == null && 
+           _passwordError == null && _confirmPasswordError == null;
+  }
+
+  void clear() {
+    _name = '';
+    _email = '';
+    _password = '';
+    _confirmPassword = '';
+    _isPasswordVisible = false;
+    _isConfirmPasswordVisible = false;
+    _acceptTerms = false;
+    _isLoading = false;
+    _errorMessage = null;
+    _successMessage = null;
+    _nameError = null;
+    _emailError = null;
     _passwordError = null;
     _confirmPasswordError = null;
     notifyListeners();
-  }
-  
-  /// Valida todos os campos
-  bool _validate() {
-    bool isValid = true;
-    
-    // Nome completo
-    final nameError = _authService.validateFullName(fullNameController.text);
-    if (nameError != null) {
-      _fullNameError = nameError;
-      isValid = false;
-    }
-    
-    // Username
-    final usernameError = _authService.validateUsername(usernameController.text);
-    if (usernameError != null) {
-      _usernameError = usernameError;
-      isValid = false;
-    }
-    
-    // Data de nascimento
-    final birthError = _authService.validateBirthDate(_birthDate);
-    if (birthError != null) {
-      _birthDateError = birthError;
-      isValid = false;
-    }
-    
-    // Senha
-    final passwordError = _authService.validatePassword(passwordController.text);
-    if (passwordError != null) {
-      _passwordError = passwordError;
-      isValid = false;
-    }
-    
-    // Confirmação de senha
-    if (confirmPasswordController.text.isEmpty) {
-      _confirmPasswordError = 'Confirme sua senha';
-      isValid = false;
-    } else if (confirmPasswordController.text != passwordController.text) {
-      _confirmPasswordError = 'Senhas não conferem';
-      isValid = false;
-    }
-    
-    notifyListeners();
-    return isValid;
-  }
-  
-  /// Executa o cadastro
-  Future<void> register() async {
-    clearErrors();
-    if (!_validate()) return;
-    
-    _isLoading = true;
-    notifyListeners();
-    
-    try {
-      final result = await _authService.register(
-        fullName: fullNameController.text.trim(),
-        username: usernameController.text.trim(),
-        birthDate: _birthDate!,
-        password: passwordController.text,
-        confirmPassword: confirmPasswordController.text,
-      );
-      
-      if (result.success) {
-        delegate.onShowSuccess('Conta criada com sucesso!');
-        delegate.onRegisterSuccess();
-      } else {
-        delegate.onShowError(result.message ?? 'Erro ao criar conta');
-      }
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
-  }
-  
-  /// Navega para login
-  void goToLogin() {
-    delegate.onNavigateToLogin();
-  }
-  
-  @override
-  void dispose() {
-    fullNameController.dispose();
-    usernameController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    super.dispose();
   }
 }

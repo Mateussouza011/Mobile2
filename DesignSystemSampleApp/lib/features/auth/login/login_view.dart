@@ -1,77 +1,86 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
+import '../../../ui/widgets/shadcn/shadcn_button.dart';
+import '../../../ui/widgets/shadcn/shadcn_input.dart';
+import '../../../ui/widgets/shadcn/shadcn_card.dart';
+import '../../../ui/widgets/shadcn/shadcn_alert.dart';
+import '../../../ui/widgets/shadcn/shadcn_checkbox.dart';
 import 'login_view_model.dart';
+import 'login_delegate.dart';
 
-/// LoginView - Tela de login com username e senha
+/// View da tela de Login
+/// Apenas UI, toda lógica delegada ao LoginDelegate
 class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+  final LoginViewModel viewModel;
+  final LoginDelegate delegate;
+
+  const LoginView({
+    super.key,
+    required this.viewModel,
+    required this.delegate,
+  });
 
   @override
   State<LoginView> createState() => _LoginViewState();
 }
 
-class _LoginViewState extends State<LoginView> 
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _fadeAnimation;
+class _LoginViewState extends State<LoginView> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 600),
-      vsync: this,
-    );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
-    _controller.forward();
+    widget.viewModel.addListener(_onViewModelChanged);
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    widget.viewModel.removeListener(_onViewModelChanged);
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
+  }
+
+  void _onViewModelChanged() {
+    if (mounted) setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-      ),
-    );
-    
-    final viewModel = context.watch<LoginViewModel>();
-    
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 600;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
+      backgroundColor: colorScheme.surface,
       body: SafeArea(
-        child: FadeTransition(
-          opacity: _fadeAnimation,
+        child: Center(
           child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+            padding: EdgeInsets.symmetric(
+              horizontal: isDesktop ? 48 : 24,
+              vertical: 32,
+            ),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: isDesktop ? 440 : double.infinity,
+              ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SizedBox(height: 24),
-                  _buildBackButton(context),
-                  const SizedBox(height: 40),
-                  _buildHeader(),
-                  const SizedBox(height: 40),
-                  _buildForm(viewModel),
-                  const SizedBox(height: 16),
-                  _buildForgotPassword(viewModel),
+                  // Header com logo
+                  _buildHeader(context, textTheme, colorScheme),
+                  
                   const SizedBox(height: 32),
-                  _buildLoginButton(viewModel),
-                  const SizedBox(height: 32),
-                  _buildRegisterLink(viewModel),
+                  
+                  // Card de Login
+                  _buildLoginCard(context, colorScheme, textTheme),
+                  
                   const SizedBox(height: 24),
+                  
+                  // Link para registro
+                  _buildRegisterLink(context, colorScheme, textTheme),
                 ],
               ),
             ),
@@ -81,340 +90,178 @@ class _LoginViewState extends State<LoginView>
     );
   }
 
-  Widget _buildBackButton(BuildContext context) {
-    return GestureDetector(
-      onTap: () => Navigator.of(context).pop(),
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFE4E4E7)),
-        ),
-        child: const Icon(
-          Icons.arrow_back_rounded,
-          size: 20,
-          color: Color(0xFF18181B),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context, TextTheme textTheme, ColorScheme colorScheme) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Logo
+        // Ícone de diamante
         Container(
-          width: 56,
-          height: 56,
+          width: 80,
+          height: 80,
           decoration: BoxDecoration(
-            color: const Color(0xFF18181B),
-            borderRadius: BorderRadius.circular(16),
+            gradient: LinearGradient(
+              colors: [
+                colorScheme.primary,
+                colorScheme.primary.withOpacity(0.7),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: colorScheme.primary.withOpacity(0.3),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
+              ),
+            ],
           ),
           child: const Icon(
             Icons.diamond_outlined,
-            size: 28,
+            size: 40,
             color: Colors.white,
           ),
         ),
+        
         const SizedBox(height: 24),
+        
         Text(
-          'Entrar',
-          style: GoogleFonts.inter(
-            fontSize: 28,
-            fontWeight: FontWeight.w600,
-            color: const Color(0xFF18181B),
-            letterSpacing: -0.5,
+          'Diamond Price',
+          style: textTheme.headlineMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: colorScheme.onSurface,
           ),
         ),
+        
         const SizedBox(height: 8),
+        
         Text(
-          'Entre com sua conta para continuar',
-          style: GoogleFonts.inter(
-            fontSize: 15,
-            fontWeight: FontWeight.w400,
-            color: const Color(0xFF71717A),
+          'Faça login para continuar',
+          style: textTheme.bodyLarge?.copyWith(
+            color: colorScheme.onSurfaceVariant,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildForm(LoginViewModel viewModel) {
-    return Column(
-      children: [
-        _InputField(
-          controller: viewModel.usernameController,
-          label: 'Usuário',
-          hint: 'seu_usuario',
-          prefixIcon: Icons.person_outline_rounded,
-          error: viewModel.usernameError,
-          onChanged: (_) => viewModel.clearErrors(),
-          textInputAction: TextInputAction.next,
-        ),
-        const SizedBox(height: 16),
-        _InputField(
-          controller: viewModel.passwordController,
-          label: 'Senha',
-          hint: '••••••••',
-          prefixIcon: Icons.lock_outline_rounded,
-          isPassword: true,
-          isPasswordVisible: viewModel.isPasswordVisible,
-          onTogglePassword: viewModel.togglePasswordVisibility,
-          error: viewModel.passwordError,
-          onChanged: (_) => viewModel.clearErrors(),
-          textInputAction: TextInputAction.done,
-          onSubmitted: (_) => viewModel.login(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildForgotPassword(LoginViewModel viewModel) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: GestureDetector(
-        onTap: viewModel.goToForgotPassword,
-        child: Text(
-          'Esqueceu a senha?',
-          style: GoogleFonts.inter(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: const Color(0xFF18181B),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLoginButton(LoginViewModel viewModel) {
-    return _PrimaryButton(
-      label: 'Entrar',
-      isLoading: viewModel.isLoading,
-      onPressed: viewModel.login,
-    );
-  }
-
-  Widget _buildRegisterLink(LoginViewModel viewModel) {
-    return Center(
-      child: GestureDetector(
-        onTap: viewModel.goToRegister,
-        child: RichText(
-          text: TextSpan(
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: const Color(0xFF71717A),
+  Widget _buildLoginCard(BuildContext context, ColorScheme colorScheme, TextTheme textTheme) {
+    return ShadcnCard(
+      variant: ShadcnCardVariant.outlined,
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Mensagem de erro
+          if (widget.viewModel.errorMessage != null) ...[
+            ShadcnAlert(
+              title: 'Erro',
+              description: widget.viewModel.errorMessage,
+              type: ShadcnAlertType.error,
+              variant: ShadcnAlertVariant.filled,
+              dismissible: true,
+              onDismiss: () => widget.viewModel.setError(null),
             ),
+            const SizedBox(height: 16),
+          ],
+          
+          // Campo de Email
+          ShadcnInput.email(
+            label: 'Email',
+            placeholder: 'seu@email.com',
+            controller: _emailController,
+            errorText: widget.viewModel.emailError,
+            enabled: !widget.viewModel.isLoading,
+            onChanged: (value) => widget.delegate.onEmailChanged(
+              viewModel: widget.viewModel,
+              email: value,
+            ),
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // Campo de Senha
+          ShadcnInput.password(
+            label: 'Senha',
+            placeholder: 'Digite sua senha',
+            controller: _passwordController,
+            errorText: widget.viewModel.passwordError,
+            enabled: !widget.viewModel.isLoading,
+            onChanged: (value) => widget.delegate.onPasswordChanged(
+              viewModel: widget.viewModel,
+              password: value,
+            ),
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // Lembrar-me e Esqueci a senha
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const TextSpan(text: 'Não tem uma conta? '),
-              TextSpan(
-                text: 'Criar conta',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF18181B),
+              Row(
+                children: [
+                  ShadcnCheckbox(
+                    value: widget.viewModel.rememberMe,
+                    onChanged: (_) => widget.delegate.onToggleRememberMe(
+                      viewModel: widget.viewModel,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Lembrar-me',
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+              ShadcnButton(
+                text: 'Esqueci a senha',
+                variant: ShadcnButtonVariant.link,
+                size: ShadcnButtonSize.sm,
+                disabled: widget.viewModel.isLoading,
+                onPressed: () => widget.delegate.onForgotPasswordPressed(
+                  viewModel: widget.viewModel,
                 ),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Campo de Input customizado
-class _InputField extends StatefulWidget {
-  final TextEditingController controller;
-  final String label;
-  final String hint;
-  final IconData? prefixIcon;
-  final bool isPassword;
-  final bool isPasswordVisible;
-  final VoidCallback? onTogglePassword;
-  final String? error;
-  final ValueChanged<String>? onChanged;
-  final TextInputAction? textInputAction;
-  final ValueChanged<String>? onSubmitted;
-
-  const _InputField({
-    required this.controller,
-    required this.label,
-    required this.hint,
-    this.prefixIcon,
-    this.isPassword = false,
-    this.isPasswordVisible = false,
-    this.onTogglePassword,
-    this.error,
-    this.onChanged,
-    this.textInputAction,
-    this.onSubmitted,
-  });
-
-  @override
-  State<_InputField> createState() => _InputFieldState();
-}
-
-class _InputFieldState extends State<_InputField> {
-  bool _isFocused = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final hasError = widget.error != null;
-    
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          widget.label,
-          style: GoogleFonts.inter(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: const Color(0xFF18181B),
-          ),
-        ),
-        const SizedBox(height: 8),
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: hasError
-                  ? const Color(0xFFEF4444)
-                  : _isFocused
-                      ? const Color(0xFF18181B)
-                      : const Color(0xFFE4E4E7),
-              width: _isFocused || hasError ? 1.5 : 1,
-            ),
-          ),
-          child: Focus(
-            onFocusChange: (focused) => setState(() => _isFocused = focused),
-            child: TextField(
-              controller: widget.controller,
-              obscureText: widget.isPassword && !widget.isPasswordVisible,
-              onChanged: widget.onChanged,
-              textInputAction: widget.textInputAction,
-              onSubmitted: widget.onSubmitted,
-              style: GoogleFonts.inter(
-                fontSize: 15,
-                fontWeight: FontWeight.w400,
-                color: const Color(0xFF18181B),
-              ),
-              decoration: InputDecoration(
-                hintText: widget.hint,
-                hintStyle: GoogleFonts.inter(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w400,
-                  color: const Color(0xFFA1A1AA),
-                ),
-                prefixIcon: widget.prefixIcon != null
-                    ? Icon(
-                        widget.prefixIcon,
-                        size: 20,
-                        color: _isFocused 
-                            ? const Color(0xFF18181B) 
-                            : const Color(0xFFA1A1AA),
-                      )
-                    : null,
-                suffixIcon: widget.isPassword
-                    ? GestureDetector(
-                        onTap: widget.onTogglePassword,
-                        child: Icon(
-                          widget.isPasswordVisible
-                              ? Icons.visibility_off_outlined
-                              : Icons.visibility_outlined,
-                          size: 20,
-                          color: const Color(0xFFA1A1AA),
-                        ),
-                      )
-                    : null,
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 14,
-                ),
-              ),
-            ),
-          ),
-        ),
-        if (hasError) ...[
-          const SizedBox(height: 6),
-          Text(
-            widget.error!,
-            style: GoogleFonts.inter(
-              fontSize: 13,
-              fontWeight: FontWeight.w400,
-              color: const Color(0xFFEF4444),
+          
+          const SizedBox(height: 24),
+          
+          // Botão de Login
+          ShadcnButton(
+            text: widget.viewModel.isLoading ? 'Entrando...' : 'Entrar',
+            loading: widget.viewModel.isLoading,
+            disabled: widget.viewModel.isLoading,
+            onPressed: () => widget.delegate.onLoginPressed(
+              viewModel: widget.viewModel,
             ),
           ),
         ],
-      ],
+      ),
     );
   }
-}
 
-/// Botão Primário
-class _PrimaryButton extends StatefulWidget {
-  final String label;
-  final bool isLoading;
-  final VoidCallback onPressed;
-
-  const _PrimaryButton({
-    required this.label,
-    this.isLoading = false,
-    required this.onPressed,
-  });
-
-  @override
-  State<_PrimaryButton> createState() => _PrimaryButtonState();
-}
-
-class _PrimaryButtonState extends State<_PrimaryButton> {
-  bool _isPressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) => setState(() => _isPressed = true),
-      onTapUp: (_) => setState(() => _isPressed = false),
-      onTapCancel: () => setState(() => _isPressed = false),
-      onTap: widget.isLoading ? null : widget.onPressed,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 100),
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        decoration: BoxDecoration(
-          color: widget.isLoading
-              ? const Color(0xFF52525B)
-              : _isPressed
-                  ? const Color(0xFF27272A)
-                  : const Color(0xFF18181B),
-          borderRadius: BorderRadius.circular(12),
+  Widget _buildRegisterLink(BuildContext context, ColorScheme colorScheme, TextTheme textTheme) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'Não tem uma conta? ',
+          style: textTheme.bodyMedium?.copyWith(
+            color: colorScheme.onSurfaceVariant,
+          ),
         ),
-        child: Center(
-          child: widget.isLoading
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                  ),
-                )
-              : Text(
-                  widget.label,
-                  style: GoogleFonts.inter(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
+        ShadcnButton(
+          text: 'Cadastre-se',
+          variant: ShadcnButtonVariant.link,
+          disabled: widget.viewModel.isLoading,
+          onPressed: () => widget.delegate.onRegisterPressed(
+            viewModel: widget.viewModel,
+          ),
         ),
-      ),
+      ],
     );
   }
 }

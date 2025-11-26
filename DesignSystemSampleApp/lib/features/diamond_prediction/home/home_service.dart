@@ -1,60 +1,101 @@
-/// HomeService - Serviço para dados do Dashboard
-/// 
-/// Responsável por buscar estatísticas e dados do dashboard.
-/// Em produção, faria chamadas HTTP para uma API de backend.
-class HomeService {
-  // Armazena predições em memória para simulação
-  final List<Map<String, dynamic>> _predictions = [];
-  
-  /// Adiciona uma predição ao histórico
-  void addPrediction(Map<String, dynamic> prediction) {
-    _predictions.insert(0, prediction);
-  }
-  
-  /// Retorna todas as predições
-  List<Map<String, dynamic>> getPredictions() {
-    return List.from(_predictions);
-  }
-  
-  /// Busca dados do dashboard
-  /// 
-  /// Retorna estatísticas como total de predições, preço médio, etc.
-  Future<Map<String, dynamic>> loadDashboardData() async {
-    // Simula delay de rede
-    await Future.delayed(const Duration(milliseconds: 500));
-    
-    // Calcula estatísticas
-    final total = _predictions.length;
-    double averagePrice = 0;
-    Map<String, dynamic>? lastPrediction;
-    
-    if (_predictions.isNotEmpty) {
-      final prices = _predictions
-          .map((p) => (p['predicted_price'] as num?)?.toDouble() ?? 0.0)
-          .toList();
-      averagePrice = prices.reduce((a, b) => a + b) / prices.length;
-      lastPrediction = _predictions.first;
-    }
-    
-    return {
-      'total_predictions': total,
-      'average_price': averagePrice,
-      'last_prediction': lastPrediction,
-      'predictions': _predictions,
-    };
-  }
-  
-  /// Limpa todos os dados (logout)
-  void clearData() {
-    _predictions.clear();
-  }
-}
+import 'package:go_router/go_router.dart';
+import 'package:flutter/material.dart';
+import 'home_delegate.dart';
+import 'home_view_model.dart';
+import '../../../core/data/models/prediction_model.dart';
+import '../../../core/data/models/user_model.dart';
+import '../../../core/data/repositories/auth_repository.dart';
+import '../../../core/data/repositories/prediction_history_repository.dart';
 
-/// Singleton para manter o estado entre telas
-class HomeServiceProvider {
-  static final HomeServiceProvider _instance = HomeServiceProvider._internal();
-  factory HomeServiceProvider() => _instance;
-  HomeServiceProvider._internal();
-  
-  final HomeService service = HomeService();
+/// Implementação do HomeDelegate - conecta View ao Repository
+class HomeService implements HomeDelegate {
+  final HomeViewModel viewModel;
+  final AuthRepository authRepository;
+  final PredictionHistoryRepository historyRepository;
+  final BuildContext context;
+
+  HomeService({
+    required this.viewModel,
+    required this.authRepository,
+    required this.historyRepository,
+    required this.context,
+  });
+
+  @override
+  Future<void> loadStats() async {
+    viewModel.setLoading(true);
+    viewModel.clearError();
+
+    try {
+      final user = getCurrentUser();
+      if (user == null || user.id == null) {
+        onError('Usuário não autenticado');
+        return;
+      }
+
+      final userId = user.id!;
+      
+      // Carregar estatísticas em paralelo
+      final results = await Future.wait([
+        historyRepository.countPredictionsForUser(userId),
+        historyRepository.getAveragePrice(userId),
+        historyRepository.getLastPrediction(userId),
+      ]);
+
+      onStatsLoaded(
+        totalPredictions: results[0] as int,
+        averagePrice: results[1] as double,
+        lastPrediction: results[2] as PredictionHistoryModel?,
+      );
+    } catch (e) {
+      onError('Erro ao carregar estatísticas: ${e.toString()}');
+    } finally {
+      viewModel.setLoading(false);
+    }
+  }
+
+  @override
+  void navigateToPrediction() {
+    GoRouter.of(context).go('/diamond-prediction');
+  }
+
+  @override
+  void navigateToHistory() {
+    GoRouter.of(context).go('/diamond-history');
+  }
+
+  @override
+  Future<void> logout() async {
+    try {
+      await authRepository.logout();
+      if (context.mounted) {
+        GoRouter.of(context).go('/diamond-landing');
+      }
+    } catch (e) {
+      onError('Erro ao fazer logout: ${e.toString()}');
+    }
+  }
+
+  @override
+  void onStatsLoaded({
+    required int totalPredictions,
+    required double averagePrice,
+    PredictionHistoryModel? lastPrediction,
+  }) {
+    viewModel.setStats(
+      totalPredictions: totalPredictions,
+      averagePrice: averagePrice,
+      lastPrediction: lastPrediction,
+    );
+  }
+
+  @override
+  void onError(String message) {
+    viewModel.setError(message);
+  }
+
+  @override
+  UserModel? getCurrentUser() {
+    return authRepository.currentUser;
+  }
 }

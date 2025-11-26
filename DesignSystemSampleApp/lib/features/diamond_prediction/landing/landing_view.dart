@@ -1,423 +1,199 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'landing_view_model.dart';
+import 'package:go_router/go_router.dart';
+import '../../../ui/widgets/shadcn/shadcn_button.dart';
+import '../../../ui/widgets/shadcn/shadcn_card.dart';
 
-/// LandingView - Design moderno, minimalista e elegante
-/// 
-/// Inspirado no estilo visual shadcn/iOS com:
-/// - Layout simétrico e limpo
-/// - Cores neutras com acentos sutis
-/// - Tipografia refinada
-/// - Micro-interações suaves
-class LandingView extends StatefulWidget {
+class LandingView extends StatelessWidget {
   const LandingView({super.key});
 
   @override
-  State<LandingView> createState() => _LandingViewState();
-}
-
-class _LandingViewState extends State<LandingView> 
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-    
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
-    
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.1),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
-    
-    _controller.forward();
-    
-    // Inicializa o ViewModel
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<LandingViewModel>().initialize();
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    // Configura a status bar para modo escuro
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-      ),
-    );
-    
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 800;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
+      backgroundColor: colorScheme.surface,
       body: SafeArea(
-        child: FadeTransition(
-          opacity: _fadeAnimation,
-          child: SlideTransition(
-            position: _slideAnimation,
-            child: _buildContent(context),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 800),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildHero(context, colorScheme, textTheme, isDesktop),
+                  const SizedBox(height: 48),
+                  _buildFeatures(context, colorScheme, textTheme, isDesktop),
+                  const SizedBox(height: 48),
+                  _buildActions(context, colorScheme),
+                  const SizedBox(height: 32),
+                  _buildDesignSystemLink(context, colorScheme, textTheme),
+                ],
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildContent(BuildContext context) {
-    final viewModel = context.watch<LandingViewModel>();
-    final size = MediaQuery.of(context).size;
-    
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          minHeight: size.height - MediaQuery.of(context).padding.top,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            children: [
-              const SizedBox(height: 60),
-              
-              // Logo/Icon
-              _buildLogo(),
-              
-              const SizedBox(height: 48),
-              
-              // Headline
-              _buildHeadline(),
-              
-              const SizedBox(height: 16),
-              
-              // Subheadline
-              _buildSubheadline(),
-              
-              const SizedBox(height: 48),
-              
-              // Features
-              _buildFeatures(viewModel),
-              
-              const SizedBox(height: 56),
-              
-              // CTA Button
-              _buildCTAButton(viewModel),
-              
-              const SizedBox(height: 16),
-              
-              // Secondary link
-              _buildSecondaryLink(viewModel),
-              
-              const SizedBox(height: 48),
-              
-              // Trust badges
-              _buildTrustBadges(),
-              
-              const SizedBox(height: 32),
+  Widget _buildHero(BuildContext context, ColorScheme colorScheme, TextTheme textTheme, bool isDesktop) {
+    return Column(
+      children: [
+        Container(
+          width: isDesktop ? 120 : 100,
+          height: isDesktop ? 120 : 100,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                colorScheme.primary,
+                colorScheme.primary.withOpacity(0.6),
+                Colors.purple.withOpacity(0.6),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(28),
+            boxShadow: [
+              BoxShadow(
+                color: colorScheme.primary.withOpacity(0.4),
+                blurRadius: 30,
+                offset: const Offset(0, 12),
+              ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLogo() {
-    return Container(
-      width: 80,
-      height: 80,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 24,
-            offset: const Offset(0, 8),
-          ),
-        ],
-        border: Border.all(
-          color: Colors.black.withOpacity(0.04),
-          width: 1,
-        ),
-      ),
-      child: Center(
-        child: ShaderMask(
-          shaderCallback: (bounds) => const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF18181B), Color(0xFF3F3F46)],
-          ).createShader(bounds),
-          child: const Icon(
+          child: Icon(
             Icons.diamond_outlined,
-            size: 36,
+            size: isDesktop ? 56 : 48,
             color: Colors.white,
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildHeadline() {
-    return Text(
-      'Diamond Price\nPrediction',
-      textAlign: TextAlign.center,
-      style: GoogleFonts.inter(
-        fontSize: 36,
-        fontWeight: FontWeight.w600,
-        color: const Color(0xFF18181B),
-        height: 1.2,
-        letterSpacing: -0.5,
-      ),
-    );
-  }
-
-  Widget _buildSubheadline() {
-    return Container(
-      constraints: const BoxConstraints(maxWidth: 320),
-      child: Text(
-        'Descubra o valor real do seu diamante com precisão usando inteligência artificial.',
-        textAlign: TextAlign.center,
-        style: GoogleFonts.inter(
-          fontSize: 16,
-          fontWeight: FontWeight.w400,
-          color: const Color(0xFF71717A),
-          height: 1.5,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFeatures(LandingViewModel viewModel) {
-    return Container(
-      constraints: const BoxConstraints(maxWidth: 400),
-      child: Column(
-        children: viewModel.features.map((feature) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: _FeatureCard(feature: feature),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  Widget _buildCTAButton(LandingViewModel viewModel) {
-    return Container(
-      constraints: const BoxConstraints(maxWidth: 400),
-      width: double.infinity,
-      child: _PrimaryButton(
-        label: 'Começar',
-        onPressed: viewModel.getStarted,
-      ),
-    );
-  }
-
-  Widget _buildSecondaryLink(LandingViewModel viewModel) {
-    return GestureDetector(
-      onTap: viewModel.learnMore,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Text(
-          'Como funciona?',
-          style: GoogleFonts.inter(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: const Color(0xFF71717A),
+        const SizedBox(height: 32),
+        Text(
+          'Diamond Price Predictor',
+          style: (isDesktop ? textTheme.headlineLarge : textTheme.headlineMedium)?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: colorScheme.onSurface,
           ),
+          textAlign: TextAlign.center,
         ),
-      ),
-    );
-  }
-
-  Widget _buildTrustBadges() {
-    return const Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _TrustBadge(icon: Icons.verified_outlined, label: 'Verificado'),
-        SizedBox(width: 24),
-        _TrustBadge(icon: Icons.lock_outline, label: 'Seguro'),
-        SizedBox(width: 24),
-        _TrustBadge(icon: Icons.speed_outlined, label: 'Rápido'),
+        const SizedBox(height: 16),
+        Text(
+          'Utilize inteligencia artificial para estimar o valor de diamantes com base em suas caracteristicas fisicas.',
+          style: textTheme.bodyLarge?.copyWith(
+            color: colorScheme.onSurfaceVariant,
+            height: 1.6,
+          ),
+          textAlign: TextAlign.center,
+        ),
       ],
     );
   }
-}
 
-/// Card de Feature - Design minimalista
-class _FeatureCard extends StatelessWidget {
-  final FeatureItem feature;
+  Widget _buildFeatures(BuildContext context, ColorScheme colorScheme, TextTheme textTheme, bool isDesktop) {
+    final features = [
+      (Icons.auto_awesome, 'IA Avancada', 'Modelo treinado com milhares de diamantes'),
+      (Icons.speed, 'Resultado Instantaneo', 'Obtenha estimativas em segundos'),
+      (Icons.history, 'Historico Completo', 'Salve e acompanhe suas consultas'),
+    ];
 
-  const _FeatureCard({required this.feature});
+    if (isDesktop) {
+      return Row(
+        children: features.map((f) => Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: _buildFeatureCard(context, colorScheme, textTheme, f.$1, f.$2, f.$3),
+          ),
+        )).toList(),
+      );
+    }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: const Color(0xFFE4E4E7),
-          width: 1,
-        ),
-      ),
-      child: Row(
+    return Column(
+      children: features.map((f) => Padding(
+        padding: const EdgeInsets.only(bottom: 16),
+        child: _buildFeatureCard(context, colorScheme, textTheme, f.$1, f.$2, f.$3),
+      )).toList(),
+    );
+  }
+
+  Widget _buildFeatureCard(BuildContext context, ColorScheme colorScheme, TextTheme textTheme, IconData icon, String title, String description) {
+    return ShadcnCard(
+      variant: ShadcnCardVariant.outlined,
+      padding: const EdgeInsets.all(20),
+      child: Column(
         children: [
           Container(
-            width: 44,
-            height: 44,
+            width: 48,
+            height: 48,
             decoration: BoxDecoration(
-              color: const Color(0xFFF4F4F5),
+              color: colorScheme.primaryContainer.withOpacity(0.5),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
-              feature.icon,
-              size: 22,
-              color: const Color(0xFF18181B),
-            ),
+            child: Icon(icon, color: colorScheme.primary, size: 24),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  feature.title,
-                  style: GoogleFonts.inter(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF18181B),
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  feature.subtitle,
-                  style: GoogleFonts.inter(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xFF71717A),
-                  ),
-                ),
-              ],
+          const SizedBox(height: 16),
+          Text(
+            title,
+            style: textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: colorScheme.onSurface,
             ),
+            textAlign: TextAlign.center,
           ),
-          const Icon(
-            Icons.chevron_right_rounded,
-            size: 20,
-            color: Color(0xFFA1A1AA),
+          const SizedBox(height: 8),
+          Text(
+            description,
+            style: textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
     );
   }
-}
 
-/// Botão Primário - Estilo shadcn
-class _PrimaryButton extends StatefulWidget {
-  final String label;
-  final VoidCallback onPressed;
-
-  const _PrimaryButton({
-    required this.label,
-    required this.onPressed,
-  });
-
-  @override
-  State<_PrimaryButton> createState() => _PrimaryButtonState();
-}
-
-class _PrimaryButtonState extends State<_PrimaryButton> {
-  bool _isPressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) => setState(() => _isPressed = true),
-      onTapUp: (_) => setState(() => _isPressed = false),
-      onTapCancel: () => setState(() => _isPressed = false),
-      onTap: widget.onPressed,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 100),
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        decoration: BoxDecoration(
-          color: _isPressed 
-              ? const Color(0xFF27272A) 
-              : const Color(0xFF18181B),
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: _isPressed ? [] : [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              widget.label,
-              style: GoogleFonts.inter(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(width: 8),
-            const Icon(
-              Icons.arrow_forward_rounded,
-              size: 18,
-              color: Colors.white,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Badge de Confiança
-class _TrustBadge extends StatelessWidget {
-  final IconData icon;
-  final String label;
-
-  const _TrustBadge({
-    required this.icon,
-    required this.label,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildActions(BuildContext context, ColorScheme colorScheme) {
     return Column(
       children: [
-        Icon(
-          icon,
-          size: 20,
-          color: const Color(0xFFA1A1AA),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: GoogleFonts.inter(
-            fontSize: 11,
-            fontWeight: FontWeight.w500,
-            color: const Color(0xFFA1A1AA),
+        SizedBox(
+          width: 280,
+          child: ShadcnButton(
+            text: 'Comecar Agora',
+            leadingIcon: const Icon(Icons.arrow_forward, size: 18),
+            onPressed: () => context.go('/diamond-login'),
           ),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          width: 280,
+          child: ShadcnButton(
+            text: 'Criar Conta',
+            variant: ShadcnButtonVariant.outline,
+            onPressed: () => context.go('/auth/register'),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDesignSystemLink(BuildContext context, ColorScheme colorScheme, TextTheme textTheme) {
+    return Column(
+      children: [
+        const Divider(),
+        const SizedBox(height: 16),
+        Text(
+          'Construido com nosso Design System',
+          style: textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant),
+        ),
+        const SizedBox(height: 8),
+        ShadcnButton(
+          text: 'Ver Componentes',
+          variant: ShadcnButtonVariant.ghost,
+          size: ShadcnButtonSize.sm,
+          trailingIcon: const Icon(Icons.open_in_new, size: 14),
+          onPressed: () => context.go('/design-system'),
         ),
       ],
     );

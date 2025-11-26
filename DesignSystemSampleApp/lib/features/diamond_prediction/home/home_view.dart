@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import '../../../DesignSystem/Theme/app_theme.dart';
-import '../../../ui/widgets/shadcn/shadcn_card.dart';
 import 'home_view_model.dart';
+import 'home_delegate.dart';
+import '../../../ui/widgets/shadcn/shadcn_card.dart';
+import '../../../ui/widgets/shadcn/shadcn_alert.dart';
 
-/// HomeView - Dashboard moderno, minimalista e elegante
-/// 
-/// Inspirado no estilo visual shadcn/iOS com:
-/// - Cards com métricas claras
-/// - Lista de atividades recentes
-/// - Ações rápidas acessíveis
 class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+  final HomeDelegate delegate;
+
+  const HomeView({super.key, required this.delegate});
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -20,453 +16,330 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.delegate.loadStats();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-      ),
-    );
-    
-    final viewModel = context.watch<HomeViewModel>();
-    
-    return Scaffold(
-      backgroundColor: AppColors.zinc50,
-      body: SafeArea(
-        child: viewModel.isLoading
-            ? _buildLoading()
-            : RefreshIndicator(
-                onRefresh: viewModel.refresh,
-                color: AppColors.zinc900,
-                child: _buildContent(context, viewModel),
-              ),
-      ),
-    );
-  }
+    return Consumer<HomeViewModel>(
+      builder: (context, viewModel, child) {
+        final colorScheme = Theme.of(context).colorScheme;
+        final textTheme = Theme.of(context).textTheme;
+        final screenWidth = MediaQuery.of(context).size.width;
+        final isDesktop = screenWidth > 800;
 
-  Widget _buildLoading() {
-    return const Center(
-      child: CircularProgressIndicator(
-        color: AppColors.zinc900,
-        strokeWidth: 2,
-      ),
-    );
-  }
-
-  Widget _buildContent(BuildContext context, HomeViewModel viewModel) {
-    return CustomScrollView(
-      physics: const AlwaysScrollableScrollPhysics(
-        parent: BouncingScrollPhysics(),
-      ),
-      slivers: [
-        // Header
-        SliverToBoxAdapter(
-          child: _buildHeader(viewModel),
-        ),
-        
-        // Quick Actions
-        SliverToBoxAdapter(
-          child: _buildQuickActions(viewModel),
-        ),
-        
-        // Stats Cards
-        SliverToBoxAdapter(
-          child: _buildStatsSection(viewModel),
-        ),
-        
-        // Recent Predictions Header
-        SliverToBoxAdapter(
-          child: _buildSectionHeader(
-            title: 'Atividade Recente',
-            action: 'Ver tudo',
-            onAction: viewModel.viewHistory,
-          ),
-        ),
-        
-        // Recent Predictions List
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          sliver: SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final prediction = viewModel.recentPredictions[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: _PredictionCard(
-                    prediction: prediction,
-                    viewModel: viewModel,
-                    onTap: () => viewModel.openPrediction(prediction),
-                  ),
-                );
-              },
-              childCount: viewModel.recentPredictions.length,
+        return Scaffold(
+          backgroundColor: colorScheme.surface,
+          appBar: AppBar(
+            title: Row(
+              children: [
+                Icon(Icons.diamond_outlined, color: colorScheme.primary),
+                const SizedBox(width: 8),
+                const Text('Diamond Predictor'),
+              ],
             ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.refresh),
+                onPressed: () => widget.delegate.loadStats(),
+                tooltip: 'Atualizar',
+              ),
+              IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: () => _showLogoutDialog(context),
+                tooltip: 'Sair',
+              ),
+              const SizedBox(width: 8),
+            ],
+          ),
+          body: SafeArea(
+            child: viewModel.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 900),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildWelcome(viewModel, colorScheme, textTheme),
+                            const SizedBox(height: 24),
+                            if (viewModel.errorMessage != null) ...[
+                              ShadcnAlert(
+                                variant: ShadcnAlertVariant.destructive,
+                                title: 'Erro',
+                                description: viewModel.errorMessage!,
+                              ),
+                              const SizedBox(height: 24),
+                            ],
+                            _buildStatsCards(viewModel, colorScheme, textTheme, isDesktop),
+                            const SizedBox(height: 32),
+                            _buildActionCards(colorScheme, textTheme, isDesktop),
+                            const SizedBox(height: 32),
+                            if (viewModel.lastPrediction != null)
+                              _buildLastPrediction(viewModel, colorScheme, textTheme),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildWelcome(HomeViewModel viewModel, ColorScheme colorScheme, TextTheme textTheme) {
+    final user = viewModel.currentUser;
+    final greeting = _getGreeting();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '$greeting${user != null ? ', ${user.name.split(' ').first}' : ''}!',
+          style: textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: colorScheme.onSurface,
           ),
         ),
-        
-        // Bottom padding
-        const SliverToBoxAdapter(
-          child: SizedBox(height: 100),
+        const SizedBox(height: 8),
+        Text(
+          'Acompanhe suas previsoes e faca novas consultas de precos de diamantes.',
+          style: textTheme.bodyLarge?.copyWith(
+            color: colorScheme.onSurfaceVariant,
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildHeader(HomeViewModel viewModel) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return 'Bom dia';
+    if (hour < 18) return 'Boa tarde';
+    return 'Boa noite';
+  }
+
+  Widget _buildStatsCards(HomeViewModel viewModel, ColorScheme colorScheme, TextTheme textTheme, bool isDesktop) {
+    final cards = <Widget>[
+      _buildStatCard(
+        Icons.analytics_outlined,
+        'Total de Predicoes',
+        viewModel.totalPredictions.toString(),
+        colorScheme.primary,
+        colorScheme,
+        textTheme,
+      ),
+      _buildStatCard(
+        Icons.attach_money,
+        'Preco Medio',
+        viewModel.averagePrice > 0 ? '\$${viewModel.averagePrice.toStringAsFixed(2)}' : '--',
+        Colors.green,
+        colorScheme,
+        textTheme,
+      ),
+      _buildStatCard(
+        Icons.calendar_today_outlined,
+        'Ultima Consulta',
+        viewModel.lastPrediction != null ? _formatDate(viewModel.lastPrediction!.createdAt) : '--',
+        Colors.orange,
+        colorScheme,
+        textTheme,
+      ),
+    ];
+
+    if (isDesktop) {
+      return Row(
+        children: cards.map((card) => Expanded(child: Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: card))).toList(),
+      );
+    }
+
+    return Column(
+      children: cards.map((card) => Padding(padding: const EdgeInsets.only(bottom: 16), child: card)).toList(),
+    );
+  }
+
+  Widget _buildStatCard(IconData icon, String label, String value, Color iconColor, ColorScheme colorScheme, TextTheme textTheme) {
+    return ShadcnCard(
+      variant: ShadcnCardVariant.outlined,
+      padding: const EdgeInsets.all(20),
       child: Row(
         children: [
-          // Avatar
           Container(
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: AppColors.zinc900,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.zinc900.withValues(alpha: 0.2),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+              color: iconColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: Center(
-              child: Text(
-                viewModel.userName[0].toUpperCase(),
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-            ),
+            child: Icon(icon, color: iconColor, size: 24),
           ),
-          const SizedBox(width: 12),
-          
-          // Greeting
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Olá, ${viewModel.userName}',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.zinc900,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                const Text(
-                  'Bem-vindo de volta',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.zinc500,
-                  ),
-                ),
+                Text(label, style: textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant)),
+                const SizedBox(height: 4),
+                Text(value, style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: colorScheme.onSurface)),
               ],
             ),
           ),
-          
-          // Logout button
-          GestureDetector(
-            onTap: viewModel.logout,
-            child: Container(
-              width: 40,
-              height: 40,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionCards(ColorScheme colorScheme, TextTheme textTheme, bool isDesktop) {
+    final cards = <Widget>[
+      _buildActionCard(
+        Icons.add_circle_outline,
+        'Nova Predicao',
+        'Calcule o valor de um novo diamante com base em suas caracteristicas',
+        colorScheme.primary,
+        () => widget.delegate.navigateToPrediction(),
+        colorScheme,
+        textTheme,
+      ),
+      _buildActionCard(
+        Icons.history,
+        'Ver Historico',
+        'Consulte todas as suas predicoes anteriores',
+        Colors.purple,
+        () => widget.delegate.navigateToHistory(),
+        colorScheme,
+        textTheme,
+      ),
+    ];
+
+    if (isDesktop) {
+      return Row(
+        children: cards.map((card) => Expanded(child: Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: card))).toList(),
+      );
+    }
+
+    return Column(
+      children: cards.map((card) => Padding(padding: const EdgeInsets.only(bottom: 16), child: card)).toList(),
+    );
+  }
+
+  Widget _buildActionCard(IconData icon, String title, String description, Color iconColor, VoidCallback onTap, ColorScheme colorScheme, TextTheme textTheme) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: ShadcnCard(
+        variant: ShadcnCardVariant.outlined,
+        padding: const EdgeInsets.all(24),
+        child: Row(
+          children: [
+            Container(
+              width: 56,
+              height: 56,
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.zinc200),
+                color: iconColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(16),
               ),
-              child: const Icon(
-                Icons.logout_rounded,
-                size: 18,
-                color: AppColors.zinc500,
+              child: Icon(icon, color: iconColor, size: 28),
+            ),
+            const SizedBox(width: 20),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: colorScheme.onSurface)),
+                  const SizedBox(height: 4),
+                  Text(description, style: textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant)),
+                ],
               ),
             ),
-          ),
-        ],
+            Icon(Icons.arrow_forward_ios, color: colorScheme.onSurfaceVariant, size: 16),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildQuickActions(HomeViewModel viewModel) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-      child: GestureDetector(
-        onTap: viewModel.newPrediction,
-        child: Container(
+  Widget _buildLastPrediction(HomeViewModel viewModel, ColorScheme colorScheme, TextTheme textTheme) {
+    final prediction = viewModel.lastPrediction!;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Ultima Predicao', style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: colorScheme.onSurface)),
+        const SizedBox(height: 16),
+        ShadcnCard(
+          variant: ShadcnCardVariant.outlined,
           padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: AppColors.zinc900,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.zinc900.withValues(alpha: 0.25),
-                blurRadius: 16,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: const Icon(
-                  Icons.add_rounded,
-                  size: 24,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(width: 16),
-              const Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Nova Predição',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
+              Row(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    SizedBox(height: 2),
-                    Text(
-                      'Descubra o valor do seu diamante',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white60,
-                      ),
-                    ),
-                  ],
-                ),
+                    child: Icon(Icons.diamond, color: colorScheme.primary, size: 20),
+                  ),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('${prediction.carat} quilates', style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600)),
+                      Text('${prediction.cut} - ${prediction.color} - ${prediction.clarity}', style: textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant)),
+                    ],
+                  ),
+                ],
               ),
-              const Icon(
-                Icons.arrow_forward_rounded,
-                size: 20,
-                color: Colors.white60,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text('\$${prediction.predictedPrice.toStringAsFixed(2)}', style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: Colors.green)),
+                  Text(_formatDate(prediction.createdAt), style: textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant)),
+                ],
               ),
             ],
           ),
         ),
-      ),
+      ],
     );
   }
 
-  Widget _buildStatsSection(HomeViewModel viewModel) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-      child: Row(
-        children: [
-          Expanded(
-            child: _StatCard(
-              label: 'Total',
-              value: viewModel.totalPredictions.toString(),
-              icon: Icons.analytics_outlined,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: _StatCard(
-              label: 'Média',
-              value: viewModel.formatPrice(viewModel.averagePrice),
-              icon: Icons.trending_up_rounded,
-              isSmallText: true,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: _StatCard(
-              label: 'Maior',
-              value: viewModel.formatPrice(viewModel.highestPrice),
-              icon: Icons.diamond_outlined,
-              isSmallText: true,
-            ),
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+
+    if (difference.inDays == 0) return 'Hoje';
+    if (difference.inDays == 1) return 'Ontem';
+    if (difference.inDays < 7) return 'Ha ${difference.inDays} dias';
+    return '${date.day}/${date.month}/${date.year}';
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Sair'),
+        content: const Text('Deseja realmente sair da sua conta?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('Cancelar')),
+          TextButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              widget.delegate.logout();
+            },
+            child: const Text('Sair'),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSectionHeader({
-    required String title,
-    required String action,
-    required VoidCallback onAction,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppColors.zinc900,
-            ),
-          ),
-          GestureDetector(
-            onTap: onAction,
-            child: Text(
-              action,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: AppColors.zinc500,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Card de Estatística
-class _StatCard extends StatelessWidget {
-  final String label;
-  final String value;
-  final IconData icon;
-  final bool isSmallText;
-
-  const _StatCard({
-    required this.label,
-    required this.value,
-    required this.icon,
-    this.isSmallText = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ShadcnCard(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            icon,
-            size: 20,
-            color: AppColors.zinc500,
-          ),
-          const SizedBox(height: 12),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: isSmallText ? 14 : 20,
-              fontWeight: FontWeight.w700,
-              color: AppColors.zinc900,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: AppColors.zinc500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Card de Predição Recente
-class _PredictionCard extends StatelessWidget {
-  final PredictionSummary prediction;
-  final HomeViewModel viewModel;
-  final VoidCallback onTap;
-
-  const _PredictionCard({
-    required this.prediction,
-    required this.viewModel,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ShadcnCard(
-      padding: EdgeInsets.zero,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              // Diamond icon
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: AppColors.zinc100,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(
-                  Icons.diamond_outlined,
-                  size: 22,
-                  color: AppColors.zinc900,
-                ),
-              ),
-              const SizedBox(width: 14),
-              
-              // Info
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${prediction.carat} ct • ${prediction.cut}',
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.zinc900,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      viewModel.formatRelativeDate(prediction.date),
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.zinc500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              
-              // Price
-              Text(
-                viewModel.formatPrice(prediction.predictedPrice),
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.zinc900,
-                ),
-              ),
-              const SizedBox(width: 8),
-              const Icon(
-                Icons.chevron_right_rounded,
-                size: 20,
-                color: AppColors.zinc400,
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

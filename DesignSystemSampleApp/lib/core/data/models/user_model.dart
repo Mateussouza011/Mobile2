@@ -1,70 +1,79 @@
-/// Modelo de Usuário para o sistema de autenticação
-/// 
-/// Armazena informações do usuário no banco de dados local.
-class User {
+/// Modelo de usuário para autenticação local
+class UserModel {
   final int? id;
-  final String fullName;
-  final String username;
-  final DateTime birthDate;
+  final String name;
+  final String email;
   final String passwordHash;
   final DateTime createdAt;
-  
-  User({
+  final DateTime? updatedAt;
+
+  const UserModel({
     this.id,
-    required this.fullName,
-    required this.username,
-    required this.birthDate,
+    required this.name,
+    required this.email,
     required this.passwordHash,
-    DateTime? createdAt,
-  }) : createdAt = createdAt ?? DateTime.now();
-  
-  /// Converte para Map para salvar no banco
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'full_name': fullName,
-      'username': username,
-      'birth_date': birthDate.toIso8601String(),
-      'password_hash': passwordHash,
-      'created_at': createdAt.toIso8601String(),
-    };
-  }
-  
-  /// Cria um User a partir de um Map do banco
-  factory User.fromMap(Map<String, dynamic> map) {
-    return User(
+    required this.createdAt,
+    this.updatedAt,
+  });
+
+  /// Cria uma instância de UserModel a partir de um Map (do SQLite)
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
       id: map['id'] as int?,
-      fullName: map['full_name'] as String,
-      username: map['username'] as String,
-      birthDate: DateTime.parse(map['birth_date'] as String),
+      name: map['name'] as String,
+      email: map['email'] as String,
       passwordHash: map['password_hash'] as String,
       createdAt: DateTime.parse(map['created_at'] as String),
+      updatedAt: map['updated_at'] != null 
+          ? DateTime.parse(map['updated_at'] as String) 
+          : null,
     );
   }
-  
-  /// Cria cópia com novos valores
-  User copyWith({
+
+  /// Converte o UserModel para Map (para inserção no SQLite)
+  Map<String, dynamic> toMap() {
+    return {
+      if (id != null) 'id': id,
+      'name': name,
+      'email': email,
+      'password_hash': passwordHash,
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt?.toIso8601String(),
+    };
+  }
+
+  /// Copia o modelo com novas propriedades
+  UserModel copyWith({
     int? id,
-    String? fullName,
-    String? username,
-    DateTime? birthDate,
+    String? name,
+    String? email,
     String? passwordHash,
     DateTime? createdAt,
+    DateTime? updatedAt,
   }) {
-    return User(
+    return UserModel(
       id: id ?? this.id,
-      fullName: fullName ?? this.fullName,
-      username: username ?? this.username,
-      birthDate: birthDate ?? this.birthDate,
+      name: name ?? this.name,
+      email: email ?? this.email,
       passwordHash: passwordHash ?? this.passwordHash,
       createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
-  
-  /// Formata a data de nascimento
-  String get formattedBirthDate {
-    return '${birthDate.day.toString().padLeft(2, '0')}/'
-           '${birthDate.month.toString().padLeft(2, '0')}/'
-           '${birthDate.year}';
+
+  @override
+  String toString() {
+    return 'UserModel(id: $id, name: $name, email: $email, createdAt: $createdAt)';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is UserModel &&
+        other.id == id &&
+        other.email == email;
+  }
+
+  @override
+  int get hashCode => id.hashCode ^ email.hashCode;
 }

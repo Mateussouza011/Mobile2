@@ -1,250 +1,156 @@
-import 'dart:convert';
-import 'dart:math';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:http/http.dart' as http;
-import '../../../core/constants/api_constants.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'prediction_delegate.dart';
+import 'prediction_view_model.dart';
+import '../../../core/data/models/prediction_model.dart';
+import '../../../core/data/repositories/auth_repository.dart';
+import '../../../core/data/repositories/prediction_history_repository.dart';
+import '../../../core/data/services/prediction_api_service.dart';
 
-/// PredictionService - Serviço para chamadas à API de predição de diamantes
-/// 
-/// Responsável por fazer requisições HTTP para a API FastAPI
-/// que contém os modelos de machine learning treinados.
-/// 
-/// Em modo de desenvolvimento (web), usa simulação local.
-class PredictionService {
-  final http.Client _client;
-  final String _baseUrl;
-  final bool _useSimulation;
-  
+/// Implementacao do PredictionDelegate - conecta View aos Services
+class PredictionService implements PredictionDelegate {
+  final PredictionViewModel viewModel;
+  final PredictionApiService apiService;
+  final PredictionHistoryRepository historyRepository;
+  final AuthRepository authRepository;
+  final BuildContext context;
+
   PredictionService({
-    http.Client? client,
-    String? baseUrl,
-    bool? useSimulation,
-  }) : _client = client ?? http.Client(),
-       _baseUrl = baseUrl ?? ApiConstants.baseUrl,
-       _useSimulation = useSimulation ?? kIsWeb; // Simula por padrão na web
-  
-  /// Realiza a predição de preço do diamante
-  /// 
-  /// Parâmetros:
-  /// - [carat] - Peso do diamante em quilates
-  /// - [cut] - Qualidade do corte (Fair, Good, Very Good, Premium, Ideal)
-  /// - [color] - Cor do diamante (D, E, F, G, H, I, J)
-  /// - [clarity] - Claridade (I1, SI2, SI1, VS2, VS1, VVS2, VVS1, IF)
-  /// - [depth] - Profundidade total percentual
-  /// - [table] - Largura do topo percentual
-  /// - [x] - Comprimento em mm
-  /// - [y] - Largura em mm
-  /// - [z] - Profundidade em mm
-  /// 
-  /// Retorna um Map contendo:
-  /// - predicted_price: preço estimado
-  /// - details: detalhes dos modelos
-  /// - input: dados de entrada enviados
-  Future<Map<String, dynamic>> predictPrice({
-    required double carat,
-    required String cut,
-    required String color,
-    required String clarity,
-    required double depth,
-    required double table,
-    required double x,
-    required double y,
-    required double z,
-  }) async {
-    // Usa simulação na web ou quando a API não está disponível
-    if (_useSimulation) {
-      return _simulatePrediction(
-        carat: carat,
-        cut: cut,
-        color: color,
-        clarity: clarity,
-        depth: depth,
-        table: table,
-        x: x,
-        y: y,
-        z: z,
-      );
-    }
-    
-    final url = Uri.parse('$_baseUrl${ApiConstants.predictEndpoint}');
-    
-    // Prepara o payload conforme contrato da API
-    final payload = {
-      'carat': carat,
-      'cut': cut,
-      'color': color,
-      'clarity': clarity,
-      'depth': depth,
-      'table': table,
-      'x': x,
-      'y': y,
-      'z': z,
-    };
-    
+    required this.viewModel,
+    required this.apiService,
+    required this.historyRepository,
+    required this.authRepository,
+    required this.context,
+  });
+
+  @override
+  Future<void> predict() async {
+    viewModel.setLoading(true);
+    viewModel.clearError();
+
     try {
-      final response = await _client
-          .post(
-            url,
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-            },
-            body: jsonEncode(payload),
-          )
-          .timeout(
-            const Duration(seconds: ApiConstants.requestTimeout),
-            onTimeout: () {
-              throw Exception('Timeout: A API não respondeu a tempo');
-            },
-          );
+      final request = viewModel.buildRequest();
+      final result = await apiService.predictPrice(request);
       
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body) as Map<String, dynamic>;
-        return data;
-      } else if (response.statusCode == 503) {
-        throw Exception('Serviço indisponível: Os modelos não estão carregados');
+      if (result.isSuccess && result.price != null) {
+        final response = PredictionResponse(price: result.price!);
+        onPredictionSuccess(response);
+        
+        // Salvar automaticamente no histórico
+        await _saveToHistory(response);
       } else {
-        final errorData = jsonDecode(response.body);
-        final detail = errorData['detail'] ?? 'Erro desconhecido';
-        throw Exception('Erro na API ($response.statusCode): $detail');
+        onError(result.errorMessage ?? 'Erro desconhecido na predicao');
       }
     } catch (e) {
-      if (e.toString().contains('Exception:')) {
-        rethrow;
-      }
-      throw Exception('Erro de conexão: Verifique se a API está rodando em $_baseUrl');
+      onError('Erro ao fazer predicao: ${e.toString()}');
+    } finally {
+      viewModel.setLoading(false);
     }
-  }
-  
-  /// Simula a predição de preço localmente (para web ou quando API não está disponível)
-  Map<String, dynamic> _simulatePrediction({
-    required double carat,
-    required String cut,
-    required String color,
-    required String clarity,
-    required double depth,
-    required double table,
-    required double x,
-    required double y,
-    required double z,
-  }) {
-    // Valores base por qualidade de corte
-    final cutMultiplier = {
-      'Fair': 0.8,
-      'Good': 0.9,
-      'Very Good': 1.0,
-      'Premium': 1.1,
-      'Ideal': 1.2,
-    };
-    
-    // Valores base por cor (D é a melhor, J é a pior)
-    final colorMultiplier = {
-      'D': 1.4,
-      'E': 1.3,
-      'F': 1.2,
-      'G': 1.1,
-      'H': 1.0,
-      'I': 0.9,
-      'J': 0.8,
-    };
-    
-    // Valores base por claridade
-    final clarityMultiplier = {
-      'IF': 1.5,    // Internally Flawless
-      'VVS1': 1.4,
-      'VVS2': 1.3,
-      'VS1': 1.2,
-      'VS2': 1.1,
-      'SI1': 1.0,
-      'SI2': 0.9,
-      'I1': 0.7,
-    };
-    
-    // Preço base por quilate (aproximação do mercado)
-    const basePrice = 3500.0;
-    
-    // Calcula o preço usando uma fórmula de aproximação
-    final cutMult = cutMultiplier[cut] ?? 1.0;
-    final colorMult = colorMultiplier[color] ?? 1.0;
-    final clarityMult = clarityMultiplier[clarity] ?? 1.0;
-    
-    // Volume aproximado do diamante
-    final volume = x * y * z;
-    final volumeFactor = volume > 0 ? (volume / 100).clamp(0.5, 2.0) : 1.0;
-    
-    // Fator de profundidade/tabela (valores ideais são ~60% depth e ~55% table)
-    final depthFactor = 1.0 - (depth - 61.5).abs() * 0.01;
-    final tableFactor = 1.0 - (table - 57).abs() * 0.01;
-    
-    // Adiciona variação aleatória de ±5% para simular diferenças entre modelos
-    final random = Random();
-    final variance = 0.95 + random.nextDouble() * 0.1;
-    
-    // Cálculo final do preço
-    final predictedPrice = basePrice * 
-        carat * carat *  // Preço cresce exponencialmente com quilates
-        cutMult * 
-        colorMult * 
-        clarityMult * 
-        volumeFactor *
-        depthFactor.clamp(0.8, 1.1) *
-        tableFactor.clamp(0.8, 1.1) *
-        variance;
-    
-    // Simula preços de diferentes "modelos"
-    final randomForest = predictedPrice * (0.98 + random.nextDouble() * 0.04);
-    final gradientBoosting = predictedPrice * (0.97 + random.nextDouble() * 0.06);
-    final neuralNetwork = predictedPrice * (0.96 + random.nextDouble() * 0.08);
-    
-    return {
-      'predicted_price': predictedPrice.roundToDouble(),
-      'simulated': true,
-      'details': {
-        'random_forest': {
-          'prediction': randomForest.roundToDouble(),
-          'weight': 0.4,
-        },
-        'gradient_boosting': {
-          'prediction': gradientBoosting.roundToDouble(),
-          'weight': 0.35,
-        },
-        'neural_network': {
-          'prediction': neuralNetwork.roundToDouble(),
-          'weight': 0.25,
-        },
-      },
-      'input': {
-        'carat': carat,
-        'cut': cut,
-        'color': color,
-        'clarity': clarity,
-        'depth': depth,
-        'table': table,
-        'x': x,
-        'y': y,
-        'z': z,
-      },
-    };
   }
 
-  /// Verifica se a API está online
-  Future<bool> checkApiHealth() async {
-    // Na simulação, retorna true
-    if (_useSimulation) return true;
-    
+  /// Salva a predição no histórico automaticamente
+  Future<void> _saveToHistory(PredictionResponse result) async {
+    final user = authRepository.currentUser;
+    if (user == null || user.id == null) return;
+
     try {
-      final url = Uri.parse('$_baseUrl${ApiConstants.healthEndpoint}');
-      final response = await _client.get(url).timeout(
-        const Duration(seconds: 5),
+      final prediction = PredictionHistoryModel(
+        userId: user.id!,
+        carat: viewModel.carat,
+        cut: viewModel.cut,
+        color: viewModel.color,
+        clarity: viewModel.clarity,
+        depth: viewModel.depth,
+        table: viewModel.table,
+        x: viewModel.x,
+        y: viewModel.y,
+        z: viewModel.z,
+        predictedPrice: result.price,
+        createdAt: DateTime.now(),
       );
-      return response.statusCode == 200;
+
+      await historyRepository.savePrediction(prediction);
     } catch (e) {
-      return false;
+      // Silently fail - não queremos interromper a experiência do usuário
+      debugPrint('Erro ao salvar histórico: $e');
     }
   }
-  
-  /// Libera recursos do cliente HTTP
-  void dispose() {
-    _client.close();
+
+  @override
+  Future<void> savePrediction() async {
+    final result = viewModel.result;
+    if (result == null) {
+      onError('Nenhuma predicao para salvar');
+      return;
+    }
+
+    final user = authRepository.currentUser;
+    if (user == null || user.id == null) {
+      onError('Usuario nao autenticado');
+      return;
+    }
+
+    viewModel.setLoading(true);
+
+    try {
+      final prediction = PredictionHistoryModel(
+        userId: user.id!,
+        carat: viewModel.carat,
+        cut: viewModel.cut,
+        color: viewModel.color,
+        clarity: viewModel.clarity,
+        depth: viewModel.depth,
+        table: viewModel.table,
+        x: viewModel.x,
+        y: viewModel.y,
+        z: viewModel.z,
+        predictedPrice: result.price,
+        createdAt: DateTime.now(),
+      );
+
+      await historyRepository.savePrediction(prediction);
+      onPredictionSaved();
+    } catch (e) {
+      onError('Erro ao salvar predicao: ${e.toString()}');
+    } finally {
+      viewModel.setLoading(false);
+    }
+  }
+
+  @override
+  void clearResult() {
+    viewModel.clearResult();
+  }
+
+  @override
+  void resetForm() {
+    viewModel.reset();
+  }
+
+  @override
+  void navigateBack() {
+    GoRouter.of(context).go('/diamond-home');
+  }
+
+  @override
+  void onPredictionSuccess(PredictionResponse response) {
+    viewModel.setResult(response);
+  }
+
+  @override
+  void onError(String message) {
+    viewModel.setError(message);
+  }
+
+  @override
+  void onPredictionSaved() {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Predicao salva com sucesso!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    }
   }
 }
