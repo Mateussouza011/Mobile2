@@ -15,6 +15,15 @@ import '../../features/avatars/avatars_page.dart';
 import '../../features/forms/forms_page.dart';
 import '../../features/navigation/navigation_bars_page.dart';
 import '../../features/alerts/alerts_page.dart';
+// Diamond Prediction App - Imports
+import '../../features/diamond_prediction/landing/landing_factory.dart';
+import '../../features/diamond_prediction/home/home_factory_new.dart';
+import '../../features/diamond_prediction/prediction/prediction_factory_new.dart';
+import '../../features/diamond_prediction/history/history_factory_new.dart';
+// Auth - Imports
+import '../../features/auth/login/login_factory.dart';
+import '../../features/auth/register/register_factory.dart';
+import '../../features/auth/forgot_password/forgot_password_factory.dart';
 
 /// Configuração de rotas usando GoRouter
 class AppRouter {
@@ -27,15 +36,30 @@ class AppRouter {
     debugLogDiagnostics: true,
     initialLocation: '/',
     routes: [
+      // ============================================
+      // Diamond Prediction App - Landing Page (Inicial)
+      // ============================================
+      GoRoute(
+        path: '/',
+        name: 'landing',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: LandingFactory.create(context),
+          transitionsBuilder: _fadeTransition,
+        ),
+      ),
+      
+      // ============================================
+      // Design System Sample - Rotas do showcase
+      // ============================================
       ShellRoute(
         builder: (context, state, child) {
           return MainLayout(child: child);
         },
         routes: [
-          // Página inicial
+          // Página do Design System
           GoRoute(
-            path: '/',
-            name: 'home',
+            path: '/design-system',
+            name: 'design-system',
             pageBuilder: (context, state) => const NoTransitionPage(
               child: HomePage(),
             ),
@@ -161,6 +185,104 @@ class AppRouter {
           ),
         ],
       ),
+      
+      // ============================================
+      // Diamond Prediction App - Rotas independentes
+      // ============================================
+      
+      // Login do Diamond App (com banco de dados local)
+      GoRoute(
+        path: '/diamond-login',
+        name: 'diamond-login',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: Builder(
+            builder: (context) {
+              return LoginFactory.create(context);
+            },
+          ),
+          transitionsBuilder: _fadeTransition,
+        ),
+      ),
+      
+      // Cadastro de usuário
+      GoRoute(
+        path: '/auth/register',
+        name: 'auth-register',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: Builder(
+            builder: (context) {
+              return RegisterFactory.create(
+                context: context,
+                onRegisterSuccess: () => context.go('/diamond-home'),
+                onGoToLogin: () => context.go('/diamond-login'),
+              );
+            },
+          ),
+          transitionsBuilder: _slideTransition,
+        ),
+      ),
+      
+      // Recuperação de senha
+      GoRoute(
+        path: '/auth/forgot-password',
+        name: 'auth-forgot-password',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: Builder(
+            builder: (context) {
+              return ForgotPasswordFactory.create(
+                context: context,
+                onRecoverySuccess: () => context.go('/diamond-login'),
+                onGoToLogin: () => context.go('/diamond-login'),
+              );
+            },
+          ),
+          transitionsBuilder: _slideTransition,
+        ),
+      ),
+      
+      // Home/Dashboard do Diamond App
+      GoRoute(
+        path: '/diamond-home',
+        name: 'diamond-home',
+        pageBuilder: (context, state) {
+          return CustomTransitionPage(
+            child: Builder(
+              builder: (context) {
+                return HomeFactory.create(context);
+              },
+            ),
+            transitionsBuilder: _fadeTransition,
+          );
+        },
+      ),
+      
+      // Predição do Diamond App
+      GoRoute(
+        path: '/diamond-prediction',
+        name: 'diamond-prediction',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: Builder(
+            builder: (context) {
+              return PredictionFactory.create(context);
+            },
+          ),
+          transitionsBuilder: _slideTransition,
+        ),
+      ),
+      
+      // Histórico do Diamond App
+      GoRoute(
+        path: '/diamond-history',
+        name: 'diamond-history',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: Builder(
+            builder: (context) {
+              return HistoryFactory.create(context);
+            },
+          ),
+          transitionsBuilder: _slideTransition,
+        ),
+      ),
     ],
     errorBuilder: (context, state) => Scaffold(
       appBar: AppBar(
@@ -213,6 +335,19 @@ class AppRouter {
 
     return SlideTransition(
       position: animation.drive(tween),
+      child: child,
+    );
+  }
+  
+  /// Transição de fade personalizada
+  static Widget _fadeTransition(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return FadeTransition(
+      opacity: animation,
       child: child,
     );
   }
