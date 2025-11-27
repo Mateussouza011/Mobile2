@@ -26,21 +26,21 @@ void main() async {
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
-      child: const ShadcnDesignSystemApp(),
+      child: const RadianceApp(),
     ),
   );
 }
 
-/// Aplicação principal baseada no Shadcn/UI e Origin UI
-class ShadcnDesignSystemApp extends StatelessWidget {
-  const ShadcnDesignSystemApp({super.key});
+/// Radiance - Professional Diamond Price Prediction Platform
+class RadianceApp extends StatelessWidget {
+  const RadianceApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
         return MaterialApp.router(
-          title: 'Shadcn/UI Design System',
+          title: 'Radiance - Professional Diamond Prediction',
           debugShowCheckedModeBanner: false,
           theme: ShadcnTheme.lightTheme,
           darkTheme: ShadcnTheme.darkTheme,

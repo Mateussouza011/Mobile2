@@ -11,6 +11,17 @@ import '../../domain/usecases/get_prediction.dart';
 import '../../domain/usecases/get_prediction_history.dart';
 import '../../domain/usecases/save_prediction.dart';
 import '../../presentation/viewmodels/diamond_prediction_viewmodel.dart';
+import '../../features/api_keys/data/repositories/api_key_repository.dart';
+import '../data/repositories/prediction_history_repository.dart';
+import '../../features/export/data/services/pdf_export_service.dart';
+import '../../features/export/data/services/csv_export_service.dart';
+import '../../features/api/data/handlers/predictions_handler.dart';
+import '../../features/api/data/handlers/company_handler.dart';
+import '../../features/api/data/middleware/api_auth_middleware.dart';
+import '../../features/api/data/middleware/rate_limiter.dart';
+import '../../features/multi_tenant/data/repositories/company_repository.dart';
+import '../../features/team_dashboard/data/repositories/team_stats_repository.dart';
+import '../../features/team/data/repositories/invitation_repository.dart';
 
 final getIt = GetIt.instance;
 
@@ -86,4 +97,51 @@ Future<void> setupDependencyInjection() async {
       getPredictionHistoryUseCase: getIt<GetPredictionHistoryUseCase>(),
     ),
   );
+
+  // ============ B2B Features ============
+  
+  // API Keys
+  getIt.registerLazySingleton<ApiKeyRepository>(
+    () => ApiKeyRepository(databaseHelper: getIt<DatabaseHelper>()),
+  );
+
+  // Export Services
+  getIt.registerLazySingleton<PredictionHistoryRepository>(
+    () => PredictionHistoryRepository(),
+  );
+
+  getIt.registerLazySingleton<PdfExportService>(
+    () => PdfExportService(),
+  );
+
+  getIt.registerLazySingleton<CsvExportService>(
+    () => CsvExportService(),
+  );
+
+  // API REST (handlers para documentação de referência)
+  // Nota: Em produção, estes seriam implementados em um backend real
+  getIt.registerLazySingleton(() => PredictionsHandler(
+    historyRepository: getIt<PredictionHistoryRepository>(),
+  ));
+
+  getIt.registerLazySingleton(() => CompanyHandler(
+    companyRepository: getIt<CompanyRepository>(),
+  ));
+
+  getIt.registerLazySingleton(() => ApiAuthMiddleware(
+    apiKeyRepository: getIt<ApiKeyRepository>(),
+  ));
+
+  getIt.registerLazySingleton(() => RateLimiter());
+
+  // Team Dashboard
+  getIt.registerLazySingleton(() => TeamStatsRepository(
+    predictionRepository: getIt<PredictionHistoryRepository>(),
+    companyRepository: getIt<CompanyRepository>(),
+  ));
+
+  // Team Invitations
+  getIt.registerLazySingleton(() => InvitationRepository(
+    databaseHelper: getIt<DatabaseHelper>(),
+  ));
 }

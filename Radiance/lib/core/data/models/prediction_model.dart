@@ -2,6 +2,7 @@
 class PredictionHistoryModel {
   final int? id;
   final int userId;
+  final String? companyId; // Multi-tenant: ID da empresa
   final double carat;
   final String cut;
   final String color;
@@ -17,6 +18,7 @@ class PredictionHistoryModel {
   const PredictionHistoryModel({
     this.id,
     required this.userId,
+    this.companyId,
     required this.carat,
     required this.cut,
     required this.color,
@@ -35,6 +37,7 @@ class PredictionHistoryModel {
     return PredictionHistoryModel(
       id: map['id'] as int?,
       userId: map['user_id'] as int,
+      companyId: map['company_id'] as String?,
       carat: (map['carat'] as num).toDouble(),
       cut: map['cut'] as String,
       color: map['color'] as String,
@@ -54,6 +57,7 @@ class PredictionHistoryModel {
     return {
       if (id != null) 'id': id,
       'user_id': userId,
+      'company_id': companyId,
       'carat': carat,
       'cut': cut,
       'color': color,
@@ -72,6 +76,7 @@ class PredictionHistoryModel {
   PredictionHistoryModel copyWith({
     int? id,
     int? userId,
+    String? companyId,
     double? carat,
     String? cut,
     String? color,
@@ -87,6 +92,7 @@ class PredictionHistoryModel {
     return PredictionHistoryModel(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      companyId: companyId ?? this.companyId,
       carat: carat ?? this.carat,
       cut: cut ?? this.cut,
       color: color ?? this.color,

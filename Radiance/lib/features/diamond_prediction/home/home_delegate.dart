@@ -12,6 +12,18 @@ abstract class HomeDelegate {
   /// Navega para o histórico
   void navigateToHistory();
   
+  /// Navega para o Team Dashboard
+  void navigateToTeamDashboard();
+  
+  /// Navega para API Keys
+  void navigateToApiKeys();
+  
+  /// Navega para Export/Relatórios
+  void navigateToExport();
+  
+  /// Navega para Convites de Equipe
+  void navigateToTeamInvitations();
+  
   /// Faz logout do usuário
   Future<void> logout();
   

@@ -1,0 +1,37 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fundo sólido para ícone -->
+  <rect width="1024" height="1024" fill="url(#bgGradient)"/>
+  
+  <!-- Gradientes -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2563EB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7C3AED;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- R estilizado centralizado e maior para ícone -->
+  <path d="M 350 300 L 350 724 L 410 724 L 410 550 L 530 550 L 640 724 L 710 724 L 590 540 C 630 530 660 490 660 430 C 660 360 610 300 520 300 L 350 300 Z M 410 360 L 520 360 C 570 360 600 380 600 430 C 600 480 570 490 520 490 L 410 490 L 410 360 Z" 
+        fill="white"/>
+  
+  <!-- Raios simplificados para ícone -->
+  <!-- Top -->
+  <path d="M 512 150 L 530 250 L 494 250 Z" fill="white" opacity="0.9"/>
+  <!-- Top Right -->
+  <path d="M 710 240 L 670 330 L 640 310 Z" fill="white" opacity="0.8"/>
+  <!-- Right -->
+  <path d="M 850 490 L 750 510 L 750 470 Z" fill="white" opacity="0.8"/>
+  <!-- Bottom Right -->
+  <path d="M 750 780 L 680 710 L 710 680 Z" fill="white" opacity="0.8"/>
+  <!-- Bottom -->
+  <path d="M 512 874 L 530 774 L 494 774 Z" fill="white" opacity="0.9"/>
+  <!-- Bottom Left -->
+  <path d="M 274 780 L 344 710 L 314 680 Z" fill="white" opacity="0.8"/>
+  <!-- Left -->
+  <path d="M 174 490 L 274 510 L 274 470 Z" fill="white" opacity="0.8"/>
+  <!-- Top Left -->
+  <path d="M 314 240 L 354 330 L 384 310 Z" fill="white" opacity="0.8"/>
+  
+  <!-- Ponto central -->
+  <circle cx="512" cy="430" r="15" fill="white" opacity="0.7"/>
+</svg>

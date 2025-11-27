@@ -1,5 +1,5 @@
-name: designsystemsampleapp
-description: A Flutter application with shadcn-inspired design system
+name: radiance_b2b_professional
+description: Radiance - Professional Diamond Price Prediction Platform for B2B
 
 publish_to: 'none'
 
@@ -39,6 +39,12 @@ dependencies:
   # Utils
   intl: ^0.19.0
   logger: ^2.0.2
+  
+  # Export & Documents
+  pdf: ^3.10.7
+  csv: ^6.0.0
+  path_provider: ^2.1.2
+  share_plus: ^7.2.1
 
 dev_dependencies:
   flutter_test:
@@ -90,10 +96,16 @@ flutter:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/diamond.svg"
+  image_path: "assets/images/radiance_icon.png"
   min_sdk_android: 21 # android min sdk min:16, default 21
   web:
     generate: true
-    image_path: "assets/images/diamond.svg"
-    background_color: "#0F172A"
-    theme_color: "#0F172A"
+    image_path: "assets/images/radiance_icon.png"
+    background_color: "#2563EB"
+    theme_color: "#2563EB"
+  windows:
+    generate: true
+    image_path: "assets/images/radiance_icon.png"
+  macos:
+    generate: true
+    image_path: "assets/images/radiance_icon.png"

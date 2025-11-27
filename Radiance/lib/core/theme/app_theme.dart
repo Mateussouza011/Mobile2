@@ -1,49 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'radiance_colors.dart';
 
-/// Sistema de temas baseado no Shadcn/UI e Origin UI
+/// Sistema de temas Radiance B2B Professional
 class ShadcnTheme {
-  // Cores Shadcn/UI
-  static const Color background = Color(0xFFFFFFFF);
-  static const Color foreground = Color(0xFF0A0A0A);
-  static const Color card = Color(0xFFFFFFFF);
-  static const Color cardForeground = Color(0xFF0A0A0A);
-  static const Color popover = Color(0xFFFFFFFF);
-  static const Color popoverForeground = Color(0xFF0A0A0A);
-  static const Color primary = Color(0xFF171717);
-  static const Color primaryForeground = Color(0xFFFAFAFA);
-  static const Color secondary = Color(0xFFF5F5F5);
-  static const Color secondaryForeground = Color(0xFF171717);
-  static const Color muted = Color(0xFFF5F5F5);
-  static const Color mutedForeground = Color(0xFF737373);
-  static const Color accent = Color(0xFFF5F5F5);
-  static const Color accentForeground = Color(0xFF171717);
-  static const Color destructive = Color(0xFFEF4444);
-  static const Color destructiveForeground = Color(0xFFFEFEFE);
-  static const Color border = Color(0xFFE5E5E5);
-  static const Color input = Color(0xFFE5E5E5);
-  static const Color ring = Color(0xFF171717);
+  // Cores Light Mode - Radiance
+  static const Color background = RadianceColors.background;
+  static const Color foreground = RadianceColors.textPrimary;
+  static const Color card = RadianceColors.card;
+  static const Color cardForeground = RadianceColors.textPrimary;
+  static const Color popover = RadianceColors.card;
+  static const Color popoverForeground = RadianceColors.textPrimary;
+  static const Color primary = RadianceColors.primary;
+  static const Color primaryForeground = RadianceColors.primaryForeground;
+  static const Color secondary = RadianceColors.secondary;
+  static const Color secondaryForeground = RadianceColors.secondaryForeground;
+  static const Color muted = RadianceColors.surfaceVariant;
+  static const Color mutedForeground = RadianceColors.textSecondary;
+  static const Color accent = RadianceColors.secondary;
+  static const Color accentForeground = RadianceColors.secondaryForeground;
+  static const Color destructive = RadianceColors.error;
+  static const Color destructiveForeground = RadianceColors.errorForeground;
+  static const Color border = RadianceColors.border;
+  static const Color input = RadianceColors.border;
+  static const Color ring = RadianceColors.primary;
   
-  // Cores escuras
-  static const Color darkBackground = Color(0xFF0A0A0A);
-  static const Color darkForeground = Color(0xFFFAFAFA);
-  static const Color darkCard = Color(0xFF0A0A0A);
-  static const Color darkCardForeground = Color(0xFFFAFAFA);
-  static const Color darkPopover = Color(0xFF0A0A0A);
-  static const Color darkPopoverForeground = Color(0xFFFAFAFA);
-  static const Color darkPrimary = Color(0xFFFAFAFA);
-  static const Color darkPrimaryForeground = Color(0xFF171717);
-  static const Color darkSecondary = Color(0xFF262626);
-  static const Color darkSecondaryForeground = Color(0xFFFAFAFA);
-  static const Color darkMuted = Color(0xFF262626);
-  static const Color darkMutedForeground = Color(0xFFA3A3A3);
-  static const Color darkAccent = Color(0xFF262626);
-  static const Color darkAccentForeground = Color(0xFFFAFAFA);
-  static const Color darkDestructive = Color(0xFF7F1D1D);
-  static const Color darkDestructiveForeground = Color(0xFFFAFAFA);
-  static const Color darkBorder = Color(0xFF262626);
-  static const Color darkInput = Color(0xFF262626);
-  static const Color darkRing = Color(0xFFD4D4D8);
+  // Cores Dark Mode - Radiance
+  static const Color darkBackground = RadianceColors.darkBackground;
+  static const Color darkForeground = RadianceColors.darkTextPrimary;
+  static const Color darkCard = RadianceColors.darkCard;
+  static const Color darkCardForeground = RadianceColors.darkTextPrimary;
+  static const Color darkPopover = RadianceColors.darkCard;
+  static const Color darkPopoverForeground = RadianceColors.darkTextPrimary;
+  static const Color darkPrimary = RadianceColors.primary;
+  static const Color darkPrimaryForeground = RadianceColors.primaryForeground;
+  static const Color darkSecondary = RadianceColors.darkSurface;
+  static const Color darkSecondaryForeground = RadianceColors.darkTextPrimary;
+  static const Color darkMuted = RadianceColors.darkSurfaceVariant;
+  static const Color darkMutedForeground = RadianceColors.darkTextSecondary;
+  static const Color darkAccent = RadianceColors.secondary;
+  static const Color darkAccentForeground = RadianceColors.secondaryForeground;
+  static const Color darkDestructive = RadianceColors.error;
+  static const Color darkDestructiveForeground = RadianceColors.errorForeground;
+  static const Color darkBorder = RadianceColors.darkBorder;
+  static const Color darkInput = RadianceColors.darkBorder;
+  static const Color darkRing = RadianceColors.primary;
 
   /// Tema claro Shadcn/UI
   static ThemeData get lightTheme {

@@ -32,7 +32,7 @@ class _DiamondPredictionViewState extends State<DiamondPredictionView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Predição de Diamantes',
+          'Análise de Valor',
           style: theme.textTheme.titleLarge?.copyWith(
             color: colorScheme.onSurface,
             fontWeight: FontWeight.w600,
@@ -50,7 +50,7 @@ class _DiamondPredictionViewState extends State<DiamondPredictionView> {
             children: [
               // Título
               Text(
-                'Características do Diamante',
+                'Características do Item',
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),

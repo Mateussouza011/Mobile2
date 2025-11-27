@@ -73,7 +73,7 @@ class LandingView extends StatelessWidget {
         ),
         const SizedBox(height: 32),
         Text(
-          'Diamond Price Predictor',
+          'Radiance',
           style: (isDesktop ? textTheme.headlineLarge : textTheme.headlineMedium)?.copyWith(
             fontWeight: FontWeight.bold,
             color: colorScheme.onSurface,

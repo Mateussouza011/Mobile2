@@ -29,6 +29,23 @@ import '../../features/diamond_prediction/history/history_factory.dart';
 import '../../features/auth/login/login_factory.dart';
 import '../../features/auth/register/register_factory.dart';
 import '../../features/auth/forgot_password/forgot_password_factory.dart';
+// B2B Features - Radiance
+import '../../features/api_keys/presentation/pages/api_keys_page.dart';
+import '../../features/api_keys/presentation/providers/api_key_provider.dart';
+import '../../features/api_keys/data/repositories/api_key_repository.dart';
+import '../../features/export/presentation/pages/export_page.dart';
+import '../../features/export/presentation/providers/export_provider.dart';
+import '../../features/export/data/services/pdf_export_service.dart';
+import '../../features/export/data/services/csv_export_service.dart';
+import '../data/repositories/prediction_history_repository.dart';
+import '../../features/multi_tenant/presentation/providers/tenant_provider.dart';
+import '../../features/api/presentation/pages/api_documentation_page.dart';
+import '../../features/team_dashboard/presentation/pages/team_dashboard_page.dart';
+import '../../features/team_dashboard/presentation/providers/team_dashboard_provider.dart';
+import '../../features/team_dashboard/data/repositories/team_stats_repository.dart';
+import '../../features/team/presentation/pages/team_invitations_page.dart';
+import '../../features/team/presentation/providers/invitation_provider.dart';
+import '../../features/team/data/repositories/invitation_repository.dart';
 
 /// Configuração de rotas usando GoRouter
 class AppRouter {
@@ -285,6 +302,94 @@ class AppRouter {
         name: 'diamond-history',
         pageBuilder: (context, state) => CustomTransitionPage(
           child: HistoryFactory.create(context),
+          transitionsBuilder: _slideTransition,
+        ),
+      ),
+
+      // ============================================
+      // B2B Features - Radiance
+      // ============================================
+      
+      // API Keys Management
+      GoRoute(
+        path: '/api-keys',
+        name: 'api-keys',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: MultiProvider(
+            providers: [
+              ChangeNotifierProvider(
+                create: (context) => ApiKeyProvider(
+                  repository: getIt<ApiKeyRepository>(),
+                  tenantProvider: context.read<TenantProvider>(),
+                ),
+              ),
+            ],
+            child: const ApiKeysPage(),
+          ),
+          transitionsBuilder: _slideTransition,
+        ),
+      ),
+
+      // Export / Reports
+      GoRoute(
+        path: '/export',
+        name: 'export',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: MultiProvider(
+            providers: [
+              ChangeNotifierProvider(
+                create: (context) => ExportProvider(
+                  pdfService: getIt<PdfExportService>(),
+                  csvService: getIt<CsvExportService>(),
+                  predictionRepository: getIt<PredictionHistoryRepository>(),
+                  tenantProvider: context.read<TenantProvider>(),
+                ),
+              ),
+            ],
+            child: const ExportPage(),
+          ),
+          transitionsBuilder: _slideTransition,
+        ),
+      ),
+
+      // API Documentation
+      GoRoute(
+        path: '/api-docs',
+        name: 'api-docs',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: const ApiDocumentationPage(),
+          transitionsBuilder: _slideTransition,
+        ),
+      ),
+
+      // Team Dashboard
+      GoRoute(
+        path: '/team-dashboard',
+        name: 'team-dashboard',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: ChangeNotifierProvider(
+            create: (context) => TeamDashboardProvider(
+              repository: getIt<TeamStatsRepository>(),
+              tenantProvider: context.read<TenantProvider>(),
+            ),
+            child: const TeamDashboardPage(),
+          ),
+          transitionsBuilder: _slideTransition,
+        ),
+      ),
+
+      // Team Invitations
+      GoRoute(
+        path: '/team-invitations',
+        name: 'team-invitations',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: ChangeNotifierProvider(
+            create: (context) => InvitationProvider(
+              repository: getIt<InvitationRepository>(),
+              tenantProvider: context.read<TenantProvider>(),
+            ),
+            child: const TeamInvitationsPage(),
+          ),
           transitionsBuilder: _slideTransition,
         ),
       ),

@@ -65,6 +65,26 @@ class HomeService implements HomeDelegate {
   }
 
   @override
+  void navigateToTeamDashboard() {
+    GoRouter.of(context).go('/team-dashboard');
+  }
+
+  @override
+  void navigateToApiKeys() {
+    GoRouter.of(context).go('/api-keys');
+  }
+
+  @override
+  void navigateToExport() {
+    GoRouter.of(context).go('/export');
+  }
+
+  @override
+  void navigateToTeamInvitations() {
+    GoRouter.of(context).go('/team-invitations');
+  }
+
+  @override
   Future<void> logout() async {
     try {
       await authRepository.logout();

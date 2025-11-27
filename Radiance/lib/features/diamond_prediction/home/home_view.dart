@@ -39,7 +39,7 @@ class _HomeViewState extends State<HomeView> {
               children: [
                 Icon(Icons.diamond_outlined, color: colorScheme.primary),
                 const SizedBox(width: 8),
-                const Text('Diamond Predictor'),
+                const Text('Radiance'),
               ],
             ),
             actions: [
@@ -216,11 +216,56 @@ class _HomeViewState extends State<HomeView> {
         colorScheme,
         textTheme,
       ),
+      _buildActionCard(
+        Icons.groups_outlined,
+        'Team Dashboard',
+        'Acompanhe metricas e atividades da equipe',
+        Colors.blue,
+        () => widget.delegate.navigateToTeamDashboard(),
+        colorScheme,
+        textTheme,
+      ),
+      _buildActionCard(
+        Icons.key_outlined,
+        'API Keys',
+        'Gerencie suas chaves de API para integracao',
+        Colors.teal,
+        () => widget.delegate.navigateToApiKeys(),
+        colorScheme,
+        textTheme,
+      ),
+      _buildActionCard(
+        Icons.file_download_outlined,
+        'Exportar Relatorios',
+        'Exporte suas previsoes em PDF ou CSV',
+        Colors.orange,
+        () => widget.delegate.navigateToExport(),
+        colorScheme,
+        textTheme,
+      ),
+      _buildActionCard(
+        Icons.person_add_outlined,
+        'Convidar Membros',
+        'Gerencie convites para sua equipe',
+        Colors.indigo,
+        () => widget.delegate.navigateToTeamInvitations(),
+        colorScheme,
+        textTheme,
+      ),
     ];
 
     if (isDesktop) {
-      return Row(
-        children: cards.map((card) => Expanded(child: Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: card))).toList(),
+      // Em desktop, mostrar 2 linhas com 3 cards cada
+      return Column(
+        children: [
+          Row(
+            children: cards.take(3).map((card) => Expanded(child: Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: card))).toList(),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: cards.skip(3).take(3).map((card) => Expanded(child: Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: card))).toList(),
+          ),
+        ],
       );
     }
 

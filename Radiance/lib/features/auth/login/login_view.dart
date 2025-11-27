@@ -125,7 +125,7 @@ class _LoginViewState extends State<LoginView> {
         const SizedBox(height: 24),
         
         Text(
-          'Diamond Price',
+          'Radiance',
           style: textTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.bold,
             color: colorScheme.onSurface,

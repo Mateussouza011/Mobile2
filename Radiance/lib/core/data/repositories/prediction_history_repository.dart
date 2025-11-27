@@ -39,7 +39,11 @@ class PredictionHistoryRepository {
   }
 
   /// Obtém todas as predições de um usuário
-  Future<List<PredictionHistoryModel>> getPredictionsForUser(int userId) async {
+  /// Se companyId for fornecido, filtra por empresa (row-level security)
+  Future<List<PredictionHistoryModel>> getPredictionsForUser(
+    int userId, {
+    String? companyId,
+  }) async {
     try {
       // Web: usar WebStorage
       if (kIsWeb) {
@@ -49,10 +53,19 @@ class PredictionHistoryRepository {
       // Nativo: usar SQLite
       final db = await _localDatabase.database;
       
+      // Aplicar filtro de tenant se companyId fornecido
+      String where = 'user_id = ?';
+      List<dynamic> whereArgs = [userId];
+      
+      if (companyId != null && companyId.isNotEmpty) {
+        where += ' AND company_id = ?';
+        whereArgs.add(companyId);
+      }
+      
       final results = await db.query(
         StorageConstants.predictionHistoryTable,
-        where: 'user_id = ?',
-        whereArgs: [userId],
+        where: where,
+        whereArgs: whereArgs,
         orderBy: 'created_at DESC',
       );
 
@@ -63,10 +76,12 @@ class PredictionHistoryRepository {
   }
 
   /// Obtém predições paginadas
+  /// Se companyId for fornecido, filtra por empresa (row-level security)
   Future<List<PredictionHistoryModel>> getPaginatedPredictions({
     required int userId,
     int page = 1,
     int pageSize = 20,
+    String? companyId,
   }) async {
     try {
       // Web: usar WebStorage
@@ -82,10 +97,19 @@ class PredictionHistoryRepository {
       final db = await _localDatabase.database;
       final offset = (page - 1) * pageSize;
       
+      // Aplicar filtro de tenant se companyId fornecido
+      String where = 'user_id = ?';
+      List<dynamic> whereArgs = [userId];
+      
+      if (companyId != null && companyId.isNotEmpty) {
+        where += ' AND company_id = ?';
+        whereArgs.add(companyId);
+      }
+      
       final results = await db.query(
         StorageConstants.predictionHistoryTable,
-        where: 'user_id = ?',
-        whereArgs: [userId],
+        where: where,
+        whereArgs: whereArgs,
         orderBy: 'created_at DESC',
         limit: pageSize,
         offset: offset,
@@ -98,7 +122,8 @@ class PredictionHistoryRepository {
   }
 
   /// Conta o total de predições de um usuário
-  Future<int> countPredictionsForUser(int userId) async {
+  /// Se companyId for fornecido, filtra por empresa (row-level security)
+  Future<int> countPredictionsForUser(int userId, {String? companyId}) async {
     try {
       // Web: usar WebStorage
       if (kIsWeb) {
@@ -108,9 +133,18 @@ class PredictionHistoryRepository {
       // Nativo: usar SQLite
       final db = await _localDatabase.database;
       
+      // Aplicar filtro de tenant se companyId fornecido
+      String where = 'user_id = ?';
+      List<dynamic> whereArgs = [userId];
+      
+      if (companyId != null && companyId.isNotEmpty) {
+        where += ' AND company_id = ?';
+        whereArgs.add(companyId);
+      }
+      
       final result = await db.rawQuery(
-        'SELECT COUNT(*) as count FROM ${StorageConstants.predictionHistoryTable} WHERE user_id = ?',
-        [userId],
+        'SELECT COUNT(*) as count FROM ${StorageConstants.predictionHistoryTable} WHERE $where',
+        whereArgs,
       );
 
       return Sqflite.firstIntValue(result) ?? 0;
@@ -120,7 +154,8 @@ class PredictionHistoryRepository {
   }
 
   /// Calcula o preço médio das predições
-  Future<double> getAveragePrice(int userId) async {
+  /// Se companyId for fornecido, filtra por empresa (row-level security)
+  Future<double> getAveragePrice(int userId, {String? companyId}) async {
     try {
       // Web: usar WebStorage
       if (kIsWeb) {
@@ -130,9 +165,18 @@ class PredictionHistoryRepository {
       // Nativo: usar SQLite
       final db = await _localDatabase.database;
       
+      // Aplicar filtro de tenant se companyId fornecido
+      String where = 'user_id = ?';
+      List<dynamic> whereArgs = [userId];
+      
+      if (companyId != null && companyId.isNotEmpty) {
+        where += ' AND company_id = ?';
+        whereArgs.add(companyId);
+      }
+      
       final result = await db.rawQuery(
-        'SELECT AVG(predicted_price) as avg FROM ${StorageConstants.predictionHistoryTable} WHERE user_id = ?',
-        [userId],
+        'SELECT AVG(predicted_price) as avg FROM ${StorageConstants.predictionHistoryTable} WHERE $where',
+        whereArgs,
       );
 
       final avg = result.first['avg'];
