@@ -3,7 +3,7 @@
 ## 📋 Overview
 Implementation of comprehensive admin panel for Radiance B2B platform with company management, user oversight, subscription control, system metrics, and audit logging.
 
-**Status:** TASK 2 COMPLETE ✅ (40%)  
+**Status:** TASK 3 COMPLETE ✅ (60%)  
 **Started:** 27/11/2025  
 **Branch:** `feat-b2bProfissional`
 
@@ -485,15 +485,299 @@ lib/features/admin/
 
 ### 🚀 Next Steps
 
-**TASK 3: Subscription Oversight** (Next)
-- List all subscriptions across companies
-- Manual upgrade/downgrade interface
-- Payment history viewer
-- Refund processing UI
-- Subscription analytics dashboard
+---
+
+## ✅ TASK 3: Subscription Oversight (COMPLETE)
+
+**Files Created:** 4 files  
+**Lines of Code:** ~1,200 lines  
+**Duration:** Task 3
+
+### 📁 Files Structure
+
+```
+lib/features/admin/
+├── domain/
+│   └── entities/
+│       ├── admin_company_stats.dart (170 lines)
+│       ├── admin_user_stats.dart (206 lines)
+│       └── admin_subscription_stats.dart (366 lines)
+├── data/
+│   └── repositories/
+│       ├── admin_company_repository.dart (363 lines)
+│       ├── admin_user_repository.dart (490 lines)
+│       └── admin_subscription_repository.dart (575 lines)
+└── presentation/
+    ├── providers/
+    │   ├── admin_company_provider.dart (236 lines)
+    │   ├── admin_user_provider.dart (258 lines)
+    │   └── admin_subscription_provider.dart (377 lines)
+    └── pages/
+        ├── admin_companies_page.dart (358 lines)
+        ├── admin_users_page.dart (682 lines)
+        └── admin_subscriptions_page.dart (676 lines)
+```
+
+### 🎯 Features Implemented
+
+#### 1. **AdminSubscriptionStats Entity** (`admin_subscription_stats.dart`)
+- ✅ Subscription statistics with payment history
+- ✅ **PaymentRecord** entity:
+  - Payment status (success, failed, pending, refunded)
+  - Transaction ID tracking
+  - Payment method (credit_card, boleto, pix)
+  - Failure reason logging
+- ✅ Revenue calculations:
+  - Total revenue from successful payments
+  - Monthly Recurring Revenue (MRR) by billing interval
+  - Average payment amount
+- ✅ Renewal tracking:
+  - Days until renewal calculation
+  - Overdue detection
+  - Attention flags (overdue, expiring soon)
+- ✅ **SubscriptionFilters** (8 options):
+  - Search by company name
+  - Filter by tier/status
+  - Overdue toggle
+  - Date range
+  - Sort by (company, tier, status, created, revenue, nextBilling)
+- ✅ **SubscriptionAction** entity:
+  - Action types (upgrade, downgrade, cancel, reactivate, suspend, refund)
+  - Audit trail (performed_by, reason, timestamp)
+
+#### 2. **AdminSubscriptionRepository** (`admin_subscription_repository.dart`)
+- ✅ **getAllSubscriptions()** - Advanced filtering
+  - JOIN subscriptions + companies
+  - 8 filter options with dynamic WHERE
+  - 6 sort options
+  - Payment history aggregation
+  - MRR/revenue calculations
+- ✅ **getSubscriptionDetails()** - Individual subscription
+  - Full payment history (last 50)
+  - Revenue metrics
+  - Renewal calculations
+- ✅ **updateSubscriptionTier()** - Upgrade/downgrade
+  - Automatic action type detection
+  - Audit logging
+  - Admin user tracking
+- ✅ **cancelSubscription()** - Cancel with reason
+  - Status update to cancelled
+  - Cancelled_at timestamp
+  - Action logging
+- ✅ **reactivateSubscription()** - Restore cancelled
+  - Status back to active
+  - Clear cancelled_at
+  - Action logging
+- ✅ **suspendSubscription()** - Temporary suspension
+  - Status to suspended
+  - Action logging
+- ✅ **processRefund()** - Payment refund
+  - Update payment status
+  - Action logging
+  - Subscription reference
+- ✅ **getSystemSubscriptionStats()** - Global metrics:
+  - Total/active/trial/pastDue/canceled counts
+  - Tier distribution (free/pro/enterprise)
+  - Total MRR calculation
+- ✅ Auto-create tables:
+  - payment_records table
+  - subscription_actions table (audit trail)
+
+#### 3. **AdminSubscriptionProvider** (`admin_subscription_provider.dart`)
+- ✅ State management with ChangeNotifier
+- ✅ **State Variables:**
+  - _subscriptions list
+  - _selectedSubscription
+  - _filters (SubscriptionFilters)
+  - _systemStats
+  - _isLoading, _error
+- ✅ **Computed Getters:**
+  - totalSubscriptions, activeSubscriptions, overdueSubscriptions
+  - subscriptionsNeedingAttention
+  - totalMRR, totalRevenue
+  - subscriptionsByTier (grouped map)
+  - subscriptionsByStatus (grouped map)
+- ✅ **Methods (12 total):**
+  - loadSubscriptions(), searchSubscriptions()
+  - applyFilters(), clearFilters()
+  - loadSubscriptionDetails()
+  - updateSubscriptionTier() - With local state update
+  - cancelSubscription() - MRR = 0 after cancel
+  - reactivateSubscription() - Reload to get correct values
+  - suspendSubscription() - MRR = 0 after suspend
+  - processRefund() - Reload selected subscription
+  - loadSystemStats()
+  - clearError(), clearSelectedSubscription()
+
+#### 4. **AdminSubscriptionsPage** (`admin_subscriptions_page.dart`)
+- ✅ **UI Components:**
+  - Search bar (3+ chars trigger)
+  - Stats row with 4 cards:
+    - Total subscriptions
+    - Active subscriptions
+    - Overdue subscriptions
+    - Total MRR (purple, money icon)
+  - Subscription cards with:
+    - Status color-coded avatar
+    - Company name + tier (color-coded)
+    - MRR, total revenue, payment count chips
+    - Status label + renewal status
+    - Popup menu (4 actions)
+- ✅ **Subscription Details Modal:**
+  - Draggable bottom sheet (0.8-0.95 height)
+  - 11 detail fields: company, plan, status, MRR, revenue, payments (success/failed), dates, renewal
+  - **Payment History Section:**
+    - List of all payments (last 50)
+    - Status icons (check/error)
+    - Amount, status, method, date
+    - Refund button for successful payments
+- ✅ **Actions:**
+  - View details (modal)
+  - Alter plano (tier dialog with radio buttons)
+  - Cancel/Reactivate with confirmation
+  - Suspend with confirmation
+  - Process refund with double confirmation
+- ✅ **Dialogs:**
+  - Tier selection (RadioListTile for Free/Pro/Enterprise)
+  - Cancel confirmation
+  - Reactivate confirmation
+  - Suspend confirmation
+  - Refund confirmation (destructive action)
+- ✅ **Empty States:**
+  - No subscriptions found
+  - No payment history
+- ✅ **Feedback:**
+  - SnackBar for success/error (color-coded)
+  - Pull-to-refresh
+
+### 🔧 Technical Details
+
+**Dependencies:**
+- flutter/material.dart
+- provider 6.1.0
+- dartz 0.10.1
+- intl (DateFormat)
+- SQLite with JOINs
+
+**Database Operations:**
+- Multi-table JOINs (subscriptions + companies)
+- Payment history tracking
+- Audit trail (subscription_actions table)
+- Auto-create missing tables
+- Parameterized queries
+
+**State Management:**
+- ChangeNotifier pattern
+- Local state updates (tier/status changes)
+- MRR recalculation on cancel/suspend
+- Reactive UI updates
+
+**Business Logic:**
+- MRR calculation by billing interval (monthly, yearly)
+- Overdue detection (negative days until renewal)
+- Attention flags (overdue, expiring in 3 days)
+- Revenue aggregation from successful payments
+- Tier upgrade/downgrade detection
+
+**UI/UX:**
+- Material Design 3
+- Color-coded status/tier indicators
+- Horizontal scrolling stats
+- Modal details with payment history
+- Confirmation dialogs for destructive actions
+- Real-time search
+- Pull-to-refresh
+
+### 📊 Statistics & Metrics
+
+**Code Metrics:**
+- Total files: 4
+- Total lines: ~1,994 lines
+- Entity: 366 lines (4 classes: AdminSubscriptionStats, PaymentRecord, SubscriptionFilters, SubscriptionAction)
+- Repository: 575 lines (8 methods + 10 helpers)
+- Provider: 377 lines (12 methods + 8 computed getters)
+- Page: 676 lines (18 UI methods + 8 dialog methods)
+
+**Features Count:**
+- 8 CRUD operations (list, get, updateTier, cancel, reactivate, suspend, refund, stats)
+- 8 filter options + 6 sort options
+- 4 status cards
+- 4 popup actions
+- 11 detail fields
+- Payment history viewer (last 50)
+- 6 action types (upgrade, downgrade, cancel, reactivate, suspend, refund)
+
+### 🔒 Security & Audit
+
+**Access Control:**
+- Admin-only operations
+- Admin user ID tracking in actions
+- Reason field for audit trail
+
+**Audit Trail:**
+- subscription_actions table
+- Track all tier changes
+- Track cancel/reactivate/suspend
+- Track refunds
+- Timestamp + performed_by for each action
+
+**Data Protection:**
+- Parameterized SQL queries
+- Soft cancel (data preservation)
+- Payment history immutability
+- Transaction ID tracking
+
+### 🐛 Known Issues & TODOs
+
+1. **Missing Features:**
+   - [ ] Filter dialog implementation
+   - [ ] Bulk tier update
+   - [ ] Export payment history (CSV)
+   - [ ] Subscription analytics charts
+   - [ ] Email notifications for actions
+   - [ ] Refund amount partial support
+   - [ ] Payment retry mechanism
+
+2. **Business Logic:**
+   - [ ] Prorated billing on tier changes
+   - [ ] Automatic suspension on failed payments
+   - [ ] Trial period handling
+   - [ ] Coupon/discount support
+   - [ ] Tax calculation
+
+3. **Integration:**
+   - [ ] Abacate Pay API integration
+   - [ ] Webhook handling for payment status
+   - [ ] Real payment processing (currently mock)
+   - [ ] Invoice generation
+
+4. **UI Enhancements:**
+   - [ ] Pagination for subscriptions list
+   - [ ] Payment history pagination
+   - [ ] Chart visualization for MRR trends
+   - [ ] Revenue forecast
+   - [ ] Churn rate calculation
+
+5. **Testing:**
+   - [ ] Unit tests for repository
+   - [ ] Unit tests for provider
+   - [ ] Widget tests for page
+   - [ ] Integration tests for tier change flow
+   - [ ] Refund flow tests
+
+### 🚀 Next Steps
+
+**TASK 4: System Metrics Dashboard** (Next)
+- Total users/companies counters
+- Revenue analytics with charts (fl_chart)
+- System health monitoring
+- API usage statistics
+- Growth trends visualization
+- Real-time metrics updates
 
 **Estimated Duration:** 1-2 days  
-**Files to Create:** ~4 files (~700 lines)
+**Files to Create:** ~4 files (~800 lines)  
+**New Dependency:** fl_chart (charts library)
 
 ---
 
@@ -503,10 +787,10 @@ lib/features/admin/
 |------|--------|-----------|-------|-------|
 | Task 1: Company Management | ✅ COMPLETE | 100% | 4 | ~1,127 |
 | Task 2: User Management | ✅ COMPLETE | 100% | 4 | ~1,636 |
-| Task 3: Subscription Oversight | 🔜 PENDING | 0% | 0 | 0 |
+| Task 3: Subscription Oversight | ✅ COMPLETE | 100% | 4 | ~1,994 |
 | Task 4: System Metrics | 🔜 PENDING | 0% | 0 | 0 |
 | Task 5: Audit Logs | 🔜 PENDING | 0% | 0 | 0 |
-| **TOTAL PHASE 5** | **🏗️ IN PROGRESS** | **40%** | **8** | **~2,763** |
+| **TOTAL PHASE 5** | **🏗️ IN PROGRESS** | **60%** | **12** | **~4,757** |
 
 ---
 
@@ -524,4 +808,4 @@ lib/features/admin/
 ---
 
 **Last Updated:** 27/11/2025  
-**Next Review:** After Task 3 completion
+**Next Review:** After Task 4 completion
