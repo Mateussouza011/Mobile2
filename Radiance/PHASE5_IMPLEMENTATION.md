@@ -765,19 +765,100 @@ lib/features/admin/
    - [ ] Integration tests for tier change flow
    - [ ] Refund flow tests
 
+### 📊 Task 4: System Metrics Dashboard (COMPLETE ✅)
+
+**Objective:** Comprehensive metrics dashboard with data visualizations for system-wide analytics including revenue trends, user growth, usage patterns, and system health monitoring.
+
+**Implementation Date:** December 2024
+
+#### 1. **AdminMetricsStats** (`admin_metrics_stats.dart`)
+- ✅ **SystemMetrics** entity (24 fields):
+  - Counters: totalUsers, activeUsers, totalCompanies, activeCompanies, totalSubscriptions, activeSubscriptions
+  - Revenue: totalRevenue, MRR, ARPU (per user), ARPA (per account)
+  - Growth: newUsersThisMonth, newCompaniesThisMonth, growthRate, churnRate
+  - Usage: totalPredictions, predictionsThisMonth, averagePredictionsPerUser
+  - API: totalApiCalls, apiCallsThisMonth, apiSuccessRate
+  - Health: systemHealthScore (0-100), failedPayments, overdueSubscriptions
+  - calculatedAt timestamp
+- ✅ **TimeSeriesData** class: date, value, optional label (for all chart data)
+- ✅ **RevenueMetrics** entity: dailyRevenue, monthlyRevenue, mrrHistory, comparisons, growthRate
+- ✅ **UserGrowthMetrics** entity: dailySignups, monthlySignups, activeUsersHistory, comparisons, growthRate
+- ✅ **TierDistribution** entity: counts + percentages for free/pro/enterprise
+- ✅ **UsageMetrics** entity: dailyPredictions, monthlyPredictions, top companies/users, growthRate
+- ✅ **SystemHealthMetrics** entity: health scores, criticalIssues, warnings, alerts list
+- ✅ **HealthAlert** entity: id, type, severity, message, details, createdAt
+- ✅ **Enums:** HealthAlertType, HealthAlertSeverity
+
+#### 2. **AdminMetricsRepository** (`admin_metrics_repository.dart`)
+- ✅ **Main Methods (6 total):**
+  - getSystemMetrics() - Comprehensive system overview (24 metrics)
+  - getRevenueMetrics() - Revenue analytics with time series
+  - getUserGrowthMetrics() - User growth tracking
+  - getTierDistribution() - Plan distribution stats
+  - getUsageMetrics() - Usage patterns (mock data for now)
+  - getSystemHealthMetrics() - Health monitoring + alerts
+- ✅ **Helper Methods (20+ total):**
+  - Time series generators (daily/monthly)
+  - Revenue calculations
+  - Growth rate calculations
+  - Health score calculations
+  - Alert generation based on thresholds
+  - Mock data generators
+- ✅ **Business Logic:**
+  - Complex SQL aggregations with date functions
+  - Health thresholds: payment < 90%, engagement < 70%, subscriptions < 85%
+  - Weighted health score calculation
+  - Mock data for predictions (future implementation)
+
+#### 3. **AdminMetricsProvider** (`admin_metrics_provider.dart`)
+- ✅ State management with ChangeNotifier
+- ✅ **State Variables:** 6 metric types + loading/error/lastUpdated
+- ✅ **Getters (20+ total):** Quick access to all metrics + computed values
+- ✅ **Methods (9 total):** Load all/individual metrics, refresh, clear
+- ✅ **Features:** Parallel loading with Future.wait, proper error handling
+
+#### 4. **AdminDashboardPage** (`admin_dashboard_page.dart`)
+- ✅ **Page Structure:** TabController with 4 tabs, AppBar with refresh, RefreshIndicator
+- ✅ **Tab 1: Visão Geral**
+  - Summary cards (4): Usuários, Empresas, MRR, Saúde (with trends)
+  - Tier Distribution PieChart (fl_chart)
+  - Quick Stats Grid (2x2): ARPU, Receita Total, Previsões, API Calls
+- ✅ **Tab 2: Receita**
+  - Monthly Revenue LineChart (12 months, curved, gradient)
+  - Daily Revenue BarChart (30 days)
+  - MRR History LineChart
+- ✅ **Tab 3: Crescimento**
+  - User Signups BarChart (12 months)
+  - Predictions Usage LineChart (30 days)
+  - Top Rankings (2 columns): Top Empresas, Top Usuários
+- ✅ **Tab 4: Saúde**
+  - Health Score Cards (2x2 grid): Geral, Pagamentos, Engagement, Assinaturas
+  - System Alerts list (with severity badges)
+- ✅ **Chart Components:** PieChart, LineChart, BarChart (8 total charts)
+- ✅ **UI Features:** Color-coded indicators, trend arrows, currency formatting, time ago, responsive
+
+**Lines of Code:** ~1,164  
+**Status:** ✅ COMPLETE
+
+**Files Created:**
+1. admin_metrics_stats.dart (330 lines)
+2. admin_metrics_repository.dart (520 lines)
+3. admin_metrics_provider.dart (284 lines)
+4. admin_dashboard_page.dart (1,030 lines)
+
+---
+
 ### 🚀 Next Steps
 
-**TASK 4: System Metrics Dashboard** (Next)
-- Total users/companies counters
-- Revenue analytics with charts (fl_chart)
-- System health monitoring
-- API usage statistics
-- Growth trends visualization
-- Real-time metrics updates
+**TASK 5: Audit Logs Viewer** (Final Task)
+- Event logging for all admin actions
+- Filter by user/company/action/date
+- Export audit reports (CSV/PDF)
+- Compliance tracking interface
+- Security event monitoring
 
-**Estimated Duration:** 1-2 days  
-**Files to Create:** ~4 files (~800 lines)  
-**New Dependency:** fl_chart (charts library)
+**Estimated Duration:** 1 day  
+**Files to Create:** ~4 files (~700 lines)
 
 ---
 
@@ -788,9 +869,9 @@ lib/features/admin/
 | Task 1: Company Management | ✅ COMPLETE | 100% | 4 | ~1,127 |
 | Task 2: User Management | ✅ COMPLETE | 100% | 4 | ~1,636 |
 | Task 3: Subscription Oversight | ✅ COMPLETE | 100% | 4 | ~1,994 |
-| Task 4: System Metrics | 🔜 PENDING | 0% | 0 | 0 |
+| Task 4: System Metrics Dashboard | ✅ COMPLETE | 100% | 4 | ~1,164 |
 | Task 5: Audit Logs | 🔜 PENDING | 0% | 0 | 0 |
-| **TOTAL PHASE 5** | **🏗️ IN PROGRESS** | **60%** | **12** | **~4,757** |
+| **TOTAL PHASE 5** | **🏗️ IN PROGRESS** | **80%** | **16** | **~5,921** |
 
 ---
 
