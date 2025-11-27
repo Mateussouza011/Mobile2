@@ -25,8 +25,8 @@ class PredictionApiService {
         headers: ApiConstants.defaultHeaders,
         body: body,
       ).timeout(
-        Duration(seconds: ApiConstants.defaultTimeout),
-        onTimeout: () => throw PredictionException(
+        const Duration(seconds: ApiConstants.defaultTimeout),
+        onTimeout: () => throw const PredictionException(
           'Tempo limite da requisição excedido. Verifique sua conexão.',
         ),
       );

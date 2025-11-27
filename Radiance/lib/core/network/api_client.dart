@@ -122,10 +122,19 @@ class ApiClient {
         return ConnectionException('Requisição cancelada');
       
       case DioExceptionType.unknown:
-        if (error.error.toString().contains('SocketException')) {
+        final errorMsg = error.error?.toString() ?? '';
+        if (errorMsg.contains('SocketException') || 
+            errorMsg.contains('Failed host lookup') ||
+            errorMsg.contains('Network is unreachable')) {
           return ConnectionException('Sem conexão com a internet');
         }
-        return ServerException('Erro desconhecido: ${error.message}');
+        if (errorMsg.contains('Connection refused')) {
+          return ConnectionException('Não foi possível conectar ao servidor');
+        }
+        if (errorMsg.contains('XMLHttpRequest error')) {
+          return ConnectionException('Erro de conexão (CORS ou rede)');
+        }
+        return ServerException('Erro desconhecido: ${error.message}\nDetalhes: $errorMsg');
       
       default:
         return ServerException('Erro inesperado');

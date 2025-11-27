@@ -132,11 +132,14 @@ class DiamondPredictionViewModel extends ChangeNotifier {
       (failure) {
         _state = PredictionState.error;
         _errorMessage = failure.message;
+        debugPrint('❌ Erro na predição: ${failure.message}');
+        debugPrint('❌ Tipo de falha: ${failure.runtimeType}');
         notifyListeners();
       },
       (prediction) {
         _state = PredictionState.success;
         _currentPrediction = prediction;
+        debugPrint('✅ Predição realizada: \$${prediction.predictedPrice}');
         notifyListeners();
         
         // Salva automaticamente no histórico

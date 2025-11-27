@@ -54,7 +54,7 @@ void main() {
       timestamp: DateTime(2025, 11, 27),
     );
 
-    final tParams = PredictionParams(
+    const tParams = PredictionParams(
       carat: 1.0,
       cut: 'Ideal',
       color: 'D',

@@ -34,7 +34,7 @@ void main() {
     timestamp: DateTime(2025, 11, 27),
   );
 
-  final tParams = PredictionParams(
+  const tParams = PredictionParams(
     carat: 1.0,
     cut: 'Ideal',
     color: 'D',
@@ -81,7 +81,7 @@ void main() {
 
   test('should return validation failure for invalid carat', () async {
     // arrange
-    final invalidParams = PredictionParams(
+    const invalidParams = PredictionParams(
       carat: -1.0, // Invalid
       cut: 'Ideal',
       color: 'D',
@@ -103,7 +103,7 @@ void main() {
 
   test('should return validation failure for invalid depth', () async {
     // arrange
-    final invalidParams = PredictionParams(
+    const invalidParams = PredictionParams(
       carat: 1.0,
       cut: 'Ideal',
       color: 'D',
