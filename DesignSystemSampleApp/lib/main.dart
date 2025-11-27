@@ -6,9 +6,13 @@ import 'core/theme/app_theme.dart';
 import 'core/providers/theme_provider.dart';
 import 'core/data/database/local_database.dart';
 import 'core/data/database/web_storage.dart';
+import 'core/di/dependency_injection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Configura Dependency Injection
+  await setupDependencyInjection();
   
   // Inicializa o armazenamento de acordo com a plataforma
   if (kIsWeb) {

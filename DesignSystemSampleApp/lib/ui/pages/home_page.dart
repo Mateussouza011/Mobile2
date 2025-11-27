@@ -131,6 +131,24 @@ class HomePage extends StatelessWidget {
                       Icons.account_circle,
                       () => context.go('/avatars'),
                     ),
+                    const SizedBox(height: 32),
+                    
+                    // Seção especial para MVVM
+                    const Divider(),
+                    const SizedBox(height: 16),
+                    Text(
+                      '🏗️ Arquitetura MVVM',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildListButton(
+                      context,
+                      '💎 Predição de Diamantes (MVVM)',
+                      Icons.diamond,
+                      () => context.go('/prediction-mvvm'),
+                    ),
                     const SizedBox(height: 12),
                     _buildListButton(
                       context,

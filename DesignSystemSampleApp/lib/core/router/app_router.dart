@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import '../../ui/pages/home_page.dart';
 import '../../ui/pages/main_layout.dart';
 import '../../features/buttons/buttons_page.dart';
@@ -15,6 +16,10 @@ import '../../features/avatars/avatars_page.dart';
 import '../../features/forms/forms_page.dart';
 import '../../features/navigation/navigation_bars_page.dart';
 import '../../features/alerts/alerts_page.dart';
+// MVVM Architecture
+import '../../presentation/views/diamond_prediction_view.dart';
+import '../../presentation/viewmodels/diamond_prediction_viewmodel.dart';
+import '../di/dependency_injection.dart';
 // Diamond Prediction App - Imports
 import '../../features/diamond_prediction/landing/landing_factory.dart';
 import '../../features/diamond_prediction/home/home_factory.dart';
@@ -251,12 +256,25 @@ class AppRouter {
         ),
       ),
       
-      // Predição do Diamond App
+      // Predição do Diamond App (Legado)
       GoRoute(
         path: '/diamond-prediction',
         name: 'diamond-prediction',
         pageBuilder: (context, state) => CustomTransitionPage(
           child: PredictionFactory.create(context),
+          transitionsBuilder: _slideTransition,
+        ),
+      ),
+      
+      // Predição MVVM (Nova Arquitetura)
+      GoRoute(
+        path: '/prediction-mvvm',
+        name: 'prediction-mvvm',
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: ChangeNotifierProvider(
+            create: (_) => getIt<DiamondPredictionViewModel>(),
+            child: const DiamondPredictionView(),
+          ),
           transitionsBuilder: _slideTransition,
         ),
       ),
