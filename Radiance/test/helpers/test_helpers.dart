@@ -31,6 +31,24 @@ class TestHelpers {
           )
         ''');
 
+        // Users table (matching actual User entity)
+        await db.execute('''
+          CREATE TABLE users (
+            id TEXT PRIMARY KEY,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE,
+            avatar_url TEXT,
+            phone TEXT,
+            is_admin INTEGER DEFAULT 0,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL,
+            is_active INTEGER DEFAULT 1,
+            current_company_id TEXT,
+            current_role_id TEXT,
+            last_login TEXT
+          )
+        ''');
+
         // Roles table
         await db.execute('''
           CREATE TABLE roles (
@@ -54,14 +72,18 @@ class TestHelpers {
             company_id TEXT NOT NULL,
             user_id TEXT NOT NULL,
             role_id TEXT NOT NULL,
+            role TEXT NOT NULL,
             status TEXT DEFAULT 'active',
+            is_active INTEGER DEFAULT 1,
             joined_at TEXT NOT NULL,
             invited_at TEXT,
             invited_by TEXT,
             last_access_at TEXT,
-            updated_at TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            updated_at TEXT,
             FOREIGN KEY (company_id) REFERENCES companies (id) ON DELETE CASCADE,
             FOREIGN KEY (role_id) REFERENCES roles (id),
+            FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
             UNIQUE(company_id, user_id)
           )
         ''');
@@ -220,17 +242,81 @@ class TestHelpers {
       'updated_at': now.toIso8601String(),
     });
 
+    // Insert test users
+    await db.insert('users', {
+      'id': 'user-1',
+      'name': 'John Admin',
+      'email': 'john@diamond.com',
+      'avatar_url': null,
+      'phone': '+55 11 99999-0001',
+      'is_admin': 0,
+      'created_at': DateTime(2024, 1, 1).toIso8601String(),
+      'updated_at': DateTime(2024, 11, 27).toIso8601String(),
+      'is_active': 1,
+      'current_company_id': 'company-1',
+      'current_role_id': 'role-admin',
+      'last_login': DateTime(2024, 11, 27, 10, 30).toIso8601String(),
+    });
+
+    await db.insert('users', {
+      'id': 'user-2',
+      'name': 'Jane User',
+      'email': 'jane@diamond.com',
+      'avatar_url': null,
+      'phone': '+55 11 99999-0002',
+      'is_admin': 0,
+      'created_at': DateTime(2024, 1, 2).toIso8601String(),
+      'updated_at': DateTime(2024, 11, 26).toIso8601String(),
+      'is_active': 1,
+      'current_company_id': 'company-1',
+      'current_role_id': 'role-user',
+      'last_login': DateTime(2024, 11, 26, 15, 45).toIso8601String(),
+    });
+
+    await db.insert('users', {
+      'id': 'user-3',
+      'name': 'Bob Analyst',
+      'email': 'bob@gemtrading.com',
+      'avatar_url': null,
+      'phone': '+55 11 99999-0003',
+      'is_admin': 0,
+      'created_at': DateTime(2024, 2, 1).toIso8601String(),
+      'updated_at': DateTime(2024, 11, 25).toIso8601String(),
+      'is_active': 1,
+      'current_company_id': 'company-2',
+      'current_role_id': 'role-admin',
+      'last_login': DateTime(2024, 11, 25, 9, 15).toIso8601String(),
+    });
+
+    await db.insert('users', {
+      'id': 'user-4',
+      'name': 'Disabled User',
+      'email': 'disabled@test.com',
+      'avatar_url': null,
+      'phone': null,
+      'is_admin': 0,
+      'created_at': DateTime(2024, 1, 15).toIso8601String(),
+      'updated_at': DateTime(2024, 10, 15).toIso8601String(),
+      'is_active': 0,
+      'current_company_id': null,
+      'current_role_id': null,
+      'last_login': DateTime(2024, 10, 1).toIso8601String(),
+    });
+
     // Insert test company_users (this creates the relationship)
     await db.insert('company_users', {
       'id': 'cu-1',
       'company_id': 'company-1',
       'user_id': 'user-1',
       'role_id': 'role-admin',
+      'role': 'admin',
       'status': 'active',
+      'is_active': 1,
       'joined_at': DateTime(2024, 1, 2).toIso8601String(),
       'invited_at': null,
       'invited_by': null,
       'last_access_at': DateTime(2024, 11, 27).toIso8601String(),
+      'created_at': DateTime(2024, 1, 2).toIso8601String(),
       'updated_at': DateTime(2024, 11, 27).toIso8601String(),
     });
 
@@ -239,11 +325,14 @@ class TestHelpers {
       'company_id': 'company-1',
       'user_id': 'user-2',
       'role_id': 'role-user',
+      'role': 'user',
       'status': 'active',
+      'is_active': 1,
       'joined_at': DateTime(2024, 1, 3).toIso8601String(),
       'invited_at': DateTime(2024, 1, 2).toIso8601String(),
       'invited_by': 'user-1',
       'last_access_at': DateTime(2024, 11, 26).toIso8601String(),
+      'created_at': DateTime(2024, 1, 3).toIso8601String(),
       'updated_at': DateTime(2024, 11, 26).toIso8601String(),
     });
 
@@ -252,11 +341,14 @@ class TestHelpers {
       'company_id': 'company-2',
       'user_id': 'user-3',
       'role_id': 'role-admin',
+      'role': 'admin',
       'status': 'active',
+      'is_active': 1,
       'joined_at': DateTime(2024, 2, 2).toIso8601String(),
       'invited_at': null,
       'invited_by': null,
       'last_access_at': null,
+      'created_at': DateTime(2024, 2, 2).toIso8601String(),
       'updated_at': DateTime(2024, 2, 2).toIso8601String(),
     });
 
@@ -353,10 +445,12 @@ class TestHelpers {
 
   /// Cleans up test database
   static Future<void> cleanupTestDatabase(Database db) async {
+    // Delete in order of dependencies (child tables first)
     await db.delete('audit_logs');
     await db.delete('prediction_history');
     await db.delete('subscriptions');
     await db.delete('company_users');
+    await db.delete('users');
     await db.delete('roles');
     await db.delete('companies');
   }

@@ -53,8 +53,8 @@ class AdminUserStats extends Equatable {
 
   String get rolesDisplay {
     if (companies.isEmpty) return '-';
-    final roles = companies.map((c) => c.role).toSet();
-    return roles.join(', ');
+    final roleIds = companies.map((c) => c.roleId).toSet();
+    return roleIds.join(', ');
   }
 
   bool get needsAttention {
