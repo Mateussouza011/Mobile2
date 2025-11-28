@@ -138,10 +138,10 @@ class AdminCompanyRepository {
           AdminCompanyStats(
             company: company,
             subscription: subscription,
-            totalMembers: row['total_members'] as int? ?? 0,
-            activeMembers: row['active_members'] as int? ?? 0,
-            totalPredictions: row['total_predictions'] as int? ?? 0,
-            predictionsThisMonth: row['predictions_this_month'] as int? ?? 0,
+            totalMembers: (row['total_members'] as num?)?.toInt() ?? 0,
+            activeMembers: (row['active_members'] as num?)?.toInt() ?? 0,
+            totalPredictions: (row['total_predictions'] as num?)?.toInt() ?? 0,
+            predictionsThisMonth: (row['predictions_this_month'] as num?)?.toInt() ?? 0,
             lastActivity: row['last_activity'] != null
                 ? DateTime.parse(row['last_activity'] as String)
                 : null,
@@ -162,19 +162,69 @@ class AdminCompanyRepository {
     String companyId,
   ) async {
     try {
-      final result = await getAllCompanies(
-        filters: CompanyFilters(searchQuery: companyId),
+      final db = await _databaseHelper.database;
+
+      // Query específica para uma empresa
+      final query = '''
+        SELECT 
+          c.*,
+          COUNT(DISTINCT cu.user_id) as total_members,
+          COUNT(DISTINCT CASE 
+            WHEN ph.created_at > datetime('now', '-30 days') 
+            THEN cu.user_id 
+          END) as active_members,
+          COUNT(ph.id) as total_predictions,
+          COUNT(CASE 
+            WHEN ph.created_at > datetime('now', 'start of month') 
+            THEN 1 
+          END) as predictions_this_month,
+          MAX(ph.created_at) as last_activity
+        FROM companies c
+        LEFT JOIN company_users cu ON c.id = cu.company_id
+        LEFT JOIN prediction_history ph ON c.id = ph.company_id
+        WHERE c.id = ?
+        GROUP BY c.id
+      ''';
+
+      final results = await db.rawQuery(query, [companyId]);
+
+      if (results.isEmpty) {
+        return Left(DatabaseFailure('Empresa não encontrada'));
+      }
+
+      final row = results.first;
+      final company = _mapToCompany(row);
+
+      // Buscar assinatura
+      final subscriptionResults = await db.query(
+        'subscriptions',
+        where: 'company_id = ?',
+        whereArgs: [company.id],
+        orderBy: 'created_at DESC',
+        limit: 1,
       );
 
-      return result.fold(
-        (failure) => Left(failure),
-        (companies) {
-          final company = companies.firstWhere(
-            (c) => c.company.id == companyId,
-            orElse: () => throw Exception('Empresa não encontrada'),
-          );
-          return Right(company);
-        },
+      Subscription? subscription;
+      if (subscriptionResults.isNotEmpty) {
+        subscription = _mapToSubscription(subscriptionResults.first);
+      }
+
+      final totalRevenue = _calculateRevenue(subscription);
+
+      return Right(
+        AdminCompanyStats(
+          company: company,
+          subscription: subscription,
+          totalMembers: (row['total_members'] as num?)?.toInt() ?? 0,
+          activeMembers: (row['active_members'] as num?)?.toInt() ?? 0,
+          totalPredictions: (row['total_predictions'] as num?)?.toInt() ?? 0,
+          predictionsThisMonth: (row['predictions_this_month'] as num?)?.toInt() ?? 0,
+          lastActivity: row['last_activity'] != null
+              ? DateTime.parse(row['last_activity'] as String)
+              : null,
+          totalRevenue: totalRevenue,
+          createdAt: DateTime.parse(row['created_at'] as String),
+        ),
       );
     } catch (e) {
       return Left(DatabaseFailure('Erro ao buscar empresa: $e'));
@@ -253,27 +303,27 @@ class AdminCompanyRepository {
       final companiesResult = await db.rawQuery(
         'SELECT COUNT(*) as total, SUM(CASE WHEN is_active = 1 THEN 1 ELSE 0 END) as active FROM companies',
       );
-      stats['total_companies'] = companiesResult.first['total'] as int? ?? 0;
-      stats['active_companies'] = companiesResult.first['active'] as int? ?? 0;
+      stats['total_companies'] = (companiesResult.first['total'] as num?)?.toInt() ?? 0;
+      stats['active_companies'] = (companiesResult.first['active'] as num?)?.toInt() ?? 0;
 
       // Total de usuários
       final usersResult = await db.rawQuery(
         'SELECT COUNT(DISTINCT user_id) as total FROM company_users',
       );
-      stats['total_users'] = usersResult.first['total'] as int? ?? 0;
+      stats['total_users'] = (usersResult.first['total'] as num?)?.toInt() ?? 0;
 
       // Total de previsões
       final predictionsResult = await db.rawQuery(
         'SELECT COUNT(*) as total FROM prediction_history',
       );
-      stats['total_predictions'] = predictionsResult.first['total'] as int? ?? 0;
+      stats['total_predictions'] = (predictionsResult.first['total'] as num?)?.toInt() ?? 0;
 
       // Previsões este mês
       final predictionsMonthResult = await db.rawQuery(
         "SELECT COUNT(*) as total FROM prediction_history WHERE created_at > datetime('now', 'start of month')",
       );
       stats['predictions_this_month'] =
-          predictionsMonthResult.first['total'] as int? ?? 0;
+          (predictionsMonthResult.first['total'] as num?)?.toInt() ?? 0;
 
       // Distribuição por tier
       final tiersResult = await db.rawQuery(
@@ -281,7 +331,7 @@ class AdminCompanyRepository {
       );
       stats['tier_distribution'] = {
         for (final row in tiersResult)
-          row['tier'] as String: row['count'] as int,
+          row['tier'] as String: (row['count'] as num).toInt(),
       };
 
       return Right(stats);
@@ -317,7 +367,7 @@ class AdminCompanyRepository {
         (e) => e.name == (map['status'] as String).toLowerCase(),
         orElse: () => SubscriptionStatus.active,
       ),
-      amount: ((map['amount'] as int? ?? 0)).toDouble(),
+      amount: (map['amount'] as num?)?.toDouble() ?? 0.0,
       billingInterval: BillingInterval.values.firstWhere(
         (e) => e.name == (map['billing_interval'] as String? ?? 'monthly'),
         orElse: () => BillingInterval.monthly,
