@@ -9,7 +9,7 @@ import '../../../../core/data/models/prediction_model.dart';
 class PdfExportService {
   /// Gera PDF de relatório de previsões
   Future<ExportResult> generatePredictionsReport({
-    required List<PredictionModel> predictions,
+    required List<PredictionHistoryModel> predictions,
     required ExportConfig config,
     String? companyName,
   }) async {
@@ -107,7 +107,7 @@ class PdfExportService {
     );
   }
 
-  pw.Widget _buildSummaryPage(List<PredictionModel> predictions) {
+  pw.Widget _buildSummaryPage(List<PredictionHistoryModel> predictions) {
     final avgPrice = predictions.isEmpty
         ? 0.0
         : predictions.map((p) => p.predictedPrice).reduce((a, b) => a + b) / predictions.length;
@@ -150,7 +150,7 @@ class PdfExportService {
     );
   }
 
-  pw.Widget _buildDetailsPage(List<PredictionModel> predictions) {
+  pw.Widget _buildDetailsPage(List<PredictionHistoryModel> predictions) {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
@@ -176,10 +176,10 @@ class PdfExportService {
             // Rows
             ...predictions.map((p) => pw.TableRow(
                   children: [
-                    _buildTableCell(_formatDate(p.timestamp)),
+                    _buildTableCell(_formatDate(p.createdAt)),
                     _buildTableCell(p.carat.toStringAsFixed(2)),
-                    _buildTableCell(p.color ?? '-'),
-                    _buildTableCell(p.clarity ?? '-'),
+                    _buildTableCell(p.color),
+                    _buildTableCell(p.clarity),
                     _buildTableCell('R\$ ${p.predictedPrice.toStringAsFixed(2)}'),
                   ],
                 )),
@@ -194,7 +194,7 @@ class PdfExportService {
       width: 100,
       padding: const pw.EdgeInsets.all(15),
       decoration: pw.BoxDecoration(
-        color: color.withAlpha(0.1),
+        color: PdfColors.grey100,
         border: pw.Border.all(color: color),
         borderRadius: const pw.BorderRadius.all(pw.Radius.circular(8)),
       ),
@@ -214,7 +214,7 @@ class PdfExportService {
     );
   }
 
-  pw.Widget _buildPriceDistribution(List<PredictionModel> predictions) {
+  pw.Widget _buildPriceDistribution(List<PredictionHistoryModel> predictions) {
     final ranges = {
       'Até R\$ 5.000': predictions.where((p) => p.predictedPrice <= 5000).length,
       'R\$ 5.001 - R\$ 10.000': predictions.where((p) => p.predictedPrice > 5000 && p.predictedPrice <= 10000).length,

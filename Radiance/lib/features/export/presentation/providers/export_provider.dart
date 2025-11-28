@@ -56,8 +56,8 @@ class ExportProvider extends ChangeNotifier {
       
       // Filtrar por período
       final predictions = allPredictions.where((p) {
-        return p.timestamp.isAfter(config.startDate) &&
-               p.timestamp.isBefore(config.endDate.add(const Duration(days: 1)));
+        return p.createdAt.isAfter(config.startDate) &&
+               p.createdAt.isBefore(config.endDate.add(const Duration(days: 1)));
       }).toList();
 
       if (predictions.isEmpty) {
@@ -116,20 +116,14 @@ class ExportProvider extends ChangeNotifier {
       }
 
       // Calcular métricas
-      final predictions = await _predictionRepository.getPredictionsForUser(
-        userId: '',
+      final allPredictions = await _predictionRepository.getPredictionsForUser(
+        0, // TODO: Get user ID from auth
         companyId: companyId,
       );
 
-      if (predictions.isLeft()) {
-        _setExporting(false);
-        return Left((predictions as Left).value);
-      }
-
-      final allPredictions = (predictions as Right).value;
       final filteredPredictions = allPredictions.where((p) {
-        return p.timestamp.isAfter(config.startDate) &&
-               p.timestamp.isBefore(config.endDate.add(const Duration(days: 1)));
+        return p.createdAt.isAfter(config.startDate) &&
+               p.createdAt.isBefore(config.endDate.add(const Duration(days: 1)));
       }).toList();
 
       final metrics = {

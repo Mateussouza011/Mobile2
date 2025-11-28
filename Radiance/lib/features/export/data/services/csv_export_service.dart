@@ -8,7 +8,7 @@ import '../../../../core/data/models/prediction_model.dart';
 class CsvExportService {
   /// Exporta previsões para CSV
   Future<ExportResult> exportPredictions({
-    required List<PredictionModel> predictions,
+    required List<PredictionHistoryModel> predictions,
     required ExportConfig config,
   }) async {
     final rows = <List<dynamic>>[
@@ -30,14 +30,14 @@ class CsvExportService {
       // Data
       ...predictions.map((p) => [
             p.id,
-            _formatDate(p.timestamp),
-            _formatTime(p.timestamp),
+            _formatDate(p.createdAt),
+            _formatTime(p.createdAt),
             p.carat.toStringAsFixed(2),
-            p.cut ?? '',
-            p.color ?? '',
-            p.clarity ?? '',
-            p.depth?.toStringAsFixed(2) ?? '',
-            p.table?.toStringAsFixed(2) ?? '',
+            p.cut,
+            p.color,
+            p.clarity,
+            p.depth.toStringAsFixed(2),
+            p.table.toStringAsFixed(2),
             p.predictedPrice.toStringAsFixed(2),
             p.companyId ?? '',
             p.userId,
