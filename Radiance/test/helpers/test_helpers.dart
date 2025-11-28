@@ -446,6 +446,9 @@ class TestHelpers {
   /// Cleans up test database
   static Future<void> cleanupTestDatabase(Database db) async {
     // Delete in order of dependencies (child tables first)
+    // Use try-catch for dynamically created tables that might not exist
+    try { await db.delete('subscription_actions'); } catch (_) {}
+    try { await db.delete('payment_records'); } catch (_) {}
     await db.delete('audit_logs');
     await db.delete('prediction_history');
     await db.delete('subscriptions');

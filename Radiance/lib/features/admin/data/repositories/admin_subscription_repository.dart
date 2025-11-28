@@ -91,8 +91,6 @@ class AdminSubscriptionRepository {
 
       final results = await db.rawQuery(query, args);
 
-      final results = await db.rawQuery(query, args);
-
       final subscriptions = <AdminSubscriptionStats>[];
       for (final row in results) {
         final subscription = _mapToSubscription(row);
@@ -405,9 +403,9 @@ class AdminSubscriptionRepository {
         SELECT 
           COUNT(*) as total_subscriptions,
           SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as active,
-          SUM(CASE WHEN status = 'trial' THEN 1 ELSE 0 END) as trial,
-          SUM(CASE WHEN status = 'past_due' THEN 1 ELSE 0 END) as past_due,
-          SUM(CASE WHEN status = 'canceled' THEN 1 ELSE 0 END) as canceled,
+          SUM(CASE WHEN status = 'trialing' THEN 1 ELSE 0 END) as trial,
+          SUM(CASE WHEN status = 'pastDue' THEN 1 ELSE 0 END) as past_due,
+          SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) as canceled,
           SUM(CASE WHEN tier = 'free' THEN 1 ELSE 0 END) as free_tier,
           SUM(CASE WHEN tier = 'pro' THEN 1 ELSE 0 END) as pro_tier,
           SUM(CASE WHEN tier = 'enterprise' THEN 1 ELSE 0 END) as enterprise_tier
@@ -456,7 +454,10 @@ class AdminSubscriptionRepository {
         (s) => s.name == map['status'],
         orElse: () => SubscriptionStatus.active,
       ),
-      billingInterval: BillingInterval.monthly,
+      billingInterval: BillingInterval.values.firstWhere(
+        (b) => b.name == map['billing_interval'],
+        orElse: () => BillingInterval.monthly,
+      ),
       startDate: DateTime.parse(map['start_date'] as String),
       endDate: map['end_date'] != null
           ? DateTime.parse(map['end_date'] as String)

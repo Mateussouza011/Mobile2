@@ -33,11 +33,11 @@ class AdminSubscriptionStats extends Equatable {
         return 'Ativa';
       case SubscriptionStatus.pastDue:
         return 'Vencida';
-      case SubscriptionStatus.canceled:
+      case SubscriptionStatus.cancelled:
         return 'Cancelada';
       case SubscriptionStatus.suspended:
         return 'Suspensa';
-      case SubscriptionStatus.trial:
+      case SubscriptionStatus.trialing:
         return 'Trial';
       default:
         return subscription.status.toString();
@@ -50,11 +50,11 @@ class AdminSubscriptionStats extends Equatable {
         return Colors.green;
       case SubscriptionStatus.pastDue:
         return Colors.orange;
-      case SubscriptionStatus.canceled:
+      case SubscriptionStatus.cancelled:
         return Colors.red;
       case SubscriptionStatus.suspended:
         return Colors.red.shade700;
-      case SubscriptionStatus.trial:
+      case SubscriptionStatus.trialing:
         return Colors.blue;
       default:
         return Colors.grey;
@@ -88,7 +88,7 @@ class AdminSubscriptionStats extends Equatable {
   }
 
   String get renewalStatus {
-    if (subscription.status == SubscriptionStatus.canceled) {
+    if (subscription.status == SubscriptionStatus.cancelled) {
       return 'Cancelada';
     }
     if (isOverdue) {
