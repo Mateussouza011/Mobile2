@@ -30,7 +30,6 @@ class ComponentCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Ícone
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
@@ -45,8 +44,6 @@ class ComponentCard extends StatelessWidget {
                     ),
                     
                     const Spacer(),
-                    
-                    // Título
                     Text(
                       title,
                       style: Theme.of(context).textTheme.titleMedium,
@@ -56,8 +53,6 @@ class ComponentCard extends StatelessWidget {
                     
                     if (description != null) ...[
                       const SizedBox(height: 4),
-                      
-                      // Descrição
                       Text(
                         description!,
                         style: Theme.of(context).textTheme.bodySmall,

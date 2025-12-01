@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import '../../../core/data/models/prediction_model.dart';
 
 class PredictionViewModel extends ChangeNotifier {
-  // Form fields
   double _carat = 1.0;
   String _cut = 'Ideal';
   String _color = 'G';
@@ -12,14 +11,10 @@ class PredictionViewModel extends ChangeNotifier {
   double _x = 5.0;
   double _y = 5.0;
   double _z = 3.0;
-
-  // State
   bool _isLoading = false;
   String? _errorMessage;
   PredictionResponse? _result;
   bool _showResult = false;
-
-  // Getters
   double get carat => _carat;
   String get cut => _cut;
   String get color => _color;
@@ -33,13 +28,9 @@ class PredictionViewModel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   PredictionResponse? get result => _result;
   bool get showResult => _showResult;
-
-  // Available options
   static const List<String> cutOptions = ['Fair', 'Good', 'Very Good', 'Premium', 'Ideal'];
   static const List<String> colorOptions = ['D', 'E', 'F', 'G', 'H', 'I', 'J'];
   static const List<String> clarityOptions = ['I1', 'SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF'];
-
-  // Setters
   void setCarat(double value) {
     _carat = value;
     notifyListeners();

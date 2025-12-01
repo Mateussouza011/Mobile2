@@ -8,6 +8,7 @@ import '../../../ui/widgets/shadcn/shadcn_card.dart';
 import '../../../ui/widgets/shadcn/shadcn_alert.dart';
 import '../../../ui/widgets/shadcn/shadcn_select.dart';
 import '../../../ui/widgets/shadcn/shadcn_slider.dart';
+import '../../../ui/widgets/theme_toggle_button.dart';
 
 class PredictionView extends StatelessWidget {
   final PredictionDelegate delegate;
@@ -19,8 +20,6 @@ class PredictionView extends StatelessWidget {
     return Consumer<PredictionViewModel>(
       builder: (context, viewModel, child) {
         final colorScheme = Theme.of(context).colorScheme;
-
-        // Mostrar modal quando tiver resultado
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (viewModel.showResult && viewModel.result != null) {
             _showResultModal(context, viewModel);
@@ -36,6 +35,7 @@ class PredictionView extends StatelessWidget {
             ),
             title: const Text('Nova Predicao'),
             actions: [
+              const ThemeToggleButton(size: 36),
               IconButton(
                 icon: const Icon(Icons.refresh),
                 onPressed: () => delegate.resetForm(),
@@ -54,8 +54,6 @@ class PredictionView extends StatelessWidget {
   void _showResultModal(BuildContext context, PredictionViewModel viewModel) {
     final result = viewModel.result;
     if (result == null) return;
-
-    // Limpar o resultado para evitar reabrir o modal
     viewModel.clearResult();
 
     showDialog(
@@ -414,8 +412,6 @@ class _DimensionField extends StatelessWidget {
     );
   }
 }
-
-/// Modal com o resultado da predição
 class _ResultModal extends StatelessWidget {
   final PredictionResponse result;
   final PredictionViewModel viewModel;
@@ -444,7 +440,6 @@ class _ResultModal extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Ícone de diamante
               Container(
                 width: 80,
                 height: 80,
@@ -466,8 +461,6 @@ class _ResultModal extends StatelessWidget {
                 child: const Icon(Icons.diamond, size: 40, color: Colors.white),
               ),
               const SizedBox(height: 20),
-              
-              // Título
               Text(
                 'Preco Estimado',
                 style: textTheme.titleMedium?.copyWith(
@@ -475,8 +468,6 @@ class _ResultModal extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              
-              // Preço
               Text(
                 '\$${result.price.toStringAsFixed(2)}',
                 style: textTheme.headlineLarge?.copyWith(
@@ -485,8 +476,6 @@ class _ResultModal extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              
-              // Badge de salvo
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
@@ -510,8 +499,6 @@ class _ResultModal extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              
-              // Resumo das características
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -536,8 +523,6 @@ class _ResultModal extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              
-              // Botões
               SizedBox(
                 width: double.infinity,
                 child: ShadcnButton(

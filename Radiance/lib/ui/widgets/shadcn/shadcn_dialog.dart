@@ -63,7 +63,6 @@ class ShadcnDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Header
             if (title != null || showCloseButton)
               Container(
                 padding: const EdgeInsets.all(24),
@@ -125,8 +124,6 @@ class ShadcnDialog extends StatelessWidget {
                   ],
                 ),
               ),
-            
-            // Content
             if (content != null)
               Flexible(
                 child: Container(
@@ -134,8 +131,6 @@ class ShadcnDialog extends StatelessWidget {
                   child: content!,
                 ),
               ),
-            
-            // Actions
             if (actions != null && actions!.isNotEmpty)
               Container(
                 padding: const EdgeInsets.all(24),
@@ -221,8 +216,6 @@ class _DialogSize {
     required this.insetPadding,
   });
 }
-
-// Alert Dialog
 class ShadcnAlertDialog extends StatelessWidget {
   final String title;
   final String description;
@@ -302,8 +295,6 @@ class ShadcnAlertDialog extends StatelessWidget {
     );
   }
 }
-
-// Loading Dialog
 class ShadcnLoadingDialog extends StatelessWidget {
   final String? title;
   final String? description;
@@ -346,8 +337,6 @@ class ShadcnLoadingDialog extends StatelessWidget {
     );
   }
 }
-
-// Bottom Sheet Dialog
 class ShadcnBottomSheetDialog extends StatelessWidget {
   final String? title;
   final Widget content;

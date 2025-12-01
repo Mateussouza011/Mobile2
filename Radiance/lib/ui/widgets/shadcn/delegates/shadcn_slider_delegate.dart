@@ -1,94 +1,36 @@
 import 'package:flutter/material.dart';
-
-/// Delegate para customizar o comportamento do ShadcnSlider
-/// 
-/// Este delegate permite centralizar toda a lógica de sliders,
-/// incluindo formatação de labels, cores dinâmicas e validação,
-/// seguindo o padrão Delegate para desacoplamento e reutilização.
 abstract class ShadcnSliderDelegate {
-  /// Chamado quando o usuário começa a arrastar o slider
-  /// 
-  /// [value] é o valor inicial do slider
   void onSliderChangeStart(double value) {}
-  
-  /// Chamado continuamente enquanto o usuário arrasta o slider
-  /// 
-  /// [value] é o valor atual do slider
   void onSliderChanged(double value) {}
-  
-  /// Chamado quando o usuário solta o slider
-  /// 
-  /// [value] é o valor final do slider
   void onSliderChangeEnd(double value) {}
-  
-  /// Formata o label que aparece acima do slider
-  /// 
-  /// [value] é o valor atual do slider
-  /// Retorna a string formatada a ser exibida
   String formatSliderLabel(double value) {
     return value.toStringAsFixed(1);
   }
-  
-  /// Retorna a cor do slider baseado no valor atual
-  /// 
-  /// [value] é o valor atual do slider
-  /// [colorScheme] é o esquema de cores do tema atual
   Color getSliderColor(double value, ColorScheme colorScheme) {
     return colorScheme.primary;
   }
-  
-  /// Retorna a cor da track (trilha) do slider
-  /// 
-  /// [value] é o valor atual do slider
-  /// [colorScheme] é o esquema de cores do tema atual
   Color getTrackColor(double value, ColorScheme colorScheme) {
     return colorScheme.primary.withValues(alpha: 0.2);
   }
-  
-  /// Valida se um valor é permitido
-  /// 
-  /// [value] é o valor a ser validado
-  /// Retorna true se o valor é válido, false caso contrário
   bool isValueAllowed(double value) {
     return true;
   }
-  
-  /// Ajusta o valor para "snap" em valores específicos
-  /// 
-  /// [value] é o valor original
-  /// Retorna o valor ajustado (pode ser o mesmo se não houver snap)
   double snapValue(double value) {
     return value;
   }
-  
-  /// Define o número de divisões do slider
-  /// 
-  /// [min] é o valor mínimo do slider
-  /// [max] é o valor máximo do slider
-  /// Retorna o número de divisões ou null para slider contínuo
   int? getSliderDivisions(double min, double max) {
     return null;
   }
-  
-  /// Retorna o ícone a ser exibido à esquerda do slider
   Widget? getLeadingWidget(double value) {
     return null;
   }
-  
-  /// Retorna o ícone a ser exibido à direita do slider
   Widget? getTrailingWidget(double value) {
     return null;
   }
-  
-  /// Define se deve mostrar o label
   bool shouldShowLabel() {
     return true;
   }
 }
-
-/// Implementação padrão do ShadcnSliderDelegate
-/// 
-/// Fornece comportamento básico sem customizações.
 class DefaultShadcnSliderDelegate implements ShadcnSliderDelegate {
   @override
   void onSliderChangeStart(double value) {}
@@ -132,10 +74,6 @@ class DefaultShadcnSliderDelegate implements ShadcnSliderDelegate {
   @override
   bool shouldShowLabel() => true;
 }
-
-/// Delegate para slider de volume
-/// 
-/// Formata valores como porcentagem e muda cor baseado no nível.
 class VolumeSliderDelegate extends DefaultShadcnSliderDelegate {
   final Function(double)? onVolumeChanged;
   
@@ -148,7 +86,6 @@ class VolumeSliderDelegate extends DefaultShadcnSliderDelegate {
   
   @override
   double snapValue(double value) {
-    // Snap para múltiplos de 0.05 (5%)
     return (value * 20).round() / 20;
   }
   
@@ -177,19 +114,13 @@ class VolumeSliderDelegate extends DefaultShadcnSliderDelegate {
   @override
   void onSliderChangeEnd(double value) {
     onVolumeChanged?.call(value);
-    // Salvar nas preferências
-    // SharedPreferences.setDouble('volume', value);
   }
   
   @override
   int? getSliderDivisions(double min, double max) {
-    return 20; // 5% de incremento
+    return 20; 
   }
 }
-
-/// Delegate para slider de temperatura
-/// 
-/// Mostra valores em graus Celsius com cores apropriadas.
 class TemperatureSliderDelegate extends DefaultShadcnSliderDelegate {
   final Function(double)? onTemperatureChanged;
   final bool useFahrenheit;
@@ -220,7 +151,7 @@ class TemperatureSliderDelegate extends DefaultShadcnSliderDelegate {
   
   @override
   int? getSliderDivisions(double min, double max) {
-    return (max - min).toInt(); // Uma divisão por grau
+    return (max - min).toInt(); 
   }
   
   @override
@@ -237,10 +168,6 @@ class TemperatureSliderDelegate extends DefaultShadcnSliderDelegate {
     onTemperatureChanged?.call(value);
   }
 }
-
-/// Delegate para slider de preço/faixa de valores
-/// 
-/// Formata valores monetários com símbolo de moeda.
 class PriceRangeSliderDelegate extends DefaultShadcnSliderDelegate {
   final String currencySymbol;
   final Function(double)? onPriceChanged;
@@ -257,7 +184,6 @@ class PriceRangeSliderDelegate extends DefaultShadcnSliderDelegate {
   
   @override
   double snapValue(double value) {
-    // Snap para múltiplos de 10
     return (value / 10).round() * 10.0;
   }
   
@@ -271,10 +197,6 @@ class PriceRangeSliderDelegate extends DefaultShadcnSliderDelegate {
     onPriceChanged?.call(value);
   }
 }
-
-/// Delegate para slider de brilho
-/// 
-/// Controla brilho da tela com ícones apropriados.
 class BrightnessSliderDelegate extends DefaultShadcnSliderDelegate {
   final Function(double)? onBrightnessChanged;
   
@@ -310,13 +232,9 @@ class BrightnessSliderDelegate extends DefaultShadcnSliderDelegate {
   
   @override
   int? getSliderDivisions(double min, double max) {
-    return 10; // 10% de incremento
+    return 10; 
   }
 }
-
-/// Delegate para slider de progresso/velocidade
-/// 
-/// Mostra velocidade com cores graduais.
 class SpeedSliderDelegate extends DefaultShadcnSliderDelegate {
   final Function(double)? onSpeedChanged;
   
@@ -345,7 +263,7 @@ class SpeedSliderDelegate extends DefaultShadcnSliderDelegate {
   
   @override
   int? getSliderDivisions(double min, double max) {
-    return 4; // Lento, Normal, Rápido, Muito Rápido
+    return 4; 
   }
   
   @override
@@ -353,10 +271,6 @@ class SpeedSliderDelegate extends DefaultShadcnSliderDelegate {
     onSpeedChanged?.call(value);
   }
 }
-
-/// Delegate para slider com validação
-/// 
-/// Impede valores fora de uma faixa aceitável.
 class ValidatedSliderDelegate extends DefaultShadcnSliderDelegate {
   final double minAcceptable;
   final double maxAcceptable;

@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 import '../errors/exceptions.dart';
-
-/// Cliente HTTP configurado com interceptors
 class ApiClient {
   late final Dio _dio;
   final Logger _logger = Logger();
@@ -23,13 +21,9 @@ class ApiClient {
         },
       ),
     );
-
-    // Adiciona interceptors
     _dio.interceptors.add(_LogInterceptor(_logger));
     _dio.interceptors.add(_ErrorInterceptor());
   }
-
-  /// GET request
   Future<Response> get(
     String path, {
     Map<String, dynamic>? queryParameters,
@@ -45,8 +39,6 @@ class ApiClient {
       throw _handleDioError(e);
     }
   }
-
-  /// POST request
   Future<Response> post(
     String path, {
     dynamic data,
@@ -64,8 +56,6 @@ class ApiClient {
       throw _handleDioError(e);
     }
   }
-
-  /// PUT request
   Future<Response> put(
     String path, {
     dynamic data,
@@ -83,8 +73,6 @@ class ApiClient {
       throw _handleDioError(e);
     }
   }
-
-  /// DELETE request
   Future<Response> delete(
     String path, {
     dynamic data,
@@ -102,8 +90,6 @@ class ApiClient {
       throw _handleDioError(e);
     }
   }
-
-  /// Trata erros do Dio
   Exception _handleDioError(DioException error) {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
@@ -141,8 +127,6 @@ class ApiClient {
     }
   }
 }
-
-/// Interceptor para logging
 class _LogInterceptor extends Interceptor {
   final Logger logger;
 
@@ -171,13 +155,9 @@ class _LogInterceptor extends Interceptor {
     super.onError(err, handler);
   }
 }
-
-/// Interceptor para tratamento de erros
 class _ErrorInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    // Aqui você pode adicionar lógica customizada de tratamento de erros
-    // Por exemplo: refresh token automático, retry logic, etc.
     super.onError(err, handler);
   }
 }

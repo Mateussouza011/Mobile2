@@ -47,7 +47,6 @@ class HomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Cabeçalho centralizado
               Text(
                 'Biblioteca de Componentes',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -56,8 +55,6 @@ class HomePage extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 48),
-              
-              // Lista de botões centralizados
               ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 400),
                 child: Column(
@@ -132,8 +129,6 @@ class HomePage extends StatelessWidget {
                       () => context.go('/avatars'),
                     ),
                     const SizedBox(height: 32),
-                    
-                    // Seção especial para MVVM
                     const Divider(),
                     const SizedBox(height: 16),
                     Text(

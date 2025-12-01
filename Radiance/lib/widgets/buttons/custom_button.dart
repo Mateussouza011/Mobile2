@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/typography.dart';
-
-/// Enumeração para variantes do CustomButton
 enum CustomButtonVariant {
   primary,
   secondary,
@@ -10,15 +8,11 @@ enum CustomButtonVariant {
   ghost,
   destructive,
 }
-
-/// Enumeração para tamanhos do CustomButton
 enum CustomButtonSize {
   small,
   medium,
   large,
 }
-
-/// Delegate para customização do CustomButton
 abstract class CustomButtonDelegate {
   Color getBackgroundColor(CustomButtonVariant variant, bool isHovered, bool isPressed);
   Color getForegroundColor(CustomButtonVariant variant);
@@ -28,8 +22,6 @@ abstract class CustomButtonDelegate {
   TextStyle getTextStyle(CustomButtonSize size);
   double getElevation(CustomButtonVariant variant);
 }
-
-/// Implementação padrão do delegate
 class DefaultCustomButtonDelegate implements CustomButtonDelegate {
   @override
   Color getBackgroundColor(CustomButtonVariant variant, bool isHovered, bool isPressed) {
@@ -112,11 +104,9 @@ class DefaultCustomButtonDelegate implements CustomButtonDelegate {
 
   @override
   double getElevation(CustomButtonVariant variant) {
-    return 0.0; // Shadcn/ui usa flat design
+    return 0.0; 
   }
 }
-
-/// Botão customizado reutilizável com design system shadcn/ui
 class CustomButton extends StatefulWidget {
   final String text;
   final VoidCallback? onPressed;

@@ -1,6 +1,4 @@
 import 'package:equatable/equatable.dart';
-
-/// Entidade de domínio para predição de diamante
 class DiamondPrediction extends Equatable {
   final double carat;
   final String cut;
@@ -27,11 +25,7 @@ class DiamondPrediction extends Equatable {
     required this.predictedPrice,
     required this.timestamp,
   });
-
-  /// Resumo do diamante
   String get diamondSummary => '${carat}ct $cut $color $clarity';
-
-  /// Preço formatado
   String get formattedPrice => '\$${predictedPrice.toStringAsFixed(2)}';
 
   @override
@@ -49,8 +43,6 @@ class DiamondPrediction extends Equatable {
         timestamp,
       ];
 }
-
-/// Entidade para histórico de predições
 class PredictionHistory extends Equatable {
   final int id;
   final int userId;

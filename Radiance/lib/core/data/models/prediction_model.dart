@@ -1,4 +1,3 @@
-/// Modelo de histórico de predição de diamantes
 class PredictionHistoryModel {
   final int? id;
   final int userId;
@@ -29,8 +28,6 @@ class PredictionHistoryModel {
     required this.predictedPrice,
     required this.createdAt,
   });
-
-  /// Cria uma instância a partir de um Map (do SQLite)
   factory PredictionHistoryModel.fromMap(Map<String, dynamic> map) {
     return PredictionHistoryModel(
       id: map['id'] as int?,
@@ -48,8 +45,6 @@ class PredictionHistoryModel {
       createdAt: DateTime.parse(map['created_at'] as String),
     );
   }
-
-  /// Converte para Map (para inserção no SQLite)
   Map<String, dynamic> toMap() {
     return {
       if (id != null) 'id': id,
@@ -59,7 +54,7 @@ class PredictionHistoryModel {
       'color': color,
       'clarity': clarity,
       'depth': depth,
-      'table_value': table, // 'table' é palavra reservada no SQL
+      'table_value': table, 
       'x': x,
       'y': y,
       'z': z,
@@ -67,8 +62,6 @@ class PredictionHistoryModel {
       'created_at': createdAt.toIso8601String(),
     };
   }
-
-  /// Copia o modelo com novas propriedades
   PredictionHistoryModel copyWith({
     int? id,
     int? userId,
@@ -100,11 +93,7 @@ class PredictionHistoryModel {
       createdAt: createdAt ?? this.createdAt,
     );
   }
-
-  /// Retorna uma descrição resumida do diamante
   String get diamondSummary => '${carat}ct $cut $color $clarity';
-
-  /// Formata o preço para exibição
   String get formattedPrice => '\$${predictedPrice.toStringAsFixed(2)}';
 
   @override
@@ -121,8 +110,6 @@ class PredictionHistoryModel {
   @override
   int get hashCode => id.hashCode;
 }
-
-/// Modelo para requisição de predição à API
 class PredictionRequest {
   final double carat;
   final String cut;
@@ -160,15 +147,12 @@ class PredictionRequest {
     };
   }
 }
-
-/// Modelo de resposta da API de predição
 class PredictionResponse {
   final double price;
 
   const PredictionResponse({required this.price});
 
   factory PredictionResponse.fromJson(Map<String, dynamic> json) {
-    // A API pode retornar 'price', 'predicted_price' ou 'prediction'
     final priceValue = json['price'] ?? json['predicted_price'] ?? json['prediction'];
     if (priceValue == null) {
       throw FormatException('Campo de preço não encontrado na resposta: $json');

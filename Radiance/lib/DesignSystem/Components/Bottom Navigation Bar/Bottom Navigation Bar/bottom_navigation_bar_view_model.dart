@@ -15,8 +15,6 @@ enum ActionBottomNavigationBarStyle {
   secondary,
   tertiary,
 }
-
-// Classe para representar um item na Bottom Navigation Bar
 class BottomBarItem {
   final IconData icon;
   final String label;

@@ -4,9 +4,8 @@ import '../../ui/widgets/shadcn/shadcn_button.dart';
 import '../../ui/widgets/shadcn/shadcn_input.dart';
 import '../../ui/widgets/shadcn/shadcn_select.dart';
 import '../../ui/widgets/shadcn/shadcn_card.dart';
+import '../../ui/widgets/theme_toggle_button.dart';
 import '../viewmodels/diamond_prediction_viewmodel.dart';
-
-/// Tela de predição de preço de diamantes
 class DiamondPredictionView extends StatefulWidget {
   const DiamondPredictionView({super.key});
 
@@ -18,7 +17,6 @@ class _DiamondPredictionViewState extends State<DiamondPredictionView> {
   @override
   void initState() {
     super.initState();
-    // Carrega histórico ao iniciar
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<DiamondPredictionViewModel>().loadHistory();
     });
@@ -42,13 +40,13 @@ class _DiamondPredictionViewState extends State<DiamondPredictionView> {
         backgroundColor: colorScheme.surface,
         elevation: 0,
         iconTheme: IconThemeData(color: colorScheme.onSurface),
+        actions: const [ThemeToggleButton(size: 36), SizedBox(width: 8)],
       ),
       body: Consumer<DiamondPredictionViewModel>(
         builder: (context, viewModel, child) {
           return ListView(
             padding: const EdgeInsets.all(24.0),
             children: [
-              // Título
               Text(
                 'Características do Diamante',
                 style: theme.textTheme.headlineSmall?.copyWith(
@@ -63,30 +61,20 @@ class _DiamondPredictionViewState extends State<DiamondPredictionView> {
                 ),
               ),
               const SizedBox(height: 24),
-
-              // Formulário
               _buildForm(context, viewModel),
               
               const SizedBox(height: 24),
-
-              // Botão de predição
               _buildPredictButton(context, viewModel),
 
               const SizedBox(height: 32),
-
-              // Resultado
               if (viewModel.hasResult) ...[
                 _buildResult(context, viewModel),
                 const SizedBox(height: 32),
               ],
-
-              // Erro
               if (viewModel.hasError) ...[
                 _buildError(context, viewModel),
                 const SizedBox(height: 32),
               ],
-
-              // Histórico
               if (viewModel.history.isNotEmpty) ...[
                 _buildHistory(context, viewModel),
               ],
@@ -102,7 +90,6 @@ class _DiamondPredictionViewState extends State<DiamondPredictionView> {
     
     return Column(
       children: [
-        // Carat (Quilates)
         Row(
           children: [
             Expanded(
@@ -140,8 +127,6 @@ class _DiamondPredictionViewState extends State<DiamondPredictionView> {
           ],
         ),
         const SizedBox(height: 16),
-
-        // Cut, Color, Clarity
         Row(
           children: [
             Expanded(
@@ -195,8 +180,6 @@ class _DiamondPredictionViewState extends State<DiamondPredictionView> {
           onChanged: (value) => viewModel.setClarity(value!),
         ),
         const SizedBox(height: 16),
-
-        // Depth e Table
         Row(
           children: [
             Expanded(
@@ -227,8 +210,6 @@ class _DiamondPredictionViewState extends State<DiamondPredictionView> {
           ],
         ),
         const SizedBox(height: 16),
-
-        // Dimensões X, Y, Z
         Row(
           children: [
             Expanded(

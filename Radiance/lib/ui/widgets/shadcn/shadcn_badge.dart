@@ -209,8 +209,6 @@ class _BadgeSize {
     required this.borderRadius,
   });
 }
-
-// Badge with dot indicator
 class ShadcnDotBadge extends StatelessWidget {
   final Widget child;
   final String? count;
@@ -275,8 +273,6 @@ class ShadcnDotBadge extends StatelessWidget {
     );
   }
 }
-
-// Status Badge
 class ShadcnStatusBadge extends StatelessWidget {
   final String status;
   final bool isOnline;
@@ -301,8 +297,6 @@ class ShadcnStatusBadge extends StatelessWidget {
     );
   }
 }
-
-// Number Badge
 class ShadcnNumberBadge extends StatelessWidget {
   final int number;
   final int? maxCount;

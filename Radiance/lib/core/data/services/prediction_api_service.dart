@@ -3,15 +3,11 @@ import 'package:flutter/foundation.dart' show kIsWeb, debugPrint;
 import 'package:http/http.dart' as http;
 import '../models/prediction_model.dart';
 import '../../constants/api_constants.dart';
-
-/// Serviço para chamadas à API de predição de preços de diamantes
 class PredictionApiService {
   final http.Client _client;
 
   PredictionApiService({http.Client? client}) 
       : _client = client ?? http.Client();
-
-  /// Realiza a predição do preço do diamante
   Future<PredictionResult> predictPrice(PredictionRequest request) async {
     try {
       final url = Uri.parse(ApiConstants.predictUrl);
@@ -63,7 +59,6 @@ class PredictionApiService {
       return PredictionResult.failure(e.message);
     } catch (e) {
       debugPrint('[PredictionAPI] Exception: $e');
-      // Em web, erros de CORS aparecem como XMLHttpRequest error
       if (kIsWeb && e.toString().contains('XMLHttpRequest')) {
         return PredictionResult.failure(
           'Erro de CORS. A API não permite requisições do navegador. '
@@ -75,8 +70,6 @@ class PredictionApiService {
       );
     }
   }
-
-  /// Verifica se a API está disponível
   Future<bool> isApiAvailable() async {
     try {
       final url = Uri.parse(ApiConstants.baseUrl);
@@ -88,14 +81,10 @@ class PredictionApiService {
       return false;
     }
   }
-
-  /// Fecha o cliente HTTP
   void dispose() {
     _client.close();
   }
 }
-
-/// Resultado da operação de predição
 class PredictionResult {
   final bool isSuccess;
   final double? price;
@@ -115,8 +104,6 @@ class PredictionResult {
     return PredictionResult._(isSuccess: false, errorMessage: message);
   }
 }
-
-/// Exceção específica para erros de predição
 class PredictionException implements Exception {
   final String message;
   

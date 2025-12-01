@@ -1,6 +1,4 @@
 import 'register_view_model.dart';
-
-/// Delegate para eventos da tela de Registro
 abstract class RegisterDelegate {
   void onRegisterPressed({required RegisterViewModel viewModel});
   void onGoToLoginPressed({required RegisterViewModel viewModel});

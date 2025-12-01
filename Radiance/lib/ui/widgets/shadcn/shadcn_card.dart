@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../DesignSystem/Theme/app_theme.dart';
-
-/// Variantes visuais do card
 enum ShadcnCardVariant {
   default_,
   elevated,
@@ -9,30 +6,21 @@ enum ShadcnCardVariant {
   filled,
   ghost,
 }
-
-/// Tamanhos do card
 enum ShadcnCardSize {
   sm,
   default_,
   lg,
   xl,
 }
-
-/// Tipos de layout do card
 enum ShadcnCardLayout {
   vertical,
   horizontal,
   grid,
   custom,
 }
-
-/// Componente Card baseado no Shadcn/UI - Versão Genérica e Flexível
 class ShadcnCard extends StatefulWidget {
-  // Conteúdo principal
   final Widget? child;
   final List<Widget>? children;
-  
-  // Estrutura do card
   final String? title;
   final String? subtitle;
   final String? description;
@@ -42,8 +30,6 @@ class ShadcnCard extends StatefulWidget {
   final Widget? trailing;
   final Widget? image;
   final Widget? overlay;
-  
-  // Comportamento e interação
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
   final VoidCallback? onDoubleTap;
@@ -51,13 +37,9 @@ class ShadcnCard extends StatefulWidget {
   final bool selectable;
   final bool selected;
   final ValueChanged<bool>? onSelectionChanged;
-  
-  // Estilo visual
   final ShadcnCardVariant variant;
   final ShadcnCardSize size;
   final ShadcnCardLayout layout;
-  
-  // Dimensões e espaçamento
   final double? width;
   final double? height;
   final EdgeInsetsGeometry? padding;
@@ -67,8 +49,6 @@ class ShadcnCard extends StatefulWidget {
   final CrossAxisAlignment crossAxisAlignment;
   final MainAxisAlignment mainAxisAlignment;
   final MainAxisSize mainAxisSize;
-  
-  // Customização visual avançada
   final Color? backgroundColor;
   final Color? borderColor;
   final Color? shadowColor;
@@ -79,8 +59,6 @@ class ShadcnCard extends StatefulWidget {
   final Gradient? gradient;
   final DecorationImage? backgroundImage;
   final BlendMode? backgroundBlendMode;
-  
-  // Estados visuais
   final bool enabled;
   final bool loading;
   final Widget? loadingWidget;
@@ -88,8 +66,6 @@ class ShadcnCard extends StatefulWidget {
   final bool expanded;
   final ValueChanged<bool>? onExpandChanged;
   final Duration? animationDuration;
-  
-  // Customização de texto
   final TextStyle? titleStyle;
   final TextStyle? subtitleStyle;
   final TextStyle? descriptionStyle;
@@ -99,8 +75,6 @@ class ShadcnCard extends StatefulWidget {
   final TextOverflow titleOverflow;
   final TextOverflow subtitleOverflow;
   final TextOverflow descriptionOverflow;
-  
-  // Badges e indicadores
   final Widget? badge;
   final Widget? statusIndicator;
   final List<Widget>? tags;
@@ -169,10 +143,6 @@ class ShadcnCard extends StatefulWidget {
     this.tags,
     this.actions,
   });
-
-  // Constructors específicos
-  
-  // Card simples com apenas conteúdo
   const ShadcnCard.simple({
     super.key,
     required this.child,
@@ -235,8 +205,6 @@ class ShadcnCard extends StatefulWidget {
        statusIndicator = null,
        tags = null,
        actions = null;
-
-  // Card com imagem
   const ShadcnCard.withImage({
     super.key,
     required this.image,
@@ -299,8 +267,6 @@ class ShadcnCard extends StatefulWidget {
        statusIndicator = null,
        tags = null,
        actions = null;
-
-  // Card expansível
   const ShadcnCard.expandable({
     super.key,
     required this.title,
@@ -438,44 +404,34 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
-    // Determinar cores e estilos baseados na variante
-    Color bgColor = widget.backgroundColor ?? AppColors.surface;
-    Color borderColorFinal = widget.borderColor ?? AppColors.border;
+    Color bgColor = widget.backgroundColor ?? colorScheme.surface;
+    Color borderColorFinal = widget.borderColor ?? colorScheme.outline;
     double elevationFinal = widget.elevation ?? 0;
     BorderRadius borderRadiusFinal = widget.borderRadius ?? BorderRadius.circular(16);
     EdgeInsetsGeometry paddingFinal = widget.padding ?? const EdgeInsets.all(24);
     double spacingFinal = widget.spacing ?? 16;
-    
-    // Estados visuais
     if (!widget.enabled) {
       bgColor = bgColor.withValues(alpha: 0.5);
     }
     
     if (widget.selected) {
-      borderColorFinal = AppColors.primary;
+      borderColorFinal = colorScheme.primary;
     }
     
     if (_isHovered && widget.onTap != null) {
-      bgColor = AppColors.zinc50;
+      bgColor = colorScheme.surfaceContainerHighest.withValues(alpha: 0.5);
     }
     
     if (_isPressed) {
-      bgColor = AppColors.zinc100;
+      bgColor = colorScheme.surfaceContainerHighest;
     }
-
-    // Construir conteúdo do card
     Widget cardContent = _buildCardContent(theme, colorScheme, spacingFinal);
-    
-    // Aplicar padding
     if (paddingFinal != EdgeInsets.zero) {
       cardContent = Padding(
         padding: paddingFinal,
         child: cardContent,
       );
     }
-    
-    // Container principal
     Widget cardContainer = Container(
       width: widget.width,
       height: widget.height,
@@ -499,8 +455,6 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
       ),
       child: cardContent,
     );
-    
-    // Adicionar overlay se especificado
     if (widget.overlay != null) {
       cardContainer = Stack(
         children: [
@@ -509,8 +463,6 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
         ],
       );
     }
-    
-    // Adicionar interatividade
     if (widget.onTap != null || 
         widget.onLongPress != null || 
         widget.onDoubleTap != null ||
@@ -537,8 +489,6 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
         ),
       );
     }
-    
-    // Adicionar seleção visual
     if (widget.selectable) {
       cardContainer = Stack(
         children: [
@@ -547,25 +497,28 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
             Positioned(
               top: 8,
               right: 8,
-              child: Container(
-                width: 20,
-                height: 20,
-                decoration: const BoxDecoration(
-                  color: AppColors.primary,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.check,
-                  size: 14,
-                  color: AppColors.onPrimary,
-                ),
+              child: Builder(
+                builder: (context) {
+                  final colorScheme = Theme.of(context).colorScheme;
+                  return Container(
+                    width: 20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.check,
+                      size: 14,
+                      color: colorScheme.onPrimary,
+                    ),
+                  );
+                },
               ),
             ),
         ],
       );
     }
-    
-    // Aplicar margem
     if (widget.margin != null) {
       cardContainer = Container(
         margin: widget.margin,
@@ -582,41 +535,29 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
     }
     
     List<Widget> contentChildren = [];
-    
-    // Imagem no topo (para layout vertical)
     if (widget.image != null && widget.layout == ShadcnCardLayout.vertical) {
       contentChildren.add(widget.image!);
       contentChildren.add(SizedBox(height: spacing));
     }
-    
-    // Header
     if (widget.header != null) {
       contentChildren.add(widget.header!);
       contentChildren.add(SizedBox(height: spacing));
     }
-    
-    // Conteúdo principal baseado no layout
     if (widget.layout == ShadcnCardLayout.horizontal) {
       contentChildren.add(_buildHorizontalLayout(theme, colorScheme, spacing));
     } else {
       contentChildren.addAll(_buildVerticalContent(theme, colorScheme, spacing));
     }
-    
-    // Footer
     if (widget.footer != null) {
       contentChildren.add(SizedBox(height: spacing));
       contentChildren.add(widget.footer!);
     }
-    
-    // Aplicar expansão se necessário
     if (widget.expandable) {
       return Column(
         crossAxisAlignment: widget.crossAxisAlignment,
         mainAxisSize: widget.mainAxisSize,
         children: [
-          // Cabeçalho sempre visível
           _buildExpandableHeader(theme, colorScheme),
-          // Conteúdo expansível
           SizeTransition(
             sizeFactor: _animation,
             child: Column(
@@ -640,21 +581,16 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Leading (imagem ou ícone)
         if (widget.leading != null || widget.image != null) ...[
           widget.leading ?? widget.image!,
           SizedBox(width: spacing),
         ],
-        
-        // Conteúdo principal
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: _buildTextContent(theme, colorScheme, spacing),
           ),
         ),
-        
-        // Trailing
         if (widget.trailing != null) ...[
           SizedBox(width: spacing),
           widget.trailing!,
@@ -665,8 +601,6 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
 
   List<Widget> _buildVerticalContent(ThemeData theme, ColorScheme colorScheme, double spacing) {
     List<Widget> children = [];
-    
-    // Badge e status indicator no topo
     if (widget.badge != null || widget.statusIndicator != null) {
       children.add(Row(
         children: [
@@ -677,17 +611,11 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
       ));
       children.add(SizedBox(height: spacing));
     }
-    
-    // Leading widget
     if (widget.leading != null) {
       children.add(widget.leading!);
       children.add(SizedBox(height: spacing));
     }
-    
-    // Conteúdo de texto
     children.addAll(_buildTextContent(theme, colorScheme, spacing));
-    
-    // Tags
     if (widget.tags != null && widget.tags!.isNotEmpty) {
       children.add(SizedBox(height: spacing));
       children.add(Wrap(
@@ -696,8 +624,6 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
         children: widget.tags!,
       ));
     }
-    
-    // Conteúdo principal
     if (widget.child != null) {
       children.add(SizedBox(height: spacing));
       children.add(widget.child!);
@@ -707,8 +633,6 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
       children.add(SizedBox(height: spacing));
       children.addAll(widget.children!);
     }
-    
-    // Actions
     if (widget.actions != null && widget.actions!.isNotEmpty) {
       children.add(SizedBox(height: spacing));
       children.add(Row(
@@ -716,8 +640,6 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
         children: widget.actions!,
       ));
     }
-    
-    // Trailing
     if (widget.trailing != null) {
       children.add(SizedBox(height: spacing));
       children.add(widget.trailing!);
@@ -735,7 +657,7 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
           widget.title!,
           style: widget.titleStyle ?? theme.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.w600,
-            color: AppColors.onSurface,
+            color: colorScheme.onSurface,
           ),
           maxLines: widget.maxTitleLines,
           overflow: widget.titleOverflow,
@@ -749,7 +671,7 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
         Text(
           widget.subtitle!,
           style: widget.subtitleStyle ?? theme.textTheme.titleMedium?.copyWith(
-            color: AppColors.zinc500,
+            color: colorScheme.inverseSurface,
           ),
           maxLines: widget.maxSubtitleLines,
           overflow: widget.subtitleOverflow,
@@ -763,7 +685,7 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
         Text(
           widget.description!,
           style: widget.descriptionStyle ?? theme.textTheme.bodyMedium?.copyWith(
-            color: AppColors.zinc500,
+            color: colorScheme.inverseSurface,
           ),
           maxLines: widget.maxDescriptionLines,
           overflow: widget.descriptionOverflow,
@@ -790,14 +712,14 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
                   widget.title!,
                   style: widget.titleStyle ?? theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: AppColors.onSurface,
+                    color: colorScheme.onSurface,
                   ),
                 ),
               if (widget.subtitle != null)
                 Text(
                   widget.subtitle!,
                   style: widget.subtitleStyle ?? theme.textTheme.bodySmall?.copyWith(
-                    color: AppColors.zinc500,
+                    color: colorScheme.inverseSurface,
                   ),
                 ),
             ],
@@ -805,20 +727,21 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
         ),
         Icon(
           _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-          color: AppColors.zinc500,
+          color: colorScheme.inverseSurface,
         ),
       ],
     );
   }
 
   Widget _buildLoadingContent() {
+    final colorScheme = Theme.of(context).colorScheme;
     return Column(
       children: [
         Container(
           height: 20,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: AppColors.zinc200,
+            color: colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(4),
           ),
         ),
@@ -827,7 +750,7 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
           height: 100,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: AppColors.zinc100,
+            color: colorScheme.surfaceContainerHigh,
             borderRadius: BorderRadius.circular(4),
           ),
         ),

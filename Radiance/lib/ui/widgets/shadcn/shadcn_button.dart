@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../DesignSystem/Theme/app_theme.dart';
-
-/// Variantes do botão Shadcn/UI
 enum ShadcnButtonVariant {
   default_,
   destructive,
@@ -10,42 +7,27 @@ enum ShadcnButtonVariant {
   ghost,
   link,
 }
-
-/// Tamanhos do botão Shadcn/UI
 enum ShadcnButtonSize {
   default_,
   sm,
   lg,
   icon,
 }
-
-/// Componente Button baseado no Shadcn/UI - Versão Genérica e Flexível
 class ShadcnButton extends StatefulWidget {
-  // Conteúdo principal
   final String? text;
   final Widget? child;
-  
-  // Comportamento
   final VoidCallback? onPressed;
   final VoidCallback? onLongPress;
   final ValueChanged<bool>? onHover;
   final ValueChanged<bool>? onFocusChange;
-  
-  // Estilo visual
   final ShadcnButtonVariant variant;
   final ShadcnButtonSize size;
-  
-  // Ícones flexíveis
   final Widget? leadingIcon;
   final Widget? trailingIcon;
-  final Widget? icon; // Para botões icon-only (retrocompatibilidade)
-  
-  // Estados
+  final Widget? icon; 
   final bool loading;
   final bool disabled;
   final bool autofocus;
-  
-  // Customização avançada
   final Color? backgroundColor;
   final Color? foregroundColor;
   final Color? borderColor;
@@ -56,13 +38,9 @@ class ShadcnButton extends StatefulWidget {
   final double? height;
   final Gradient? gradient;
   final List<BoxShadow>? boxShadow;
-  
-  // Animação e feedback
   final Duration? animationDuration;
   final Widget? loadingWidget;
   final double? elevation;
-  
-  // Construtor principal
   const ShadcnButton({
     super.key,
     this.text,
@@ -93,8 +71,6 @@ class ShadcnButton extends StatefulWidget {
     this.loadingWidget,
     this.elevation,
   }) : assert(text != null || child != null || icon != null, 'Either text, child, or icon must be provided');
-
-  // Construtor nomeado para botão com ícone à esquerda
   const ShadcnButton.withLeadingIcon({
     super.key,
     required this.text,
@@ -124,8 +100,6 @@ class ShadcnButton extends StatefulWidget {
   }) : child = null,
        trailingIcon = null,
        icon = null;
-
-  // Construtor nomeado para botão apenas com ícone
   const ShadcnButton.icon({
     super.key,
     required this.icon,
@@ -155,8 +129,6 @@ class ShadcnButton extends StatefulWidget {
        child = null,
        leadingIcon = null,
        trailingIcon = null;
-
-  // Construtor nomeado para loading
   const ShadcnButton.loading({
     super.key,
     this.text,
@@ -219,33 +191,21 @@ class _ShadcnButtonState extends State<ShadcnButton> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
-    // Determinar cores baseadas na variante ou customização
     Color bgColor = widget.backgroundColor ?? _getBackgroundColor(colorScheme);
     Color fgColor = widget.foregroundColor ?? _getForegroundColor(colorScheme);
     Color? bColor = widget.borderColor ?? _getBorderColor(colorScheme);
-    
-    // Determinar tamanho e padding
     EdgeInsets buttonPadding = widget.padding ?? _getPadding();
     double buttonHeight = widget.height ?? _getHeight();
     double fontSize = _getFontSize();
-    BorderRadius buttonBorderRadius = widget.borderRadius ?? BorderRadius.circular(12); // iOS style
-    
-    // Estado desabilitado ou loading
+    BorderRadius buttonBorderRadius = widget.borderRadius ?? BorderRadius.circular(12); 
     if (widget.disabled || widget.loading) {
       bgColor = bgColor.withValues(alpha: 0.5);
       fgColor = fgColor.withValues(alpha: 0.5);
     }
-    
-    // Estado hover/pressed
     if (_isHovered && !widget.disabled && !widget.loading) {
       bgColor = Color.alphaBlend(Colors.black.withValues(alpha: 0.1), bgColor);
     }
-
-    // Widget de conteúdo
     Widget buttonChild = _buildButtonContent(fgColor, fontSize);
-
-    // Container principal
     Widget button = Container(
       width: widget.width,
       height: buttonHeight,
@@ -304,26 +264,22 @@ class _ShadcnButtonState extends State<ShadcnButton> with SingleTickerProviderSt
         ),
       ),
     );
-
-    // Aplicar animação de escala
     return ScaleTransition(
       scale: _scaleAnimation,
       child: button,
     );
   }
-
-  // Métodos auxiliares para determinar cores baseadas na variante
   Color _getBackgroundColor(ColorScheme colorScheme) {
     switch (widget.variant) {
       case ShadcnButtonVariant.default_:
-        return AppColors.primary;
+        return colorScheme.primary;
       case ShadcnButtonVariant.destructive:
-        return AppColors.destructive;
+        return colorScheme.error;
       case ShadcnButtonVariant.outline:
       case ShadcnButtonVariant.ghost:
         return Colors.transparent;
       case ShadcnButtonVariant.secondary:
-        return AppColors.secondary;
+        return colorScheme.secondary;
       case ShadcnButtonVariant.link:
         return Colors.transparent;
     }
@@ -332,23 +288,23 @@ class _ShadcnButtonState extends State<ShadcnButton> with SingleTickerProviderSt
   Color _getForegroundColor(ColorScheme colorScheme) {
     switch (widget.variant) {
       case ShadcnButtonVariant.default_:
-        return AppColors.onPrimary;
+        return colorScheme.onPrimary;
       case ShadcnButtonVariant.destructive:
-        return AppColors.onDestructive;
+        return colorScheme.onError;
       case ShadcnButtonVariant.outline:
       case ShadcnButtonVariant.ghost:
-        return AppColors.onSurface;
+        return colorScheme.onSurface;
       case ShadcnButtonVariant.secondary:
-        return AppColors.onSecondary;
+        return colorScheme.onSecondary;
       case ShadcnButtonVariant.link:
-        return AppColors.primary;
+        return colorScheme.primary;
     }
   }
 
   Color? _getBorderColor(ColorScheme colorScheme) {
     switch (widget.variant) {
       case ShadcnButtonVariant.outline:
-        return AppColors.border;
+        return colorScheme.outline;
       default:
         return null;
     }
@@ -394,7 +350,6 @@ class _ShadcnButtonState extends State<ShadcnButton> with SingleTickerProviderSt
   }
 
   Widget _buildButtonContent(Color fgColor, double fontSize) {
-    // Widget de loading personalizado ou padrão
     if (widget.loading) {
       return widget.loadingWidget ?? SizedBox(
         width: 16,
@@ -405,24 +360,16 @@ class _ShadcnButtonState extends State<ShadcnButton> with SingleTickerProviderSt
         ),
       );
     }
-
-    // Botão apenas com ícone
     if (widget.size == ShadcnButtonSize.icon) {
       return IconTheme(
         data: IconThemeData(color: fgColor),
         child: widget.icon ?? const Icon(Icons.add),
       );
     }
-
-    // Conteúdo personalizado (child)
     if (widget.child != null) {
       return widget.child!;
     }
-
-    // Layout com texto e ícones
     List<Widget> children = [];
-    
-    // Ícone à esquerda (leadingIcon)
     if (widget.leadingIcon != null) {
       children.add(
         IconTheme(
@@ -432,8 +379,6 @@ class _ShadcnButtonState extends State<ShadcnButton> with SingleTickerProviderSt
       );
       children.add(const SizedBox(width: 8));
     }
-    
-    // Texto principal
     if (widget.text != null) {
       children.add(
         Text(
@@ -446,8 +391,6 @@ class _ShadcnButtonState extends State<ShadcnButton> with SingleTickerProviderSt
         ),
       );
     }
-    
-    // Ícone à direita (trailingIcon)
     if (widget.trailingIcon != null) {
       children.add(const SizedBox(width: 8));
       children.add(
@@ -457,8 +400,6 @@ class _ShadcnButtonState extends State<ShadcnButton> with SingleTickerProviderSt
         ),
       );
     }
-    
-    // Compatibilidade com ícone antigo (icon) quando não é icon-only
     if (widget.icon != null && widget.leadingIcon == null && widget.trailingIcon == null && widget.size != ShadcnButtonSize.icon) {
       children.insert(0, IconTheme(
         data: IconThemeData(color: fgColor),

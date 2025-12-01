@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../widgets/buttons/custom_button.dart';
+import '../../ui/widgets/theme_toggle_button.dart';
 import '../../DesignSystem/Samples/actionButtonSampleScreen/action_button_sample_screen.dart';
 import '../../DesignSystem/Samples/bottomTabBarSampleScreen/bottom_tab_bar_sample_screen.dart';
 import '../../DesignSystem/Samples/inputFieldSampleScreen/input_field_sample_screen.dart';
@@ -16,10 +17,11 @@ class HomePage extends StatelessWidget {
         title: const Text('Design System Sample App'),
         centerTitle: true,
         actions: [
+          const ThemeToggleButton(size: 36),
+          const SizedBox(width: 4),
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              // Simula logout
               _showLogoutDialog(context);
             },
           ),
@@ -30,7 +32,6 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Saudação principal
             Text(
               'Olá, bem-vindo!',
               style: Theme.of(context).textTheme.headlineLarge?.copyWith(
@@ -38,8 +39,6 @@ class HomePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            
-            // Subtítulo
             Text(
               'Explore os componentes do Design System',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -47,8 +46,6 @@ class HomePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            
-            // Seção de componentes do Design System
             Text(
               'Componentes do Design System',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -56,8 +53,6 @@ class HomePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            
-            // Grid de componentes
             Expanded(
               child: GridView.count(
                 crossAxisCount: 2,
@@ -98,8 +93,6 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
-            
-            // Informações do usuário
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
@@ -259,7 +252,7 @@ class HomePage extends StatelessWidget {
             text: 'Sair',
             onPressed: () {
               Navigator.of(context).pop();
-              context.go('/');
+              context.go('/diamond-login');
             },
             variant: CustomButtonVariant.destructive,
             size: CustomButtonSize.small,

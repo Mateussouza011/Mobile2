@@ -1,6 +1,4 @@
 import '../../../domain/entities/diamond_prediction.dart';
-
-/// Modelo de dados para predição (usado para API e Database)
 class DiamondPredictionModel {
   final double carat;
   final String cut;
@@ -27,8 +25,6 @@ class DiamondPredictionModel {
     required this.predictedPrice,
     required this.timestamp,
   });
-
-  /// Converte entidade de domínio para modelo
   factory DiamondPredictionModel.fromEntity(DiamondPrediction entity) {
     return DiamondPredictionModel(
       carat: entity.carat,
@@ -44,8 +40,6 @@ class DiamondPredictionModel {
       timestamp: entity.timestamp,
     );
   }
-
-  /// Converte para entidade de domínio
   DiamondPrediction toEntity() {
     return DiamondPrediction(
       carat: carat,
@@ -61,8 +55,6 @@ class DiamondPredictionModel {
       timestamp: timestamp,
     );
   }
-
-  /// Para requisição à API (sem predictedPrice)
   Map<String, dynamic> toJson() {
     return {
       'carat': carat,
@@ -76,13 +68,10 @@ class DiamondPredictionModel {
       'z': z,
     };
   }
-
-  /// Da resposta da API
   factory DiamondPredictionModel.fromApiResponse(
     Map<String, dynamic> json,
     Map<String, dynamic> requestData,
   ) {
-    // A API retorna apenas o preço predito
     final price = (json['price'] ?? json['predicted_price'] ?? json['prediction']) as num;
     
     return DiamondPredictionModel(
@@ -99,8 +88,6 @@ class DiamondPredictionModel {
       timestamp: DateTime.now(),
     );
   }
-
-  /// Do banco de dados local
   factory DiamondPredictionModel.fromMap(Map<String, dynamic> map) {
     return DiamondPredictionModel(
       carat: (map['carat'] as num).toDouble(),
@@ -116,8 +103,6 @@ class DiamondPredictionModel {
       timestamp: DateTime.parse(map['timestamp'] as String),
     );
   }
-
-  /// Para banco de dados local
   Map<String, dynamic> toMap() {
     return {
       'carat': carat,
@@ -125,7 +110,7 @@ class DiamondPredictionModel {
       'color': color,
       'clarity': clarity,
       'depth': depth,
-      'table_value': table, // 'table' é palavra reservada no SQL
+      'table_value': table, 
       'x': x,
       'y': y,
       'z': z,
@@ -134,8 +119,6 @@ class DiamondPredictionModel {
     };
   }
 }
-
-/// Modelo para histórico de predições
 class PredictionHistoryModel {
   final int id;
   final int userId;

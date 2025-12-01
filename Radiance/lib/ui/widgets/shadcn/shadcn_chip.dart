@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-/// Variantes visuais do chip
 enum ShadcnChipVariant {
   default_,
   secondary,
@@ -9,15 +7,11 @@ enum ShadcnChipVariant {
   success,
   warning,
 }
-
-/// Tamanhos do chip
 enum ShadcnChipSize {
   sm,
   default_,
   lg,
 }
-
-/// Componente Chip baseado no Shadcn/UI
 class ShadcnChip extends StatefulWidget {
   final String label;
   final Widget? avatar;
@@ -61,8 +55,6 @@ class ShadcnChip extends StatefulWidget {
     this.borderRadius,
     this.tooltip,
   });
-
-  /// Chip de filtro selecionável
   const ShadcnChip.filter({
     super.key,
     required this.label,
@@ -84,8 +76,6 @@ class ShadcnChip extends StatefulWidget {
        deletable = false,
        padding = null,
        borderRadius = null;
-
-  /// Chip removível
   const ShadcnChip.input({
     super.key,
     required this.label,
@@ -107,8 +97,6 @@ class ShadcnChip extends StatefulWidget {
        deletable = true,
        padding = null,
        borderRadius = null;
-
-  /// Chip de ação
   const ShadcnChip.action({
     super.key,
     required this.label,
@@ -181,8 +169,6 @@ class _ShadcnChipState extends State<ShadcnChip> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-
-    // Configurações baseadas no tamanho
     final chipHeight = switch (widget.size) {
       ShadcnChipSize.sm => 24.0,
       ShadcnChipSize.default_ => 32.0,
@@ -206,8 +192,6 @@ class _ShadcnChipState extends State<ShadcnChip> with SingleTickerProviderStateM
       ShadcnChipSize.default_ => 24.0,
       ShadcnChipSize.lg => 32.0,
     };
-
-    // Configurações de cor baseadas na variante
     final (backgroundColor, foregroundColor, borderColor) = _getColors(colorScheme);
 
     final chip = AnimatedBuilder(
@@ -235,7 +219,6 @@ class _ShadcnChipState extends State<ShadcnChip> with SingleTickerProviderStateM
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Avatar ou ícone à esquerda
                 if (widget.avatar != null) ...[
                   SizedBox(
                     width: avatarSize,
@@ -257,8 +240,6 @@ class _ShadcnChipState extends State<ShadcnChip> with SingleTickerProviderStateM
                   ),
                   const SizedBox(width: 8),
                 ],
-                
-                // Label
                 Flexible(
                   child: Text(
                     widget.label,
@@ -269,8 +250,6 @@ class _ShadcnChipState extends State<ShadcnChip> with SingleTickerProviderStateM
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                
-                // Ícone de remoção
                 if (widget.deletable && widget.onDeleted != null) ...[
                   const SizedBox(width: 8),
                   GestureDetector(
@@ -380,8 +359,6 @@ class _ShadcnChipState extends State<ShadcnChip> with SingleTickerProviderStateM
     };
   }
 }
-
-/// Wrapper para múltiplos chips
 class ShadcnChipGroup extends StatelessWidget {
   final List<ShadcnChip> chips;
   final Axis direction;

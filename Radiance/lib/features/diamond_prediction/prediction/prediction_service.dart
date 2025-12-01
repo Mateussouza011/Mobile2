@@ -6,8 +6,6 @@ import '../../../core/data/models/prediction_model.dart';
 import '../../../core/data/repositories/auth_repository.dart';
 import '../../../core/data/repositories/prediction_history_repository.dart';
 import '../../../core/data/services/prediction_api_service.dart';
-
-/// Implementacao do PredictionDelegate - conecta View aos Services
 class PredictionService implements PredictionDelegate {
   final PredictionViewModel viewModel;
   final PredictionApiService apiService;
@@ -35,8 +33,6 @@ class PredictionService implements PredictionDelegate {
       if (result.isSuccess && result.price != null) {
         final response = PredictionResponse(price: result.price!);
         onPredictionSuccess(response);
-        
-        // Salvar automaticamente no histórico
         await _saveToHistory(response);
       } else {
         onError(result.errorMessage ?? 'Erro desconhecido na predicao');
@@ -47,8 +43,6 @@ class PredictionService implements PredictionDelegate {
       viewModel.setLoading(false);
     }
   }
-
-  /// Salva a predição no histórico automaticamente
   Future<void> _saveToHistory(PredictionResponse result) async {
     final user = authRepository.currentUser;
     if (user == null || user.id == null) return;
@@ -71,7 +65,6 @@ class PredictionService implements PredictionDelegate {
 
       await historyRepository.savePrediction(prediction);
     } catch (e) {
-      // Silently fail - não queremos interromper a experiência do usuário
       debugPrint('Erro ao salvar histórico: $e');
     }
   }

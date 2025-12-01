@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_badge.dart';
 import '../../ui/widgets/shadcn/shadcn_chip.dart';
+import '../../ui/widgets/theme_toggle_button.dart';
 
 class BadgesPage extends StatefulWidget {
   const BadgesPage({super.key});
@@ -36,6 +37,7 @@ class _BadgesPageState extends State<BadgesPage> {
         backgroundColor: colorScheme.surface,
         elevation: 0,
         iconTheme: IconThemeData(color: colorScheme.onSurface),
+        actions: const [ThemeToggleButton(size: 36), SizedBox(width: 8)],
       ),
       body: ListView(
         padding: const EdgeInsets.all(24.0),
@@ -298,8 +300,6 @@ class _BadgesPageState extends State<BadgesPage> {
             'Componentes interativos para seleção e filtros',
             [
               const SizedBox(height: 20),
-              
-              // Chips de filtro
               const Text('Chips de Filtro:'),
               const SizedBox(height: 12),
               ShadcnChipGroup(
@@ -362,8 +362,6 @@ class _BadgesPageState extends State<BadgesPage> {
                 ],
               ),
               const SizedBox(height: 20),
-              
-              // Chips de entrada (removíveis)
               const Text('Tags Removíveis:'),
               const SizedBox(height: 12),
               ShadcnChipGroup(
@@ -378,8 +376,6 @@ class _BadgesPageState extends State<BadgesPage> {
                 )).toList(),
               ),
               const SizedBox(height: 16),
-              
-              // Chips de ação
               const Text('Chips de Ação:'),
               const SizedBox(height: 12),
               ShadcnChipGroup(

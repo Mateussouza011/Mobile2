@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
-
-/// ViewModel para a tela de Login
-/// Contém apenas dados e estados, sem lógica de negócio
 class LoginViewModel extends ChangeNotifier {
-  // Estados do formulário
   String _email = '';
   String _password = '';
   bool _isPasswordVisible = false;
   bool _rememberMe = false;
-  
-  // Estados de UI
   bool _isLoading = false;
   String? _errorMessage;
   String? _emailError;
   String? _passwordError;
-
-  // Getters
   String get email => _email;
   String get password => _password;
   bool get isPasswordVisible => _isPasswordVisible;
@@ -30,8 +22,6 @@ class LoginViewModel extends ChangeNotifier {
       _password.isNotEmpty &&
       _emailError == null &&
       _passwordError == null;
-
-  // Setters com notificação
   void setEmail(String value) {
     _email = value;
     _validateEmail();
@@ -75,8 +65,6 @@ class LoginViewModel extends ChangeNotifier {
     _passwordError = error;
     notifyListeners();
   }
-
-  // Validações
   void _validateEmail() {
     if (_email.isEmpty) {
       _emailError = null;
@@ -112,8 +100,6 @@ class LoginViewModel extends ChangeNotifier {
       _errorMessage = null;
     }
   }
-
-  /// Limpa todos os estados
   void clear() {
     _email = '';
     _password = '';
@@ -124,8 +110,6 @@ class LoginViewModel extends ChangeNotifier {
     _passwordError = null;
     notifyListeners();
   }
-
-  /// Valida todo o formulário antes do submit
   bool validateForm() {
     bool isValid = true;
     

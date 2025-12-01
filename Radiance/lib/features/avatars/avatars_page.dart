@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_avatar.dart';
+import '../../ui/widgets/theme_toggle_button.dart';
 
 class AvatarsPage extends StatelessWidget {
   const AvatarsPage({super.key});
@@ -21,6 +22,7 @@ class AvatarsPage extends StatelessWidget {
         backgroundColor: colorScheme.surface,
         elevation: 0,
         iconTheme: IconThemeData(color: colorScheme.onSurface),
+        actions: const [ThemeToggleButton(size: 36), SizedBox(width: 8)],
       ),
       body: ListView(
         padding: const EdgeInsets.all(24.0),

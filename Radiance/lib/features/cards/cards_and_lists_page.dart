@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_card.dart';
 import '../../ui/widgets/shadcn/shadcn_button.dart';
+import '../../ui/widgets/theme_toggle_button.dart';
 
 class CardsAndListsPage extends StatelessWidget {
   const CardsAndListsPage({super.key});
@@ -17,11 +18,11 @@ class CardsAndListsPage extends StatelessWidget {
           style: theme.textTheme.titleLarge,
         ),
         centerTitle: true,
+        actions: const [ThemeToggleButton(size: 36), SizedBox(width: 8)],
       ),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          // Descrição
           Text(
             'Cards e listas estilizados com tema adaptativo.',
             style: theme.textTheme.bodyLarge?.copyWith(
@@ -29,15 +30,11 @@ class CardsAndListsPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 24),
-          
-          // Seção de Lista
           _buildSectionTitle(context, 'Lista de Itens'),
           const SizedBox(height: 16),
           _buildItemsList(context),
           
           const SizedBox(height: 32),
-          
-          // Seção de Cards
           _buildSectionTitle(context, 'Cards com Ação'),
           const SizedBox(height: 16),
           _buildCardsGrid(context),
@@ -180,7 +177,6 @@ class CardsAndListsPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header com ícone
               Row(
                 children: [
                   Container(
@@ -221,7 +217,6 @@ class CardsAndListsPage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              // Botão de ação
               SizedBox(
                 width: double.infinity,
                 child: ShadcnButton(

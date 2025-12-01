@@ -2,15 +2,12 @@ import 'package:dartz/dartz.dart';
 import '../../core/errors/failures.dart';
 import '../entities/diamond_prediction.dart';
 import '../repositories/prediction_repository.dart';
-
-/// Use case para obter predição de preço
 class GetPredictionUseCase {
   final PredictionRepository repository;
 
   GetPredictionUseCase(this.repository);
 
   Future<Either<Failure, DiamondPrediction>> call(PredictionParams params) async {
-    // Validações
     final validation = _validate(params);
     if (validation != null) {
       return Left(ValidationFailure(validation));
@@ -42,8 +39,6 @@ class GetPredictionUseCase {
     return null;
   }
 }
-
-/// Parâmetros para predição
 class PredictionParams {
   final double carat;
   final String cut;

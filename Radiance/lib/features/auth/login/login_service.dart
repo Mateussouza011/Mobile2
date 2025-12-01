@@ -3,8 +3,6 @@ import 'package:go_router/go_router.dart';
 import '../../../core/data/repositories/auth_repository.dart';
 import 'login_view_model.dart';
 import 'login_delegate.dart';
-
-/// Service que implementa a lógica de negócio do Login
 class LoginService implements LoginDelegate {
   final AuthRepository _authRepository;
   final BuildContext _context;
@@ -49,7 +47,6 @@ class LoginService implements LoginDelegate {
   Future<void> onLoginPressed({
     required LoginViewModel viewModel,
   }) async {
-    // Valida o formulário
     if (!viewModel.validateForm()) {
       return;
     }
@@ -64,7 +61,6 @@ class LoginService implements LoginDelegate {
       );
 
       if (result.isSuccess && result.user != null) {
-        // Navega para a home do Diamond App
         if (_context.mounted) {
           _context.go('/diamond-home');
         }

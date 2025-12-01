@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../DesignSystem/Theme/app_theme.dart';
 
 enum ShadcnSliderType {
   single,
@@ -58,8 +57,6 @@ class ShadcnSlider extends StatefulWidget {
     this.leadingWidget,
     this.trailingWidget,
   });
-
-  // Construtor para slider simples
   const ShadcnSlider.single({
     super.key,
     required double value,
@@ -87,8 +84,6 @@ class ShadcnSlider extends StatefulWidget {
        onRangeChangeStart = null,
        onRangeChangeEnd = null,
        type = ShadcnSliderType.single;
-
-  // Construtor para slider de intervalo
   const ShadcnSlider.range({
     super.key,
     required RangeValues values,
@@ -146,37 +141,31 @@ class _ShadcnSliderState extends State<ShadcnSlider> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Label
         if (widget.label != null) ...[
           Text(
             widget.label!,
             style: theme.textTheme.labelMedium?.copyWith(
               fontWeight: FontWeight.w500,
-              color: AppColors.onSurface,
+              color: colorScheme.onSurface,
               fontSize: 14,
             ),
           ),
           const SizedBox(height: 8),
         ],
-
-        // Slider com widgets laterais
         Row(
           children: [
-            // Leading widget
             if (widget.leadingWidget != null) ...[
               widget.leadingWidget!,
               const SizedBox(width: 16),
             ],
-
-            // Slider principal
             Expanded(
               child: Column(
                 children: [
-                  // Labels de valor
                   if (widget.showLabels) ...[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -186,7 +175,7 @@ class _ShadcnSliderState extends State<ShadcnSlider> {
                               ? _getFormattedValue(_currentRangeValues.start)
                               : _getFormattedValue(_currentValue),
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: AppColors.zinc500,
+                            color: colorScheme.inverseSurface,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -194,7 +183,7 @@ class _ShadcnSliderState extends State<ShadcnSlider> {
                           Text(
                             _getFormattedValue(_currentRangeValues.end),
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: AppColors.zinc500,
+                              color: colorScheme.inverseSurface,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -202,14 +191,12 @@ class _ShadcnSliderState extends State<ShadcnSlider> {
                     ),
                     const SizedBox(height: 8),
                   ],
-
-                  // Slider
                   SliderTheme(
                     data: SliderTheme.of(context).copyWith(
-                      activeTrackColor: widget.activeColor ?? AppColors.primary,
-                      inactiveTrackColor: widget.inactiveColor ?? AppColors.zinc200,
-                      thumbColor: widget.thumbColor ?? AppColors.primary,
-                      overlayColor: (widget.thumbColor ?? AppColors.primary).withValues(alpha: 0.1),
+                      activeTrackColor: widget.activeColor ?? colorScheme.primary,
+                      inactiveTrackColor: widget.inactiveColor ?? colorScheme.surfaceContainerHighest,
+                      thumbColor: widget.thumbColor ?? colorScheme.primary,
+                      overlayColor: (widget.thumbColor ?? colorScheme.primary).withValues(alpha: 0.1),
                       thumbShape: RoundSliderThumbShape(
                         enabledThumbRadius: widget.thumbRadius ?? 10,
                         elevation: 2,
@@ -222,7 +209,7 @@ class _ShadcnSliderState extends State<ShadcnSlider> {
                           : const RoundSliderTickMarkShape(tickMarkRadius: 0),
                       showValueIndicator: ShowValueIndicator.onlyForContinuous,
                       valueIndicatorTextStyle: theme.textTheme.bodySmall?.copyWith(
-                        color: AppColors.onPrimary,
+                        color: colorScheme.onPrimary,
                       ),
                     ),
                     child: widget.type == ShadcnSliderType.range
@@ -260,8 +247,6 @@ class _ShadcnSliderState extends State<ShadcnSlider> {
                             onChangeEnd: widget.onChangeEnd,
                           ),
                   ),
-
-                  // Ticks/marcas
                   if (widget.showTicks && widget.divisions != null) ...[
                     const SizedBox(height: 4),
                     Row(
@@ -274,7 +259,7 @@ class _ShadcnSliderState extends State<ShadcnSlider> {
                           return Text(
                             _getFormattedValue(value),
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: AppColors.zinc400,
+                              color: colorScheme.inverseSurface,
                               fontSize: 10,
                             ),
                           );
@@ -285,8 +270,6 @@ class _ShadcnSliderState extends State<ShadcnSlider> {
                 ],
               ),
             ),
-
-            // Trailing widget
             if (widget.trailingWidget != null) ...[
               const SizedBox(width: 16),
               widget.trailingWidget!,
@@ -309,8 +292,6 @@ class _ShadcnSliderState extends State<ShadcnSlider> {
     return value.toStringAsFixed(1);
   }
 }
-
-/// Slider de volume com ícone
 class ShadcnVolumeSlider extends StatelessWidget {
   final double value;
   final ValueChanged<double> onChanged;
@@ -325,6 +306,8 @@ class ShadcnVolumeSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    
     return ShadcnSlider.single(
       value: value,
       onChanged: onChanged,
@@ -337,20 +320,18 @@ class ShadcnVolumeSlider extends StatelessWidget {
         value == 0 ? Icons.volume_off : 
         value < 30 ? Icons.volume_down :
         value < 70 ? Icons.volume_up : Icons.volume_up,
-        color: AppColors.zinc500,
+        color: colorScheme.inverseSurface,
       ),
       trailingWidget: Text(
         '${value.toInt()}%',
-        style: const TextStyle(
-          color: AppColors.zinc500,
+        style: TextStyle(
+          color: colorScheme.inverseSurface,
           fontWeight: FontWeight.w500,
         ),
       ),
     );
   }
 }
-
-/// Slider de preço com formatação de moeda
 class ShadcnPriceRangeSlider extends StatelessWidget {
   final RangeValues values;
   final ValueChanged<RangeValues> onChanged;
@@ -382,8 +363,6 @@ class ShadcnPriceRangeSlider extends StatelessWidget {
     );
   }
 }
-
-/// Slider de temperatura com cores
 class ShadcnTemperatureSlider extends StatelessWidget {
   final double value;
   final ValueChanged<double> onChanged;

@@ -1,7 +1,5 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-
-/// Helper para gerenciar o banco de dados SQLite
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._internal();
   static Database? _database;
@@ -44,8 +42,6 @@ class DatabaseHelper {
         timestamp TEXT NOT NULL
       )
     ''');
-
-    // Criar índice para melhor performance
     await db.execute('''
       CREATE INDEX idx_user_timestamp 
       ON prediction_history(user_id, timestamp DESC)
@@ -53,21 +49,14 @@ class DatabaseHelper {
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    // Migração de versões futuras
     if (oldVersion < 2) {
-      // Exemplo de migração
-      // await db.execute('ALTER TABLE prediction_history ADD COLUMN new_field TEXT');
     }
   }
-
-  /// Fecha o banco de dados
   Future<void> close() async {
     final db = await database;
     await db.close();
     _database = null;
   }
-
-  /// Limpa todas as tabelas (útil para testes)
   Future<void> clearAllTables() async {
     final db = await database;
     await db.delete('prediction_history');

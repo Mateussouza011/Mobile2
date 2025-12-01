@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../DesignSystem/Theme/app_theme.dart';
 import 'delegates/shadcn_input_delegate.dart';
-
-/// Tipos de entrada personalizados
 enum ShadcnInputType {
   text,
   email,
@@ -17,8 +14,6 @@ enum ShadcnInputType {
   time,
   datetime,
 }
-
-/// Variantes visuais do input
 enum ShadcnInputVariant {
   default_,
   filled,
@@ -26,39 +21,28 @@ enum ShadcnInputVariant {
   underlined,
   borderless,
 }
-
-/// Tamanhos do input
 enum ShadcnInputSize {
   sm,
   default_,
   lg,
 }
-
-/// Componente Input baseado no Shadcn/UI - Versão Genérica e Flexível
 class ShadcnInput extends StatefulWidget {
-  // Conteúdo e controle
   final String? label;
   final String? placeholder;
   final String? helperText;
   final String? errorText;
   final TextEditingController? controller;
   final String? initialValue;
-  
-  // Callbacks e eventos
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
   final VoidCallback? onTap;
   final VoidCallback? onEditingComplete;
   final ValueChanged<bool>? onFocusChange;
-  
-  // Validação avançada
   final FormFieldValidator<String>? validator;
   final List<TextInputFormatter>? inputFormatters;
   final String? Function(String?)? customValidator;
   final bool validateOnChange;
   final bool validateOnFocusLoss;
-  
-  // Tipo e comportamento
   final ShadcnInputType inputType;
   final ShadcnInputVariant variant;
   final ShadcnInputSize size;
@@ -68,8 +52,6 @@ class ShadcnInput extends StatefulWidget {
   final bool autofocus;
   final bool autocorrect;
   final bool enableSuggestions;
-  
-  // Layout e dimensões
   final int? maxLines;
   final int? minLines;
   final int? maxLength;
@@ -78,8 +60,6 @@ class ShadcnInput extends StatefulWidget {
   final EdgeInsets? contentPadding;
   final TextAlign textAlign;
   final TextAlignVertical? textAlignVertical;
-  
-  // Ícones e widgets personalizados
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final Widget? leadingWidget;
@@ -87,8 +67,6 @@ class ShadcnInput extends StatefulWidget {
   final String? prefixText;
   final String? suffixText;
   final Widget? counter;
-  
-  // Customização visual avançada
   final Color? backgroundColor;
   final Color? borderColor;
   final Color? focusedBorderColor;
@@ -104,19 +82,13 @@ class ShadcnInput extends StatefulWidget {
   final TextStyle? hintStyle;
   final TextStyle? errorStyle;
   final TextStyle? helperStyle;
-  
-  // Estados visuais
   final bool showCounter;
   final bool dense;
   final bool floating;
   final Gradient? gradient;
   final List<BoxShadow>? boxShadow;
   final double? elevation;
-  
-  // Delegate para customização avançada
   final ShadcnInputDelegate? delegate;
-  
-  // Construtor principal
   const ShadcnInput({
     super.key,
     this.label,
@@ -182,10 +154,6 @@ class ShadcnInput extends StatefulWidget {
     this.elevation,
     this.delegate,
   });
-
-  // Construtores nomeados para casos específicos
-  
-  // Input para email com validação
   const ShadcnInput.email({
     super.key,
     this.label = 'Email',
@@ -250,8 +218,6 @@ class ShadcnInput extends StatefulWidget {
        gradient = null,
        boxShadow = null,
        elevation = null;
-
-  // Input para senha com toggle de visibilidade
   const ShadcnInput.password({
     super.key,
     this.label = 'Senha',
@@ -316,8 +282,6 @@ class ShadcnInput extends StatefulWidget {
        gradient = null,
        boxShadow = null,
        elevation = null;
-
-  // Input para busca
   const ShadcnInput.search({
     super.key,
     this.label,
@@ -440,16 +404,10 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
 
   void _validateInput() {
     String? error;
-    
-    // Validação customizada
     if (widget.customValidator != null) {
       error = widget.customValidator!(_controller.text);
     }
-    
-    // Validação padrão por tipo
     error ??= _getDefaultValidation(_controller.text);
-    
-    // Validação do FormField
     if (error == null && widget.validator != null) {
       error = widget.validator!(_controller.text);
     }
@@ -492,38 +450,26 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
-    // Determinar cores baseadas na variante e customização
     Color bgColor = widget.backgroundColor ?? _getBackgroundColor(colorScheme);
-    Color borderColorNormal = widget.borderColor ?? AppColors.border;
-    Color borderColorFocused = widget.focusedBorderColor ?? AppColors.ring;
-    Color borderColorError = widget.errorBorderColor ?? AppColors.destructive;
-    Color textColorFinal = widget.textColor ?? (widget.enabled ? AppColors.onSurface : AppColors.onSurface.withValues(alpha: 0.5));
-    Color hintColorFinal = widget.hintColor ?? AppColors.zinc400;
-    Color labelColorFinal = widget.labelColor ?? AppColors.onSurface;
-    
-    // Determinar padding e dimensões
+    Color borderColorNormal = widget.borderColor ?? colorScheme.outline;
+    Color borderColorFocused = widget.focusedBorderColor ?? colorScheme.primary;
+    Color borderColorError = widget.errorBorderColor ?? colorScheme.error;
+    Color textColorFinal = widget.textColor ?? (widget.enabled ? colorScheme.onSurface : colorScheme.onSurface.withValues(alpha: 0.5));
+    Color hintColorFinal = widget.hintColor ?? colorScheme.inverseSurface;
+    Color labelColorFinal = widget.labelColor ?? colorScheme.onSurface;
     EdgeInsets padding = widget.contentPadding ?? _getContentPadding();
     BorderRadius borderRadius = widget.borderRadius ?? BorderRadius.circular(12);
     double borderWidthNormal = widget.borderWidth ?? 1;
     double borderWidthFocused = widget.focusedBorderWidth ?? 2;
-    
-    // Erro final (widget.errorText tem prioridade sobre validação interna)
     String? finalError = widget.errorText ?? _validationError;
-    
-    // Tipo de teclado
     TextInputType keyboardType = _getKeyboardType();
-    
-    // Formatadores de entrada
     List<TextInputFormatter>? formatters = widget.inputFormatters ?? _getDefaultFormatters();
-    
-    // Construir sufixo para senha
     Widget? finalSuffixIcon = widget.suffixIcon;
     if (widget.inputType == ShadcnInputType.password) {
       finalSuffixIcon = IconButton(
         icon: Icon(
           _obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-          color: AppColors.zinc400,
+          color: colorScheme.inverseSurface,
           size: 20,
         ),
         onPressed: () {
@@ -543,7 +489,7 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
         borderRadius: borderRadius,
         boxShadow: widget.boxShadow ?? (_isFocused ? [
           BoxShadow(
-            color: AppColors.ring.withValues(alpha: 0.1),
+            color: colorScheme.primary.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -586,7 +532,7 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
           ),
           prefixIcon: widget.prefixIcon != null ? IconTheme(
             data: IconThemeData(
-              color: _isFocused ? AppColors.onSurface : AppColors.zinc400,
+              color: _isFocused ? colorScheme.onSurface : colorScheme.inverseSurface,
               size: 20,
             ),
             child: widget.prefixIcon!,
@@ -606,23 +552,18 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
           errorBorder: _getBorder(borderRadius, borderColorError, borderWidthNormal),
           focusedErrorBorder: _getBorder(borderRadius, borderColorError, borderWidthFocused),
           disabledBorder: _getBorder(borderRadius, borderColorNormal.withValues(alpha: 0.5), borderWidthNormal),
-          errorText: null, // Renderizamos o erro manualmente fora do input
+          errorText: null, 
         ),
       ),
     );
-
-    // Construir layout completo
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Leading Widget
         if (widget.leadingWidget != null) ...[
           widget.leadingWidget!,
           const SizedBox(height: 8),
         ],
-        
-        // Label
         if (widget.label != null) ...[
           Text(
             widget.label!,
@@ -634,34 +575,26 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
           ),
           const SizedBox(height: 8),
         ],
-        
-        // Input Field
         inputField,
-        
-        // Error Text
         if (finalError != null) ...[
           const SizedBox(height: 6),
           Text(
             finalError,
             style: widget.errorStyle ?? theme.textTheme.bodySmall?.copyWith(
-              color: AppColors.destructive,
+              color: colorScheme.error,
               fontSize: 13,
             ),
           ),
         ],
-        
-        // Helper Text
         if (widget.helperText != null && finalError == null) ...[
           const SizedBox(height: 4),
           Text(
             widget.helperText!,
             style: widget.helperStyle ?? theme.textTheme.bodySmall?.copyWith(
-              color: AppColors.zinc500,
+              color: colorScheme.inverseSurface,
             ),
           ),
         ],
-        
-        // Trailing Widget
         if (widget.trailingWidget != null) ...[
           const SizedBox(height: 8),
           widget.trailingWidget!,
@@ -670,16 +603,14 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
     );
   }
 
-  // Métodos auxiliares
-
   Color _getBackgroundColor(ColorScheme colorScheme) {
     switch (widget.variant) {
       case ShadcnInputVariant.filled:
-        return AppColors.zinc100;
+        return colorScheme.surfaceContainerHighest;
       case ShadcnInputVariant.borderless:
         return Colors.transparent;
       default:
-        return AppColors.surface;
+        return colorScheme.surface;
     }
   }
 
@@ -688,9 +619,9 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
       case ShadcnInputVariant.borderless:
         return Colors.transparent;
       case ShadcnInputVariant.underlined:
-        return AppColors.border;
+        return colorScheme.outline;
       default:
-        return AppColors.border;
+        return colorScheme.outline;
     }
   }
 

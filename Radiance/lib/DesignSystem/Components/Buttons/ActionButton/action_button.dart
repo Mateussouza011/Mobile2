@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'action_button_view_model.dart';
-import '../../../shared/colors.dart';
+import '../../../../core/theme/colors.dart';
 import '../../../shared/styles.dart';
 
 class ActionButton extends StatelessWidget {
@@ -18,7 +18,7 @@ class ActionButton extends StatelessWidget {
     double verticalPadding = 12;
     double iconSize = 24;
     TextStyle buttonTextStyle = button3Semibold;
-    Color buttonColor = lightPrimaryBrandColor;
+    Color buttonColor = ShadcnColors.primary;
 
     switch (viewModel.size) {
       case ActionButtonSize.large:
@@ -38,13 +38,13 @@ class ActionButton extends StatelessWidget {
 
     switch (viewModel.style) {
       case ActionButtonStyle.primary:
-        buttonColor = lightPrimaryBrandColor;
+        buttonColor = ShadcnColors.primary;
         break;
       case ActionButtonStyle.secondary:
-        buttonColor = lightSecondaryBrandColor;
+        buttonColor = ShadcnColors.secondary;
         break;
       case ActionButtonStyle.tertiary:
-        buttonColor = lightTertiaryBrandColor;
+        buttonColor = ShadcnColors.accent;
         break;
     }
 
@@ -52,7 +52,8 @@ class ActionButton extends StatelessWidget {
       onPressed: viewModel.onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: buttonColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        foregroundColor: ShadcnColors.primaryForeground,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         textStyle: buttonTextStyle,
         padding: EdgeInsets.symmetric(
           vertical: verticalPadding,

@@ -6,9 +6,6 @@ import '../../../ui/widgets/shadcn/shadcn_alert.dart';
 import '../../../ui/widgets/shadcn/shadcn_checkbox.dart';
 import 'login_view_model.dart';
 import 'login_delegate.dart';
-
-/// View da tela de Login
-/// Apenas UI, toda lógica delegada ao LoginDelegate
 class LoginView extends StatefulWidget {
   final LoginViewModel viewModel;
   final LoginDelegate delegate;
@@ -69,17 +66,12 @@ class _LoginViewState extends State<LoginView> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Header com logo
                   _buildHeader(context, textTheme, colorScheme),
                   
                   const SizedBox(height: 32),
-                  
-                  // Card de Login
                   _buildLoginCard(context, colorScheme, textTheme),
                   
                   const SizedBox(height: 24),
-                  
-                  // Link para registro
                   _buildRegisterLink(context, colorScheme, textTheme),
                 ],
               ),
@@ -93,7 +85,6 @@ class _LoginViewState extends State<LoginView> {
   Widget _buildHeader(BuildContext context, TextTheme textTheme, ColorScheme colorScheme) {
     return Column(
       children: [
-        // Ícone de diamante
         Container(
           width: 80,
           height: 80,
@@ -151,7 +142,6 @@ class _LoginViewState extends State<LoginView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Mensagem de erro
           if (widget.viewModel.errorMessage != null) ...[
             ShadcnAlert(
               title: 'Erro',
@@ -163,8 +153,6 @@ class _LoginViewState extends State<LoginView> {
             ),
             const SizedBox(height: 16),
           ],
-          
-          // Campo de Email
           ShadcnInput.email(
             label: 'Email',
             placeholder: 'seu@email.com',
@@ -178,8 +166,6 @@ class _LoginViewState extends State<LoginView> {
           ),
           
           const SizedBox(height: 16),
-          
-          // Campo de Senha
           ShadcnInput.password(
             label: 'Senha',
             placeholder: 'Digite sua senha',
@@ -193,8 +179,6 @@ class _LoginViewState extends State<LoginView> {
           ),
           
           const SizedBox(height: 16),
-          
-          // Lembrar-me e Esqueci a senha
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -228,8 +212,6 @@ class _LoginViewState extends State<LoginView> {
           ),
           
           const SizedBox(height: 24),
-          
-          // Botão de Login
           ShadcnButton(
             text: widget.viewModel.isLoading ? 'Entrando...' : 'Entrar',
             loading: widget.viewModel.isLoading,

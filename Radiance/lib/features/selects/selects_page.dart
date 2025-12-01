@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_select.dart';
+import '../../ui/widgets/theme_toggle_button.dart';
 
 class SelectsPage extends StatefulWidget {
   const SelectsPage({super.key});
@@ -101,6 +102,7 @@ class _SelectsPageState extends State<SelectsPage> {
         backgroundColor: colorScheme.surface,
         elevation: 0,
         iconTheme: IconThemeData(color: colorScheme.onSurface),
+        actions: const [ThemeToggleButton(size: 36), SizedBox(width: 8)],
       ),
       body: ListView(
         padding: const EdgeInsets.all(24.0),

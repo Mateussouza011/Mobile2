@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_input.dart';
 import '../../ui/widgets/shadcn/shadcn_form.dart';
+import '../../ui/widgets/theme_toggle_button.dart';
 
 class InputsPage extends StatefulWidget {
   const InputsPage({super.key});
@@ -36,11 +37,11 @@ class _InputsPageState extends State<InputsPage> {
         backgroundColor: colorScheme.surface,
         elevation: 0,
         iconTheme: IconThemeData(color: colorScheme.onSurface),
+        actions: const [ThemeToggleButton(size: 36), SizedBox(width: 8)],
       ),
       body: ListView(
         padding: const EdgeInsets.all(24.0),
         children: [
-          // Inputs Básicos
           _buildSection(
             context,
             'Inputs Básicos',
@@ -85,8 +86,6 @@ class _InputsPageState extends State<InputsPage> {
           ),
           
           const SizedBox(height: 32),
-          
-          // Campos com Máscara
           _buildSection(
             context,
             'Campos com Máscara',
@@ -115,24 +114,18 @@ class _InputsPageState extends State<InputsPage> {
           ),
 
           const SizedBox(height: 32),
-          
-          // Estados dos Inputs
           _buildSection(
             context,
             'Estados dos Inputs',
             'Diferentes estados visuais e de interação',
             [
               const SizedBox(height: 20),
-              
-              // Normal
               const ShadcnInput(
                 label: 'Estado Normal',
                 placeholder: 'Campo normal',
                 helperText: 'Este campo está em estado normal',
               ),
               const SizedBox(height: 16),
-              
-              // Desabilitado
               ShadcnInput(
                 label: 'Estado Desabilitado',
                 controller: _disabledController,
@@ -140,16 +133,12 @@ class _InputsPageState extends State<InputsPage> {
                 helperText: 'Este campo está desabilitado',
               ),
               const SizedBox(height: 16),
-              
-              // Com erro
               const ShadcnInput(
                 label: 'Estado de Erro',
                 placeholder: 'Campo com erro',
                 errorText: 'Este campo contém um erro',
               ),
               const SizedBox(height: 16),
-              
-              // Área de texto
               const ShadcnInput(
                 label: 'Comentários',
                 placeholder: 'Digite seus comentários...',

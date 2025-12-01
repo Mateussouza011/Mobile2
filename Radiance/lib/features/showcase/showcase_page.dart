@@ -7,6 +7,7 @@ import '../../ui/widgets/shadcn/shadcn_progress.dart';
 import '../../ui/widgets/shadcn/shadcn_skeleton.dart';
 import '../../ui/widgets/shadcn/shadcn_separator.dart';
 import '../../ui/widgets/shadcn/shadcn_accordion.dart';
+import '../../ui/widgets/theme_toggle_button.dart';
 
 class ComponentShowcasePage extends StatefulWidget {
   const ComponentShowcasePage({super.key});
@@ -52,13 +53,16 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
         elevation: 0,
         centerTitle: true,
         iconTheme: IconThemeData(color: colorScheme.onSurface),
+        actions: const [
+          ThemeToggleButton(size: 36),
+          SizedBox(width: 8),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header da página
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(24),
@@ -146,58 +150,44 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
               ),
             ),
             const SizedBox(height: 32),
-            // Seção de Botões Genéricos
             _buildSection(
               'Botões Genéricos',
               [
-                // Botão padrão
                 ShadcnButton(
                   text: 'Botão Padrão',
                   onPressed: () => _showMessage(context, 'Botão padrão pressionado!'),
                 ),
                 const SizedBox(height: 12),
-                
-                // Botão outline
                 ShadcnButton(
                   text: 'Botão Outline',
                   variant: ShadcnButtonVariant.outline,
                   onPressed: () => _showMessage(context, 'Botão outline pressionado!'),
                 ),
                 const SizedBox(height: 12),
-                
-                // Botão secondary
                 ShadcnButton(
                   text: 'Botão Secondary',
                   variant: ShadcnButtonVariant.secondary,
                   onPressed: () => _showMessage(context, 'Botão secondary pressionado!'),
                 ),
                 const SizedBox(height: 12),
-                
-                // Botão ghost
                 ShadcnButton(
                   text: 'Botão Ghost',
                   variant: ShadcnButtonVariant.ghost,
                   onPressed: () => _showMessage(context, 'Botão ghost pressionado!'),
                 ),
                 const SizedBox(height: 12),
-                
-                // Botão destructive
                 ShadcnButton(
                   text: 'Botão Destructive',
                   variant: ShadcnButtonVariant.destructive,
                   onPressed: () => _showMessage(context, 'Ação destrutiva executada!'),
                 ),
                 const SizedBox(height: 12),
-                
-                // Botão com ícone
                 ShadcnButton.withLeadingIcon(
                   text: 'Download',
                   leadingIcon: const Icon(Icons.download),
                   onPressed: () => _showMessage(context, 'Iniciando download...'),
                 ),
                 const SizedBox(height: 12),
-                
-                // Botão com loading
                 ShadcnButton(
                   text: _isLoading ? null : 'Processar',
                   loading: _isLoading,
@@ -210,8 +200,6 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
                   },
                 ),
                 const SizedBox(height: 12),
-                
-                // Botão apenas ícone
                 ShadcnButton.icon(
                   icon: const Icon(Icons.favorite),
                   onPressed: () => _showMessage(context, 'Favoritado!'),
@@ -220,46 +208,33 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
             ),
             
             const SizedBox(height: 32),
-            
-            // Seção de Inputs Genéricos
             _buildSection(
               'Inputs Genéricos',
               [
-                // Input padrão
                 const ShadcnInput(
                   label: 'Nome',
                   placeholder: 'Digite seu nome',
                 ),
                 const SizedBox(height: 16),
-                
-                // Input para email com validação automática
                 const ShadcnInput.email(
                   label: 'Email',
                 ),
                 const SizedBox(height: 16),
-                
-                // Input para senha com toggle automático
                 const ShadcnInput.password(
                   label: 'Senha',
                   helperText: 'Mínimo 8 caracteres',
                 ),
                 const SizedBox(height: 16),
-                
-                // Input de busca
                 const ShadcnInput.search(
                   placeholder: 'Buscar...',
                 ),
                 const SizedBox(height: 16),
-                
-                // Input com ícones
                 const ShadcnInput(
                   label: 'Localização',
                   placeholder: 'Digite seu endereço',
                   prefixIcon: Icon(Icons.location_on),
                 ),
                 const SizedBox(height: 16),
-                
-                // Input com validação customizada
                 ShadcnInput(
                   label: 'CEP',
                   placeholder: '00000-000',
@@ -279,19 +254,14 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
             ),
             
             const SizedBox(height: 32),
-            
-            // Seção de Cards Genéricos
             _buildSection(
               'Cards Genéricos',
               [
-                // Card simples
                 ShadcnCard.simple(
                   child: const Text('Este é um card simples com conteúdo básico.'),
                   onTap: () => _showMessage(context, 'Card simples tocado!'),
                 ),
                 const SizedBox(height: 16),
-                
-                // Card com header e footer
                 ShadcnCard(
                   title: 'Notificações',
                   description: 'Você tem 3 mensagens não lidas.',
@@ -314,8 +284,6 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
-                // Card expansível
                 ShadcnCard.expandable(
                   title: 'Card Expansível',
                   subtitle: 'Toque para expandir/recolher',
@@ -342,8 +310,6 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
-                // Card selecionável
                 ShadcnCard(
                   title: 'Card Selecionável',
                   description: 'Toque para selecionar/deselecionar',
@@ -357,8 +323,6 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
-                // Card com layout horizontal
                 ShadcnCard(
                   layout: ShadcnCardLayout.horizontal,
                   leading: Container(
@@ -407,12 +371,9 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
             ),
             
             const SizedBox(height: 32),
-            
-            // Seção de Chips & Tags
             _buildSection(
               'Chips & Tags',
               [
-                // Chips de filtro
                 const Text('Chips de Filtro:'),
                 const SizedBox(height: 12),
                 ShadcnChipGroup(
@@ -461,8 +422,6 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                
-                // Chips de entrada (removíveis)
                 const Text('Tags Removíveis:'),
                 const SizedBox(height: 12),
                 ShadcnChipGroup(
@@ -477,8 +436,6 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
                   )).toList(),
                 ),
                 const SizedBox(height: 16),
-                
-                // Chips de ação
                 const Text('Chips de Ação:'),
                 const SizedBox(height: 12),
                 ShadcnChipGroup(
@@ -510,12 +467,9 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
             ),
             
             const SizedBox(height: 32),
-            
-            // Seção de Progress & Loading
             _buildSection(
               'Progress & Loading',
               [
-                // Progress linear
                 const Text('Progress Linear:'),
                 const SizedBox(height: 12),
                 ShadcnProgress.linear(
@@ -531,8 +485,6 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
                   label: '${_progressValue.toInt()}%',
                 ),
                 const SizedBox(height: 20),
-                
-                // Progress circular
                 const Text('Progress Circular:'),
                 const SizedBox(height: 12),
                 Row(
@@ -555,8 +507,6 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                
-                // Progress indeterminado
                 const Text('Loading Indeterminado:'),
                 const SizedBox(height: 12),
                 const Row(
@@ -572,8 +522,6 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                
-                // Progress em etapas
                 const Text('Progress em Etapas:'),
                 const SizedBox(height: 12),
                 ShadcnStepProgress(
@@ -606,8 +554,6 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
             ),
             
             const SizedBox(height: 32),
-            
-            // Seção de Skeleton & Placeholders
             _buildSection(
               'Skeleton & Placeholders',
               [
@@ -624,14 +570,12 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
                 const SizedBox(height: 16),
                 
                 if (_showSkeleton) ...[
-                  // Templates de skeleton
                   ShadcnSkeletonTemplates.listItem(),
                   const SizedBox(height: 16),
                   ShadcnSkeletonTemplates.userProfile(),
                   const SizedBox(height: 16),
                   ShadcnSkeletonTemplates.productCard(),
                 ] else ...[
-                  // Conteúdo real
                   Row(
                     children: [
                       const CircleAvatar(
@@ -668,8 +612,6 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
             ),
             
             const SizedBox(height: 32),
-            
-            // Seção de Layout & Separators
             _buildSection(
               'Layout & Separators',
               [
@@ -701,8 +643,6 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
                   variant: ShadcnSeparatorVariant.dashed,
                 ),
                 const SizedBox(height: 20),
-                
-                // Exemplo de seção com separadores
                 const ShadcnSection(
                   title: 'Configurações de Conta',
                   subtitle: 'Gerencie suas preferências pessoais',
@@ -732,12 +672,9 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
             ),
             
             const SizedBox(height: 32),
-            
-            // Seção de Navigation & Accordion
             _buildSection(
               'Navigation & Accordion',
               [
-                // FAQ Accordion
                 const Text('FAQ Accordion:'),
                 const SizedBox(height: 12),
                 const ShadcnFAQAccordion(
@@ -748,8 +685,6 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                
-                // Settings Accordion
                 const Text('Settings Accordion:'),
                 const SizedBox(height: 12),
                 ShadcnSettingsAccordion(
@@ -824,7 +759,6 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header da seção
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(20),
@@ -861,8 +795,6 @@ class _ComponentShowcasePageState extends State<ComponentShowcasePage> {
               ],
             ),
           ),
-          
-          // Conteúdo da seção
           Padding(
             padding: const EdgeInsets.all(20),
             child: Column(

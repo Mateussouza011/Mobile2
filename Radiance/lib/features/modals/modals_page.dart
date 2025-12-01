@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_button.dart';
 import '../../ui/widgets/shadcn/shadcn_dialog.dart';
+import '../../ui/widgets/theme_toggle_button.dart';
 
 class ModalsPage extends StatelessWidget {
   const ModalsPage({super.key});
@@ -23,11 +24,11 @@ class ModalsPage extends StatelessWidget {
         backgroundColor: colorScheme.surface,
         elevation: 0,
         iconTheme: IconThemeData(color: colorScheme.onSurface),
+        actions: const [ThemeToggleButton(size: 36), SizedBox(width: 8)],
       ),
       body: ListView(
         padding: const EdgeInsets.all(24.0),
         children: [
-          // Descrição
           Text(
             'Demonstração de modais estilizados',
             style: textTheme.headlineSmall?.copyWith(
@@ -43,8 +44,6 @@ class ModalsPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 32),
-          
-          // Seção de Modais
           _buildModalsSection(context),
           
         ],
@@ -83,8 +82,6 @@ class ModalsPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            
-            // Botões para abrir modais
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -373,8 +370,6 @@ class ModalsPage extends StatelessWidget {
       title: 'Carregando dados...',
       description: 'Por favor, aguarde enquanto processamos sua solicitação.',
     );
-
-    // Simular carregamento
     Future.delayed(const Duration(seconds: 2), () {
       if (Navigator.of(context).canPop()) {
         Navigator.of(context).pop();

@@ -1,78 +1,37 @@
 import 'package:flutter/material.dart';
-
-/// Delegate para customizar o comportamento de modais do Shadcn
-/// 
-/// Este delegate permite centralizar toda a lógica de modais,
-/// incluindo lifecycle hooks, animações, backdrop behavior e validação,
-/// seguindo o padrão Delegate para desacoplamento e reutilização.
 abstract class ShadcnModalDelegate {
-  /// Chamado imediatamente antes do modal ser exibido
-  /// 
-  /// Retorna false para cancelar a exibição do modal
   Future<bool> willShow() async {
     return true;
   }
-  
-  /// Chamado imediatamente após o modal ser exibido
   void didShow() {}
-  
-  /// Chamado quando o usuário tenta fechar o modal
-  /// 
-  /// [result] é o valor que será retornado ao fechar
-  /// Retorna false para impedir o fechamento
   Future<bool> willClose<T>(T? result) async {
     return true;
   }
-  
-  /// Chamado após o modal ser fechado
-  /// 
-  /// [result] é o valor retornado pelo modal
   void didClose<T>(T? result) {}
-  
-  /// Define se o modal pode ser fechado tocando no backdrop
   bool canDismissWithBackdrop() {
     return true;
   }
-  
-  /// Define se o modal pode ser fechado com o botão de voltar
   bool canDismissWithBackButton() {
     return true;
   }
-  
-  /// Define a cor do backdrop
   Color getBackdropColor(ColorScheme colorScheme) {
     return Colors.black54;
   }
-  
-  /// Define a opacidade do backdrop (0.0 a 1.0)
   double getBackdropOpacity() {
     return 0.5;
   }
-  
-  /// Define a duração da animação de entrada
   Duration getEnterAnimationDuration() {
     return const Duration(milliseconds: 300);
   }
-  
-  /// Define a duração da animação de saída
   Duration getExitAnimationDuration() {
     return const Duration(milliseconds: 200);
   }
-  
-  /// Define a curva de animação de entrada
   Curve getEnterAnimationCurve() {
     return Curves.easeOut;
   }
-  
-  /// Define a curva de animação de saída
   Curve getExitAnimationCurve() {
     return Curves.easeIn;
   }
-  
-  /// Constrói a animação customizada para entrada
-  /// 
-  /// [animation] é a animação principal
-  /// [child] é o conteúdo do modal
   Widget buildEnterTransition(Animation<double> animation, Widget child) {
     return FadeTransition(
       opacity: animation,
@@ -82,26 +41,16 @@ abstract class ShadcnModalDelegate {
       ),
     );
   }
-  
-  /// Define se deve exibir o botão de fechar padrão
   bool shouldShowCloseButton() {
     return true;
   }
-  
-  /// Define a posição do botão de fechar
   Alignment getCloseButtonAlignment() {
     return Alignment.topRight;
   }
-  
-  /// Widget customizado para o botão de fechar
   Widget? getCustomCloseButton() {
     return null;
   }
 }
-
-/// Implementação padrão do ShadcnModalDelegate
-/// 
-/// Fornece comportamento básico sem customizações.
 class DefaultShadcnModalDelegate implements ShadcnModalDelegate {
   @override
   Future<bool> willShow() async => true;
@@ -159,10 +108,6 @@ class DefaultShadcnModalDelegate implements ShadcnModalDelegate {
   @override
   Widget? getCustomCloseButton() => null;
 }
-
-/// Delegate para modais de confirmação
-/// 
-/// Exige confirmação dupla antes de fechar com alterações não salvas.
 class ConfirmationModalDelegate extends DefaultShadcnModalDelegate {
   final bool hasUnsavedChanges;
   final String confirmationMessage;
@@ -181,9 +126,6 @@ class ConfirmationModalDelegate extends DefaultShadcnModalDelegate {
     if (!hasUnsavedChanges) {
       return true;
     }
-    
-    // Aqui você mostraria um dialog de confirmação
-    // Por enquanto, retornamos false para demonstração
     final confirmed = await _showConfirmationDialog();
     
     if (confirmed) {
@@ -196,26 +138,19 @@ class ConfirmationModalDelegate extends DefaultShadcnModalDelegate {
   }
   
   Future<bool> _showConfirmationDialog() async {
-    // Implementação simplificada - você usaria showDialog aqui
     return true;
   }
   
   @override
   bool canDismissWithBackdrop() {
-    // Não permite fechar com backdrop se houver alterações não salvas
     return !hasUnsavedChanges;
   }
   
   @override
   bool canDismissWithBackButton() {
-    // Não permite fechar com botão voltar se houver alterações não salvas
     return !hasUnsavedChanges;
   }
 }
-
-/// Delegate para modais com tracking/analytics
-/// 
-/// Registra eventos de abertura, fechamento e interações.
 class TrackedModalDelegate extends DefaultShadcnModalDelegate {
   final String modalName;
   final Map<String, dynamic>? additionalProperties;
@@ -260,13 +195,8 @@ class TrackedModalDelegate extends DefaultShadcnModalDelegate {
   
   void _trackEvent(String eventName, Map<String, dynamic> properties) {
     analyticsCallback?.call(eventName, properties);
-    // Exemplo: analytics.logEvent(name: eventName, parameters: properties);
   }
 }
-
-/// Delegate para modais com backdrop customizado
-/// 
-/// Permite backdrop com blur e cores personalizadas.
 class CustomBackdropModalDelegate extends DefaultShadcnModalDelegate {
   final Color backdropColor;
   final double backdropOpacity;
@@ -286,10 +216,6 @@ class CustomBackdropModalDelegate extends DefaultShadcnModalDelegate {
   @override
   double getBackdropOpacity() => backdropOpacity;
 }
-
-/// Delegate para modais com animação de slide
-/// 
-/// Modal entra deslizando de uma direção específica.
 class SlideModalDelegate extends DefaultShadcnModalDelegate {
   final SlideDirection slideDirection;
   
@@ -331,18 +257,12 @@ class SlideModalDelegate extends DefaultShadcnModalDelegate {
   @override
   Duration getEnterAnimationDuration() => const Duration(milliseconds: 400);
 }
-
-/// Enum para direção do slide
 enum SlideDirection {
   top,
   bottom,
   left,
   right,
 }
-
-/// Delegate para modais sem backdrop
-/// 
-/// Modal aparece sem escurecer o fundo.
 class NoBackdropModalDelegate extends DefaultShadcnModalDelegate {
   @override
   double getBackdropOpacity() => 0.0;
@@ -350,10 +270,6 @@ class NoBackdropModalDelegate extends DefaultShadcnModalDelegate {
   @override
   bool canDismissWithBackdrop() => false;
 }
-
-/// Delegate para modais de loading
-/// 
-/// Impede fechamento até que uma operação seja concluída.
 class LoadingModalDelegate extends DefaultShadcnModalDelegate {
   bool isLoading;
   
@@ -375,10 +291,6 @@ class LoadingModalDelegate extends DefaultShadcnModalDelegate {
     isLoading = loading;
   }
 }
-
-/// Delegate para modais com tempo limite
-/// 
-/// Fecha automaticamente após um período de tempo.
 class TimedModalDelegate extends DefaultShadcnModalDelegate {
   final Duration duration;
   final Function()? onTimeout;
@@ -392,14 +304,9 @@ class TimedModalDelegate extends DefaultShadcnModalDelegate {
   void didShow() {
     Future.delayed(duration, () {
       onTimeout?.call();
-      // Aqui você chamaria Navigator.pop() ou similar
     });
   }
 }
-
-/// Delegate para modais fullscreen
-/// 
-/// Modal ocupa toda a tela com animação de fade.
 class FullscreenModalDelegate extends DefaultShadcnModalDelegate {
   @override
   Widget buildEnterTransition(Animation<double> animation, Widget child) {
@@ -418,10 +325,6 @@ class FullscreenModalDelegate extends DefaultShadcnModalDelegate {
   @override
   double getBackdropOpacity() => 0.0;
 }
-
-/// Delegate combinado para modais complexos
-/// 
-/// Combina tracking, confirmação e backdrop customizado.
 class ComplexModalDelegate extends DefaultShadcnModalDelegate {
   final String modalName;
   final bool hasUnsavedChanges;
@@ -447,7 +350,6 @@ class ComplexModalDelegate extends DefaultShadcnModalDelegate {
   @override
   Future<bool> willClose<T>(T? result) async {
     if (hasUnsavedChanges) {
-      // Mostrar confirmação
       return false;
     }
     return true;

@@ -6,8 +6,6 @@ import 'prediction_view.dart';
 import '../../../core/data/repositories/auth_repository.dart';
 import '../../../core/data/repositories/prediction_history_repository.dart';
 import '../../../core/data/services/prediction_api_service.dart';
-
-/// Factory para criar a tela de Prediction com todas as dependencias
 class PredictionFactory {
   static Widget create(BuildContext context) {
     final viewModel = PredictionViewModel();

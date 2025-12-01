@@ -5,8 +5,6 @@ import 'history_view_model.dart';
 import '../../../core/data/models/prediction_model.dart';
 import '../../../core/data/repositories/auth_repository.dart';
 import '../../../core/data/repositories/prediction_history_repository.dart';
-
-/// Implementacao do HistoryDelegate - conecta View ao Repository
 class HistoryService implements HistoryDelegate {
   final HistoryViewModel viewModel;
   final PredictionHistoryRepository historyRepository;

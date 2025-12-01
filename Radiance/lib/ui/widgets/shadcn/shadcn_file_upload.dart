@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'dart:io';
 
 enum ShadcnFileUploadType {
@@ -19,7 +19,7 @@ class ShadcnFileUpload extends StatefulWidget {
   final String? description;
   final List<String>? acceptedFileTypes;
   final int? maxFiles;
-  final int? maxFileSize; // em MB
+  final int? maxFileSize; 
   final ShadcnFileUploadType type;
   final ValueChanged<List<File>>? onFilesSelected;
   final ValueChanged<File>? onFileSelected;
@@ -83,8 +83,6 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
           ),
           const SizedBox(height: 16),
         ],
-
-        // Upload Area
         GestureDetector(
           onTap: widget.enabled ? _selectFiles : null,
           child: DragTarget<File>(
@@ -112,7 +110,6 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
                 ),
                 child: Column(
                   children: [
-                    // Ãcone
                     widget.icon ?? Icon(
                       _getUploadIcon(),
                       size: 48,
@@ -121,8 +118,6 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
                           : colorScheme.onSurfaceVariant,
                     ),
                     const SizedBox(height: 16),
-                    
-                    // Texto principal
                     Text(
                       widget.type == ShadcnFileUploadType.dragDrop 
                           ? (widget.dragText ?? 'Arraste arquivos aqui ou clique para selecionar')
@@ -137,8 +132,6 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
                     ),
                     
                     const SizedBox(height: 8),
-                    
-                    // InformaÃ§Ãµes de formato
                     if (widget.acceptedFileTypes != null) ...[
                       Text(
                         'Formatos aceitos: ${widget.acceptedFileTypes!.join(', ')}',
@@ -151,7 +144,7 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
                     if (widget.maxFileSize != null) ...[
                       const SizedBox(height: 4),
                       Text(
-                        'Tamanho mÃ¡ximo: ${widget.maxFileSize}MB',
+                        'Tamanho máximo: ${widget.maxFileSize}MB',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: colorScheme.onSurfaceVariant,
                         ),
@@ -163,8 +156,6 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
             },
           ),
         ),
-
-        // Lista de arquivos selecionados
         if (_uploadedFiles.isNotEmpty) ...[
           const SizedBox(height: 16),
           ...List.generate(_uploadedFiles.length, (index) {
@@ -189,15 +180,12 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
       ),
       child: Row(
         children: [
-          // Ãcone do arquivo
           Icon(
             _getFileIcon(file.name),
             color: _getStatusColor(file.status),
             size: 24,
           ),
           const SizedBox(width: 12),
-          
-          // InformaÃ§Ãµes do arquivo
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,8 +219,6 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
               ],
             ),
           ),
-          
-          // Progress indicator ou botÃ£o de remover
           if (file.status == ShadcnFileUploadStatus.uploading) ...[
             SizedBox(
               width: 20,
@@ -339,8 +325,6 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
   }
 
   void _selectFiles() async {
-    // Simular seleÃ§Ã£o de arquivos
-    // Na implementaÃ§Ã£o real, usaria file_picker ou similar
     
     final mockFiles = [
       File('documento.pdf'),
@@ -352,13 +336,12 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
 
   void _handleFileSelected(List<File> files) {
     for (final file in files) {
-      // ValidaÃ§Ãµes
       if (!_validateFile(file)) continue;
       
       final uploadedFile = UploadedFile(
         file: file,
         name: file.path.split('/').last,
-        size: 1024 * 512, // Mock size
+        size: 1024 * 512, 
         status: ShadcnFileUploadStatus.idle,
       );
       
@@ -369,12 +352,8 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
           _uploadedFiles.add(uploadedFile);
         }
       });
-      
-      // Simular upload
       _simulateUpload(uploadedFile);
     }
-    
-    // Callbacks
     if (widget.type == ShadcnFileUploadType.single && files.isNotEmpty) {
       widget.onFileSelected?.call(files.first);
     } else {
@@ -385,17 +364,13 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
   bool _validateFile(File file) {
     final fileName = file.path.split('/').last;
     final extension = fileName.split('.').last.toLowerCase();
-    
-    // Validar tipo de arquivo
     if (widget.acceptedFileTypes != null && 
         !widget.acceptedFileTypes!.contains(extension)) {
-      widget.onError?.call('Tipo de arquivo nÃ£o aceito: $extension');
+      widget.onError?.call('Tipo de arquivo não aceito: $extension');
       return false;
     }
-    
-    // Validar nÃºmero mÃ¡ximo de arquivos
     if (widget.maxFiles != null && _uploadedFiles.length >= widget.maxFiles!) {
-      widget.onError?.call('NÃºmero mÃ¡ximo de arquivos excedido');
+      widget.onError?.call('Número máximo de arquivos excedido');
       return false;
     }
     
@@ -406,16 +381,12 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
     setState(() {
       file.status = ShadcnFileUploadStatus.uploading;
     });
-    
-    // Simular progresso de upload
     for (double progress = 0.0; progress <= 1.0; progress += 0.1) {
       await Future.delayed(const Duration(milliseconds: 200));
       setState(() {
         file.progress = progress;
       });
     }
-    
-    // Simular sucesso ou erro
     setState(() {
       file.status = ShadcnFileUploadStatus.success;
       file.progress = 1.0;

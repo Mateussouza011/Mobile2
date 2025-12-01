@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-/// Layout principal da aplicação com BottomNavigationBar
 class MainLayout extends StatelessWidget {
   final Widget child;
 

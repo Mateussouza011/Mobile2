@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../ui/widgets/theme_toggle_button.dart';
 
 class TablesPage extends StatelessWidget {
   const TablesPage({super.key});
@@ -21,6 +22,7 @@ class TablesPage extends StatelessWidget {
         backgroundColor: colorScheme.surface,
         elevation: 0,
         iconTheme: IconThemeData(color: colorScheme.onSurface),
+        actions: const [ThemeToggleButton(size: 36), SizedBox(width: 8)],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
@@ -39,8 +41,6 @@ class TablesPage extends StatelessWidget {
   Widget _buildSimpleTable(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
-    // Dados demonstrativos simples
     final data = [
       {'nome': 'Item A', 'status': 'Ativo'},
       {'nome': 'Item B', 'status': 'Inativo'},
@@ -70,8 +70,6 @@ class TablesPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            
-            // Cabeçalho
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -104,8 +102,6 @@ class TablesPage extends StatelessWidget {
                 ],
               ),
             ),
-            
-            // Linhas
             ...data.asMap().entries.map((entry) {
               final index = entry.key;
               final item = entry.value;

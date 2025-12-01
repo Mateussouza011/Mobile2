@@ -1,8 +1,6 @@
 import '../../../core/data/repositories/auth_repository.dart';
 import 'register_view_model.dart';
 import 'register_delegate.dart';
-
-/// Service que implementa a lógica de negócio do Registro
 class RegisterService implements RegisterDelegate {
   final AuthRepository _authRepository;
   final VoidCallback _onRegisterSuccess;

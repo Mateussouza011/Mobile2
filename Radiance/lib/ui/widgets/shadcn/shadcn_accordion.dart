@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
-
-/// Tipos de accordion
 enum ShadcnAccordionType {
-  single, // Apenas um item pode estar expandido
-  multiple, // Múltiplos itens podem estar expandidos
+  single, 
+  multiple, 
 }
-
-/// Variantes do accordion
 enum ShadcnAccordionVariant {
   default_,
   outline,
   filled,
   ghost,
 }
-
-/// Item individual do accordion
 class ShadcnAccordionItem {
   final String id;
   final Widget title;
@@ -34,8 +28,6 @@ class ShadcnAccordionItem {
     this.borderColor,
   });
 }
-
-/// Componente Accordion baseado no Shadcn/UI
 class ShadcnAccordion extends StatefulWidget {
   final List<ShadcnAccordionItem> items;
   final ShadcnAccordionType type;
@@ -63,8 +55,6 @@ class ShadcnAccordion extends StatefulWidget {
     this.borderRadius,
     this.showDividers = true,
   });
-
-  /// Cria um accordion que permite apenas um item expandido
   factory ShadcnAccordion.single({
     Key? key,
     required List<ShadcnAccordionItem> items,
@@ -95,8 +85,6 @@ class ShadcnAccordion extends StatefulWidget {
       showDividers: showDividers,
     );
   }
-
-  /// Cria um accordion que permite múltiplos itens expandidos
   factory ShadcnAccordion.multiple({
     Key? key,
     required List<ShadcnAccordionItem> items,
@@ -139,8 +127,6 @@ class _ShadcnAccordionState extends State<ShadcnAccordion> with TickerProviderSt
   void initState() {
     super.initState();
     _expandedItems = Set.from(widget.initialExpandedItems ?? []);
-    
-    // Criar controllers de animação para cada item
     for (final item in widget.items) {
       final controller = AnimationController(
         duration: widget.animationDuration,
@@ -154,8 +140,6 @@ class _ShadcnAccordionState extends State<ShadcnAccordion> with TickerProviderSt
       
       _animationControllers[item.id] = controller;
       _animations[item.id] = animation;
-      
-      // Inicializar estado expandido
       if (_expandedItems.contains(item.id)) {
         controller.value = 1.0;
       }
@@ -177,13 +161,10 @@ class _ShadcnAccordionState extends State<ShadcnAccordion> with TickerProviderSt
 
     setState(() {
       if (_expandedItems.contains(itemId)) {
-        // Fechar item
         _expandedItems.remove(itemId);
         _animationControllers[itemId]?.reverse();
       } else {
-        // Abrir item
         if (widget.type == ShadcnAccordionType.single) {
-          // Fechar todos os outros itens
           for (final expandedId in _expandedItems.toList()) {
             _animationControllers[expandedId]?.reverse();
           }
@@ -249,7 +230,6 @@ class _ShadcnAccordionState extends State<ShadcnAccordion> with TickerProviderSt
       ),
       child: Column(
         children: [
-          // Header (sempre visível)
           Material(
             color: Colors.transparent,
             child: InkWell(
@@ -259,13 +239,10 @@ class _ShadcnAccordionState extends State<ShadcnAccordion> with TickerProviderSt
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    // Ícone customizado ou ícone padrão
                     if (item.icon != null) ...[
                       item.icon!,
                       const SizedBox(width: 12),
                     ],
-                    
-                    // Título
                     Expanded(
                       child: DefaultTextStyle(
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -277,8 +254,6 @@ class _ShadcnAccordionState extends State<ShadcnAccordion> with TickerProviderSt
                         child: item.title,
                       ),
                     ),
-                    
-                    // Seta de expansão
                     AnimatedRotation(
                       turns: isExpanded ? 0.5 : 0.0,
                       duration: widget.animationDuration,
@@ -294,8 +269,6 @@ class _ShadcnAccordionState extends State<ShadcnAccordion> with TickerProviderSt
               ),
             ),
           ),
-          
-          // Conteúdo (expansível)
           AnimatedBuilder(
             animation: animation,
             builder: (context, child) {
@@ -328,7 +301,6 @@ class _ShadcnAccordionState extends State<ShadcnAccordion> with TickerProviderSt
     ShadcnAccordionItem item, 
     bool isExpanded,
   ) {
-    // Cores customizadas do item têm prioridade
     if (item.backgroundColor != null && item.borderColor != null) {
       return (
         item.backgroundColor!,
@@ -367,8 +339,6 @@ class _ShadcnAccordionState extends State<ShadcnAccordion> with TickerProviderSt
     };
   }
 }
-
-/// FAQ Accordion - Template pronto para uso
 class ShadcnFAQAccordion extends StatelessWidget {
   final List<({String question, String answer})> faqs;
   final ShadcnAccordionVariant variant;
@@ -397,8 +367,6 @@ class ShadcnFAQAccordion extends StatelessWidget {
     );
   }
 }
-
-/// Settings Accordion - Template para configurações
 class ShadcnSettingsAccordion extends StatelessWidget {
   final List<({String title, String description, List<Widget> settings})> sections;
 

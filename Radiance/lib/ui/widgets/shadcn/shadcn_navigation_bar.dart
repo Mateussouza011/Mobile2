@@ -273,8 +273,6 @@ class ShadcnNavigationBar extends StatelessWidget {
     }
   }
 }
-
-// Navigation Rail para layouts maiores
 class ShadcnNavigationRail extends StatelessWidget {
   final List<ShadcnNavigationBarItem> items;
   final int selectedIndex;

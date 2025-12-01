@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_navigation_bar.dart';
+import '../../ui/widgets/theme_toggle_button.dart';
 
 class NavigationBarsPage extends StatefulWidget {
   const NavigationBarsPage({super.key});
@@ -28,11 +29,11 @@ class _NavigationBarsPageState extends State<NavigationBarsPage> {
         backgroundColor: colorScheme.surface,
         elevation: 0,
         iconTheme: IconThemeData(color: colorScheme.onSurface),
+        actions: const [ThemeToggleButton(size: 36), SizedBox(width: 8)],
       ),
       body: ListView(
         padding: const EdgeInsets.all(24.0),
         children: [
-          // Descrição
           Text(
             'Navigation Bars',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -48,8 +49,6 @@ class _NavigationBarsPageState extends State<NavigationBarsPage> {
             ),
           ),
           const SizedBox(height: 32),
-
-          // Navigation Bar Primário
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),

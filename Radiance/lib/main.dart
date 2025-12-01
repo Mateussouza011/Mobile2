@@ -10,16 +10,10 @@ import 'core/di/dependency_injection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Configura Dependency Injection
   await setupDependencyInjection();
-  
-  // Inicializa o armazenamento de acordo com a plataforma
   if (kIsWeb) {
-    // Web: usa armazenamento em memória com dados de teste
     await WebStorage.instance.seedTestData();
   } else {
-    // Nativo: usa SQLite
     await LocalDatabase.instance.database;
   }
   
@@ -30,8 +24,6 @@ void main() async {
     ),
   );
 }
-
-/// Aplicação principal baseada no Shadcn/UI e Origin UI
 class ShadcnDesignSystemApp extends StatelessWidget {
   const ShadcnDesignSystemApp({super.key});
 

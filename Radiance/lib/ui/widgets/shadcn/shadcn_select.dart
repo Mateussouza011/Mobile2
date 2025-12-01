@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../DesignSystem/Theme/app_theme.dart';
 
 class ShadcnSelectOption<T> {
   final T value;
@@ -164,17 +163,16 @@ class _ShadcnSelectState<T> extends State<ShadcnSelect<T>> {
             .toList();
       }
     });
-
-    // Update overlay
     _overlayEntry?.markNeedsBuild();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     
-    final bgColor = widget.backgroundColor ?? AppColors.surface;
-    final borderColorFinal = widget.borderColor ?? AppColors.border;
+    final bgColor = widget.backgroundColor ?? colorScheme.surface;
+    final borderColorFinal = widget.borderColor ?? colorScheme.outline;
     final borderRadiusFinal = widget.borderRadius ?? BorderRadius.circular(12);
     final paddingFinal = widget.padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12);
 
@@ -187,20 +185,17 @@ class _ShadcnSelectState<T> extends State<ShadcnSelect<T>> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Label
         if (widget.label != null) ...[
           Text(
             widget.label!,
             style: theme.textTheme.labelMedium?.copyWith(
               fontWeight: FontWeight.w500,
-              color: AppColors.onSurface,
+              color: colorScheme.onSurface,
               fontSize: 14,
             ),
           ),
           const SizedBox(height: 8),
         ],
-
-        // Select Field
         CompositedTransformTarget(
           link: _layerLink,
           child: GestureDetector(
@@ -215,15 +210,15 @@ class _ShadcnSelectState<T> extends State<ShadcnSelect<T>> {
                   borderRadius: borderRadiusFinal,
                   border: Border.all(
                     color: widget.errorText != null
-                        ? AppColors.destructive
+                        ? colorScheme.error
                         : _isOpen
-                            ? AppColors.ring
+                            ? colorScheme.primary
                             : borderColorFinal,
                     width: _isOpen ? 2 : 1,
                   ),
                   boxShadow: _isOpen ? [
                     BoxShadow(
-                      color: AppColors.ring.withValues(alpha: 0.1),
+                      color: colorScheme.primary.withValues(alpha: 0.1),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -231,19 +226,16 @@ class _ShadcnSelectState<T> extends State<ShadcnSelect<T>> {
                 ),
                 child: Row(
                   children: [
-                    // Prefix Icon
                     if (widget.prefixIcon != null) ...[
                       IconTheme(
                         data: IconThemeData(
-                          color: _isOpen ? AppColors.onSurface : AppColors.zinc400,
+                          color: _isOpen ? colorScheme.onSurface : colorScheme.inverseSurface,
                           size: 20,
                         ),
                         child: widget.prefixIcon!,
                       ),
                       const SizedBox(width: 8),
                     ],
-
-                    // Selected Option or Placeholder
                     Expanded(
                       child: selectedOption != null
                           ? Row(
@@ -258,8 +250,8 @@ class _ShadcnSelectState<T> extends State<ShadcnSelect<T>> {
                                     style: widget.textStyle ??
                                         theme.textTheme.bodyMedium?.copyWith(
                                           color: widget.enabled
-                                              ? AppColors.onSurface
-                                              : AppColors.onSurface.withValues(alpha: 0.5),
+                                              ? colorScheme.onSurface
+                                              : colorScheme.onSurface.withValues(alpha: 0.5),
                                           fontSize: 15,
                                         ),
                                     overflow: TextOverflow.ellipsis,
@@ -270,13 +262,11 @@ class _ShadcnSelectState<T> extends State<ShadcnSelect<T>> {
                           : Text(
                               widget.placeholder ?? 'Selecione uma opção',
                               style: theme.textTheme.bodyMedium?.copyWith(
-                                color: AppColors.zinc400,
+                                color: colorScheme.inverseSurface,
                                 fontSize: 15,
                               ),
                             ),
                     ),
-
-                    // Suffix Icon or Dropdown Arrow
                     widget.suffixIcon ??
                         AnimatedRotation(
                           turns: _isOpen ? 0.5 : 0,
@@ -284,8 +274,8 @@ class _ShadcnSelectState<T> extends State<ShadcnSelect<T>> {
                           child: Icon(
                             Icons.keyboard_arrow_down,
                             color: widget.enabled
-                                ? AppColors.zinc400
-                                : AppColors.zinc400.withValues(alpha: 0.5),
+                                ? colorScheme.inverseSurface
+                                : colorScheme.inverseSurface.withValues(alpha: 0.5),
                           ),
                         ),
                   ],
@@ -294,25 +284,21 @@ class _ShadcnSelectState<T> extends State<ShadcnSelect<T>> {
             ),
           ),
         ),
-
-        // Helper Text
         if (widget.helperText != null && widget.errorText == null) ...[
           const SizedBox(height: 4),
           Text(
             widget.helperText!,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: AppColors.zinc500,
+              color: colorScheme.inverseSurface,
             ),
           ),
         ],
-
-        // Error Text
         if (widget.errorText != null) ...[
           const SizedBox(height: 6),
           Text(
             widget.errorText!,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: AppColors.destructive,
+              color: colorScheme.error,
               fontSize: 13,
             ),
           ),
@@ -378,88 +364,90 @@ class _SelectDropdownState<T> extends State<_SelectDropdown<T>> {
               elevation: 8,
               borderRadius: widget.borderRadius ?? BorderRadius.circular(12),
               color: Colors.transparent,
-              child: Container(
-                width: widget.width,
-                constraints: const BoxConstraints(maxHeight: 300),
-                decoration: BoxDecoration(
-                  color: widget.backgroundColor ?? AppColors.surface,
-                  borderRadius: widget.borderRadius ?? BorderRadius.circular(12),
-                  border: Border.all(
-                    color: widget.borderColor ?? AppColors.border,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.1),
-                      blurRadius: 16,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Search Field
-                    if (widget.searchable) ...[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextField(
-                          controller: widget.searchController,
-                          onChanged: widget.onSearchChanged,
-                          decoration: InputDecoration(
-                            hintText: widget.searchHint,
-                            prefixIcon: const Icon(Icons.search, size: 16),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(color: AppColors.border),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(color: AppColors.border),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(color: AppColors.ring),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 8,
-                            ),
-                            isDense: true,
-                          ),
-                          style: theme.textTheme.bodySmall,
-                        ),
+              child: Builder(
+                builder: (context) {
+                  final colorScheme = Theme.of(context).colorScheme;
+                  return Container(
+                    width: widget.width,
+                    constraints: const BoxConstraints(maxHeight: 300),
+                    decoration: BoxDecoration(
+                      color: widget.backgroundColor ?? colorScheme.surface,
+                      borderRadius: widget.borderRadius ?? BorderRadius.circular(12),
+                      border: Border.all(
+                        color: widget.borderColor ?? colorScheme.outline,
                       ),
-                      const Divider(height: 1, color: AppColors.border),
-                    ],
-
-                    // Options List
-                    Flexible(
-                      child: widget.options.isEmpty
-                          ? Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text(
-                                'Nenhuma opção encontrada',
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: AppColors.zinc500,
-                                ),
-                              ),
-                            )
-                          : ListView.builder(
-                              shrinkWrap: true,
-                              padding: const EdgeInsets.symmetric(vertical: 4),
-                              itemCount: widget.options.length,
-                              itemBuilder: (context, index) {
-                                final option = widget.options[index];
-                                return _SelectOptionTile<T>(
-                                  option: option,
-                                  onTap: () => widget.onChanged(option.value),
-                                  textStyle: widget.textStyle,
-                                );
-                              },
-                            ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.1),
+                          blurRadius: 16,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (widget.searchable) ...[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextField(
+                              controller: widget.searchController,
+                              onChanged: widget.onSearchChanged,
+                              decoration: InputDecoration(
+                                hintText: widget.searchHint,
+                                prefixIcon: const Icon(Icons.search, size: 16),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(color: colorScheme.outline),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(color: colorScheme.outline),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(color: colorScheme.primary),
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 8,
+                                ),
+                                isDense: true,
+                              ),
+                              style: theme.textTheme.bodySmall,
+                            ),
+                          ),
+                          Divider(height: 1, color: colorScheme.outline),
+                        ],
+                        Flexible(
+                          child: widget.options.isEmpty
+                              ? Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Text(
+                                    'Nenhuma opção encontrada',
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      color: colorScheme.inverseSurface,
+                                    ),
+                                  ),
+                                )
+                              : ListView.builder(
+                                  shrinkWrap: true,
+                                  padding: const EdgeInsets.symmetric(vertical: 4),
+                                  itemCount: widget.options.length,
+                                  itemBuilder: (context, index) {
+                                    final option = widget.options[index];
+                                    return _SelectOptionTile<T>(
+                                      option: option,
+                                      onTap: () => widget.onChanged(option.value),
+                                      textStyle: widget.textStyle,
+                                    );
+                                  },
+                                ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
           ),
@@ -483,12 +471,13 @@ class _SelectOptionTile<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: option.enabled ? onTap : null,
-        hoverColor: AppColors.zinc100,
+        hoverColor: colorScheme.surfaceContainerHighest,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           child: Row(
@@ -503,8 +492,8 @@ class _SelectOptionTile<T> extends StatelessWidget {
                   style: textStyle ??
                       theme.textTheme.bodyMedium?.copyWith(
                         color: option.enabled
-                            ? AppColors.onSurface
-                            : AppColors.onSurface.withValues(alpha: 0.5),
+                            ? colorScheme.onSurface
+                            : colorScheme.onSurface.withValues(alpha: 0.5),
                         fontSize: 14,
                       ),
                 ),

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-/// Variantes visuais do progress
 enum ShadcnProgressVariant {
   default_,
   secondary,
@@ -8,24 +6,18 @@ enum ShadcnProgressVariant {
   warning,
   error,
 }
-
-/// Tamanhos do progress
 enum ShadcnProgressSize {
   sm,
   default_,
   lg,
 }
-
-/// Tipos de progress
 enum ShadcnProgressType {
   linear,
   circular,
   ring,
 }
-
-/// Componente de progresso baseado no Shadcn/UI
 class ShadcnProgress extends StatefulWidget {
-  final double? value; // null para indeterminate
+  final double? value; 
   final double min;
   final double max;
   final ShadcnProgressVariant variant;
@@ -59,8 +51,6 @@ class ShadcnProgress extends StatefulWidget {
     this.strokeWidth,
     this.animated = true,
   });
-
-  /// Progress linear determinado
   const ShadcnProgress.linear({
     super.key,
     required this.value,
@@ -78,8 +68,6 @@ class ShadcnProgress extends StatefulWidget {
   }) : type = ShadcnProgressType.linear,
        child = null,
        strokeWidth = null;
-
-  /// Progress circular determinado
   const ShadcnProgress.circular({
     super.key,
     required this.value,
@@ -97,8 +85,6 @@ class ShadcnProgress extends StatefulWidget {
   }) : type = ShadcnProgressType.circular,
        label = null,
        showPercentage = false;
-
-  /// Progress indeterminado (loading)
   const ShadcnProgress.indeterminate({
     super.key,
     this.variant = ShadcnProgressVariant.default_,
@@ -184,8 +170,6 @@ class _ShadcnProgressState extends State<ShadcnProgress> with TickerProviderStat
         _progressController.forward();
       }
     }
-    
-    // Controlar animação indeterminada
     if (widget.value == null && oldWidget.value != null) {
       _indeterminateController.repeat();
     } else if (widget.value != null && oldWidget.value == null) {
@@ -223,7 +207,6 @@ class _ShadcnProgressState extends State<ShadcnProgress> with TickerProviderStat
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Label e percentual
         if (widget.label != null || widget.showPercentage) ...[
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -244,8 +227,6 @@ class _ShadcnProgressState extends State<ShadcnProgress> with TickerProviderStat
           ),
           const SizedBox(height: 8),
         ],
-        
-        // Barra de progresso
         LayoutBuilder(
           builder: (context, constraints) {
             return Container(
@@ -298,7 +279,7 @@ class _ShadcnProgressState extends State<ShadcnProgress> with TickerProviderStat
               }
               
               final width = constraints.maxWidth;
-              final indicatorWidth = width * 0.3; // 30% da largura total
+              final indicatorWidth = width * 0.3; 
               final leftPosition = -indicatorWidth + (_indeterminateAnimation.value * (width + indicatorWidth));
               
               return SizedBox(
@@ -350,7 +331,6 @@ class _ShadcnProgressState extends State<ShadcnProgress> with TickerProviderStat
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Círculo de fundo
           CustomPaint(
             size: Size(size, size),
             painter: _CircleProgressPainter(
@@ -359,8 +339,6 @@ class _ShadcnProgressState extends State<ShadcnProgress> with TickerProviderStat
               strokeWidth: strokeWidth,
             ),
           ),
-          
-          // Círculo de progresso
           if (widget.value != null)
             AnimatedBuilder(
               animation: _progressAnimation,
@@ -377,7 +355,6 @@ class _ShadcnProgressState extends State<ShadcnProgress> with TickerProviderStat
               },
             )
           else
-            // Progresso indeterminado circular
             AnimatedBuilder(
               animation: _indeterminateController,
               builder: (context, child) {
@@ -394,8 +371,6 @@ class _ShadcnProgressState extends State<ShadcnProgress> with TickerProviderStat
                 );
               },
             ),
-          
-          // Conteúdo central
           if (widget.child != null)
             widget.child!
           else if (widget.value != null)
@@ -416,7 +391,6 @@ class _ShadcnProgressState extends State<ShadcnProgress> with TickerProviderStat
   }
 
   Widget _buildRingProgress(BuildContext context) {
-    // Similar ao circular, mas com visual de anel mais espesso
     return _buildCircularProgress(context);
   }
 
@@ -449,8 +423,6 @@ class _ShadcnProgressState extends State<ShadcnProgress> with TickerProviderStat
     };
   }
 }
-
-/// Painter personalizado para progresso circular
 class _CircleProgressPainter extends CustomPainter {
   final double progress;
   final Color color;
@@ -473,7 +445,7 @@ class _CircleProgressPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = (size.width - strokeWidth) / 2;
 
-    const startAngle = -1.5708; // -90 graus (topo)
+    const startAngle = -1.5708; 
     final sweepAngle = 2 * 3.14159 * progress;
 
     canvas.drawArc(
@@ -488,8 +460,6 @@ class _CircleProgressPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
-
-/// Componente de progresso em etapas
 class ShadcnStepProgress extends StatelessWidget {
   final int currentStep;
   final int totalSteps;
@@ -522,7 +492,6 @@ class ShadcnStepProgress extends StatelessWidget {
         Row(
           children: List.generate(totalSteps * 2 - 1, (index) {
             if (index.isEven) {
-              // Step circle
               final stepIndex = index ~/ 2;
               final isActive = stepIndex < currentStep;
               final isCurrent = stepIndex == currentStep;
@@ -554,7 +523,6 @@ class ShadcnStepProgress extends StatelessWidget {
                 ),
               );
             } else {
-              // Connection line
               final stepIndex = index ~/ 2;
               final isActive = stepIndex < currentStep;
               

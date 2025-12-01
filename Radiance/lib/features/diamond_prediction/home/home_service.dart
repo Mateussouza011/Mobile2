@@ -6,8 +6,6 @@ import '../../../core/data/models/prediction_model.dart';
 import '../../../core/data/models/user_model.dart';
 import '../../../core/data/repositories/auth_repository.dart';
 import '../../../core/data/repositories/prediction_history_repository.dart';
-
-/// Implementação do HomeDelegate - conecta View ao Repository
 class HomeService implements HomeDelegate {
   final HomeViewModel viewModel;
   final AuthRepository authRepository;
@@ -34,8 +32,6 @@ class HomeService implements HomeDelegate {
       }
 
       final userId = user.id!;
-      
-      // Carregar estatísticas em paralelo
       final results = await Future.wait([
         historyRepository.countPredictionsForUser(userId),
         historyRepository.getAveragePrice(userId),
@@ -69,7 +65,7 @@ class HomeService implements HomeDelegate {
     try {
       await authRepository.logout();
       if (context.mounted) {
-        GoRouter.of(context).go('/diamond-landing');
+        GoRouter.of(context).go('/diamond-login');
       }
     } catch (e) {
       onError('Erro ao fazer logout: ${e.toString()}');

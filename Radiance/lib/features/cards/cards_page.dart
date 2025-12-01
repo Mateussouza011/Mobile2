@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_card.dart';
 import '../../ui/widgets/shadcn/shadcn_separator.dart';
 import '../../ui/widgets/shadcn/shadcn_button.dart';
+import '../../ui/widgets/theme_toggle_button.dart';
 
 class CardsPage extends StatefulWidget {
   const CardsPage({super.key});
@@ -38,28 +39,21 @@ class _CardsPageState extends State<CardsPage> {
         backgroundColor: colorScheme.surface,
         elevation: 0,
         iconTheme: IconThemeData(color: colorScheme.onSurface),
+        actions: const [ThemeToggleButton(size: 36), SizedBox(width: 8)],
       ),
       body: ListView(
         padding: const EdgeInsets.all(24.0),
         children: [
           const SizedBox(height: 32),
-          
-          // Seção Cards Básicos
           _buildBasicCards(context),
           
           const SizedBox(height: 32),
-          
-          // Variações
           _buildVariations(context),
           
           const SizedBox(height: 32),
-          
-          // Cards Avançados
           _buildAdvancedCards(context),
           
           const SizedBox(height: 32),
-          
-          // Layout & Separadores
           _buildSeparatorSection(context),
         ],
       ),
@@ -165,15 +159,11 @@ class _CardsPageState extends State<CardsPage> {
           ),
         ),
         const SizedBox(height: 20),
-        
-        // Card simples com onTap
         ShadcnCard.simple(
           child: const Text('Este é um card simples com conteúdo básico.'),
           onTap: () => _showMessage('Card simples tocado!'),
         ),
         const SizedBox(height: 16),
-        
-        // Card com header e footer
         ShadcnCard(
           title: 'Notificações',
           description: 'Você tem 3 mensagens não lidas.',
@@ -196,8 +186,6 @@ class _CardsPageState extends State<CardsPage> {
           ),
         ),
         const SizedBox(height: 16),
-        
-        // Card expansível
         ShadcnCard.expandable(
           title: 'Card Expansível',
           subtitle: 'Toque para expandir/recolher',
@@ -224,8 +212,6 @@ class _CardsPageState extends State<CardsPage> {
           ),
         ),
         const SizedBox(height: 16),
-        
-        // Card selecionável
         ShadcnCard(
           title: 'Card Selecionável',
           description: 'Toque para selecionar/deselecionar',
@@ -239,8 +225,6 @@ class _CardsPageState extends State<CardsPage> {
           ),
         ),
         const SizedBox(height: 16),
-        
-        // Card com layout horizontal
         ShadcnCard(
           layout: ShadcnCardLayout.horizontal,
           leading: Container(
@@ -304,8 +288,6 @@ class _CardsPageState extends State<CardsPage> {
           ),
         ),
         const SizedBox(height: 20),
-        
-        // Card com separadores básicos
         ShadcnCard(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -349,8 +331,6 @@ class _CardsPageState extends State<CardsPage> {
         ),
         
         const SizedBox(height: 16),
-        
-        // Card com separadores com labels
         ShadcnCard(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -379,8 +359,6 @@ class _CardsPageState extends State<CardsPage> {
         ),
         
         const SizedBox(height: 16),
-        
-        // Card demonstrando uso em layout
         ShadcnCard(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -441,8 +419,6 @@ class _CardsPageState extends State<CardsPage> {
         ),
         
         const SizedBox(height: 16),
-        
-        // Exemplo de ShadcnSection
         const ShadcnSection(
           title: 'Configurações de Conta',
           subtitle: 'Gerencie suas preferências pessoais',

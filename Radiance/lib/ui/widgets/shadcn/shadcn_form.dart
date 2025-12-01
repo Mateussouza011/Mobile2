@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-/// Componente de formulário avançado com validação automática
 class ShadcnForm extends StatefulWidget {
   final Widget child;
   final GlobalKey<FormState>? formKey;
@@ -110,8 +108,6 @@ abstract class ShadcnFormState {
   Map<String, dynamic> getAllValues();
   bool get hasErrors;
 }
-
-/// Campo de formulário aprimorado com integração ao ShadcnForm
 class ShadcnFormField extends StatefulWidget {
   final String name;
   final String? label;
@@ -192,12 +188,9 @@ class _ShadcnFormFieldState extends State<ShadcnFormField> {
   }
 
   String? _validate(String? value) {
-    // Validação de obrigatório
     if (widget.required && (value == null || value.isEmpty)) {
       return widget.requiredMessage ?? '${widget.label ?? 'Campo'} é obrigatório';
     }
-
-    // Validação customizada
     if (widget.validator != null) {
       return widget.validator!(value);
     }
@@ -286,8 +279,6 @@ class _ShadcnFormFieldState extends State<ShadcnFormField> {
     );
   }
 }
-
-/// Input de máscara para CPF
 class ShadcnCpfInput extends StatelessWidget {
   final String? label;
   final String? placeholder;
@@ -329,8 +320,6 @@ class ShadcnCpfInput extends StatelessWidget {
     if (cpf.length != 11) {
       return 'CPF deve ter 11 dígitos';
     }
-    
-    // Validação básica de CPF
     if (RegExp(r'^(\d)\1{10}$').hasMatch(cpf)) {
       return 'CPF inválido';
     }
@@ -338,8 +327,6 @@ class ShadcnCpfInput extends StatelessWidget {
     return null;
   }
 }
-
-/// Input de máscara para CNPJ
 class ShadcnCnpjInput extends StatelessWidget {
   final String? label;
   final String? placeholder;
@@ -385,8 +372,6 @@ class ShadcnCnpjInput extends StatelessWidget {
     return null;
   }
 }
-
-/// Input de telefone com máscara
 class ShadcnPhoneInput extends StatelessWidget {
   final String? label;
   final String? placeholder;
@@ -421,8 +406,6 @@ class ShadcnPhoneInput extends StatelessWidget {
     );
   }
 }
-
-/// Input de CEP
 class ShadcnCepInput extends StatelessWidget {
   final String? label;
   final String? placeholder;
@@ -457,8 +440,6 @@ class ShadcnCepInput extends StatelessWidget {
     );
   }
 }
-
-// Formatadores personalizados
 class CpfInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(

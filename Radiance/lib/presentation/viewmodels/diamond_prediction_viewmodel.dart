@@ -3,16 +3,12 @@ import '../../../domain/entities/diamond_prediction.dart';
 import '../../../domain/usecases/get_prediction.dart';
 import '../../../domain/usecases/get_prediction_history.dart';
 import '../../../domain/usecases/save_prediction.dart';
-
-/// Estados possíveis do ViewModel
 enum PredictionState {
   initial,
   loading,
   success,
   error,
 }
-
-/// ViewModel para gerenciar predições de diamantes
 class DiamondPredictionViewModel extends ChangeNotifier {
   final GetPredictionUseCase getPredictionUseCase;
   final SavePredictionUseCase savePredictionUseCase;
@@ -23,14 +19,10 @@ class DiamondPredictionViewModel extends ChangeNotifier {
     required this.savePredictionUseCase,
     required this.getPredictionHistoryUseCase,
   });
-
-  // Estado
   PredictionState _state = PredictionState.initial;
   DiamondPrediction? _currentPrediction;
   List<PredictionHistory> _history = [];
   String? _errorMessage;
-  
-  // Dados do formulário
   double _carat = 1.0;
   String _cut = 'Ideal';
   String _color = 'D';
@@ -40,8 +32,6 @@ class DiamondPredictionViewModel extends ChangeNotifier {
   double _x = 5.0;
   double _y = 5.0;
   double _z = 3.0;
-
-  // Getters
   PredictionState get state => _state;
   DiamondPrediction? get currentPrediction => _currentPrediction;
   List<PredictionHistory> get history => _history;
@@ -49,8 +39,6 @@ class DiamondPredictionViewModel extends ChangeNotifier {
   bool get isLoading => _state == PredictionState.loading;
   bool get hasError => _state == PredictionState.error;
   bool get hasResult => _currentPrediction != null;
-  
-  // Form getters
   double get carat => _carat;
   String get cut => _cut;
   String get color => _color;
@@ -60,8 +48,6 @@ class DiamondPredictionViewModel extends ChangeNotifier {
   double get x => _x;
   double get y => _y;
   double get z => _z;
-
-  // Setters do formulário
   void setCarat(double value) {
     _carat = value;
     notifyListeners();
@@ -106,8 +92,6 @@ class DiamondPredictionViewModel extends ChangeNotifier {
     _z = value;
     notifyListeners();
   }
-
-  /// Obtém predição de preço
   Future<void> predict() async {
     _state = PredictionState.loading;
     _errorMessage = null;
@@ -141,29 +125,22 @@ class DiamondPredictionViewModel extends ChangeNotifier {
         _currentPrediction = prediction;
         debugPrint('✅ Predição realizada: \$${prediction.predictedPrice}');
         notifyListeners();
-        
-        // Salva automaticamente no histórico
         _saveToHistory(prediction);
       },
     );
   }
-
-  /// Salva predição no histórico
   Future<void> _saveToHistory(DiamondPrediction prediction) async {
-    const userId = 1; // TODO: Implementar sistema de autenticação
+    const userId = 1; 
     await savePredictionUseCase(prediction, userId);
-    await loadHistory(); // Recarrega histórico
+    await loadHistory(); 
   }
-
-  /// Carrega histórico de predições
   Future<void> loadHistory() async {
-    const userId = 1; // TODO: Implementar sistema de autenticação
+    const userId = 1; 
     
     final result = await getPredictionHistoryUseCase(userId);
     
     result.fold(
       (failure) {
-        // Erro ao carregar histórico não bloqueia a aplicação
         debugPrint('Erro ao carregar histórico: ${failure.message}');
       },
       (history) {
@@ -172,16 +149,12 @@ class DiamondPredictionViewModel extends ChangeNotifier {
       },
     );
   }
-
-  /// Limpa resultado atual
   void clearResult() {
     _currentPrediction = null;
     _state = PredictionState.initial;
     _errorMessage = null;
     notifyListeners();
   }
-
-  /// Reseta formulário para valores padrão
   void resetForm() {
     _carat = 1.0;
     _cut = 'Ideal';
@@ -194,8 +167,6 @@ class DiamondPredictionViewModel extends ChangeNotifier {
     _z = 3.0;
     clearResult();
   }
-
-  /// Carrega dados de uma predição anterior
   void loadFromHistory(PredictionHistory historyItem) {
     final prediction = historyItem.prediction;
     _carat = prediction.carat;

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-
-/// ViewModel para a tela de Registro
 class RegisterViewModel extends ChangeNotifier {
-  // Estados do formulário
   String _name = '';
   String _email = '';
   String _password = '';
@@ -10,8 +7,6 @@ class RegisterViewModel extends ChangeNotifier {
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
   bool _acceptTerms = false;
-  
-  // Estados de UI
   bool _isLoading = false;
   String? _errorMessage;
   String? _successMessage;
@@ -19,8 +14,6 @@ class RegisterViewModel extends ChangeNotifier {
   String? _emailError;
   String? _passwordError;
   String? _confirmPasswordError;
-
-  // Getters
   String get name => _name;
   String get email => _email;
   String get password => _password;
@@ -46,8 +39,6 @@ class RegisterViewModel extends ChangeNotifier {
       _emailError == null &&
       _passwordError == null &&
       _confirmPasswordError == null;
-
-  // Setters
   void setName(String value) {
     _name = value;
     _validateName();
@@ -108,8 +99,6 @@ class RegisterViewModel extends ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
   }
-
-  // Validações
   void _validateName() {
     if (_name.isEmpty) {
       _nameError = null;

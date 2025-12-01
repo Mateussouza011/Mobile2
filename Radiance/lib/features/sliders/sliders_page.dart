@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_slider.dart';
+import '../../ui/widgets/theme_toggle_button.dart';
 
 class SlidersPage extends StatefulWidget {
   const SlidersPage({super.key});
@@ -33,23 +34,18 @@ class _SlidersPageState extends State<SlidersPage> {
         backgroundColor: colorScheme.surface,
         elevation: 0,
         iconTheme: IconThemeData(color: colorScheme.onSurface),
+        actions: const [ThemeToggleButton(size: 36), SizedBox(width: 8)],
       ),
       body: ListView(
         padding: const EdgeInsets.all(24.0),
         children: [
           const SizedBox(height: 32),
-          
-          // Slider básico
           _buildBasicSlider(context),
           
           const SizedBox(height: 24),
-          
-          // Slider com label
           _buildLabeledSlider(context),
           
           const SizedBox(height: 32),
-          
-          // Sliders e Controles (seção movida de inputs)
           _buildSection(
             context,
             'Sliders e Controles',
@@ -87,8 +83,6 @@ class _SlidersPageState extends State<SlidersPage> {
                 },
               ),
               const SizedBox(height: 24),
-              
-              // Slider customizado
               ShadcnSlider.single(
                 value: 75,
                 onChanged: (value) {},

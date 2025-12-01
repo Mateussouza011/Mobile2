@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_button.dart';
+import '../../ui/widgets/theme_toggle_button.dart';
 
 class ButtonsPage extends StatefulWidget {
   const ButtonsPage({super.key});
@@ -26,11 +27,11 @@ class _ButtonsPageState extends State<ButtonsPage> {
         backgroundColor: colorScheme.surface,
         elevation: 0,
         iconTheme: IconThemeData(color: colorScheme.onSurface),
+        actions: const [ThemeToggleButton(size: 36), SizedBox(width: 8)],
       ),
       body: ListView(
         padding: const EdgeInsets.all(24.0),
         children: [
-          // Variantes
           _buildSection(
             context,
             'Variantes',
@@ -80,8 +81,6 @@ class _ButtonsPageState extends State<ButtonsPage> {
           ),
           
           const SizedBox(height: 32),
-          
-          // Com Ícones
           _buildSection(
             context,
             'Com Ícones',
@@ -126,16 +125,12 @@ class _ButtonsPageState extends State<ButtonsPage> {
           ),
           
           const SizedBox(height: 32),
-          
-          // Estados
           _buildSection(
             context,
             'Estados',
             '',
             [
               const SizedBox(height: 20),
-              
-              // Estado normal
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -162,8 +157,6 @@ class _ButtonsPageState extends State<ButtonsPage> {
               ),
               
               const SizedBox(height: 16),
-              
-              // Estado loading
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -191,8 +184,6 @@ class _ButtonsPageState extends State<ButtonsPage> {
               ),
               
               const SizedBox(height: 16),
-              
-              // Estado desabilitado
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -222,8 +213,6 @@ class _ButtonsPageState extends State<ButtonsPage> {
           ),
           
           const SizedBox(height: 32),
-          
-          // Tamanhos
           _buildSection(
             context,
             'Tamanhos',

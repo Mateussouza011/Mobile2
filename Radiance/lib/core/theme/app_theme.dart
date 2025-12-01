@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-/// Sistema de temas baseado no Shadcn/UI e Origin UI
 class ShadcnTheme {
-  // Cores Shadcn/UI
   static const Color background = Color(0xFFFFFFFF);
   static const Color foreground = Color(0xFF0A0A0A);
   static const Color card = Color(0xFFFFFFFF);
@@ -23,8 +20,6 @@ class ShadcnTheme {
   static const Color border = Color(0xFFE5E5E5);
   static const Color input = Color(0xFFE5E5E5);
   static const Color ring = Color(0xFF171717);
-  
-  // Cores escuras
   static const Color darkBackground = Color(0xFF0A0A0A);
   static const Color darkForeground = Color(0xFFFAFAFA);
   static const Color darkCard = Color(0xFF0A0A0A);
@@ -44,14 +39,10 @@ class ShadcnTheme {
   static const Color darkBorder = Color(0xFF262626);
   static const Color darkInput = Color(0xFF262626);
   static const Color darkRing = Color(0xFFD4D4D8);
-
-  /// Tema claro Shadcn/UI
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      
-      // Esquema de cores
       colorScheme: const ColorScheme.light(
         brightness: Brightness.light,
         primary: primary,
@@ -67,11 +58,7 @@ class ShadcnTheme {
         outline: border,
         outlineVariant: input,
       ),
-      
-      // Tipografia Shadcn/UI
       textTheme: _buildTextTheme(foreground, mutedForeground),
-      
-      // AppBar
       appBarTheme: AppBarTheme(
         backgroundColor: background,
         foregroundColor: foreground,
@@ -84,8 +71,6 @@ class ShadcnTheme {
         ),
         iconTheme: const IconThemeData(color: foreground),
       ),
-      
-      // Cards
       cardTheme: CardThemeData(
         color: card,
         elevation: 0,
@@ -95,8 +80,6 @@ class ShadcnTheme {
           side: const BorderSide(color: border, width: 1),
         ),
       ),
-      
-      // Botões Elevated
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: primary,
@@ -113,8 +96,6 @@ class ShadcnTheme {
           ),
         ),
       ),
-      
-      // Botões Outlined
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: foreground,
@@ -129,8 +110,6 @@ class ShadcnTheme {
           ),
         ),
       ),
-      
-      // Botões Text
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: foreground,
@@ -144,8 +123,6 @@ class ShadcnTheme {
           ),
         ),
       ),
-      
-      // Bottom Navigation
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: background,
         selectedItemColor: foreground,
@@ -155,8 +132,6 @@ class ShadcnTheme {
         selectedLabelStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500),
         unselectedLabelStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w400),
       ),
-      
-      // Input fields
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: background,
@@ -187,8 +162,6 @@ class ShadcnTheme {
           fontWeight: FontWeight.w400,
         ),
       ),
-      
-      // SnackBar
       snackBarTheme: SnackBarThemeData(
         backgroundColor: primary,
         contentTextStyle: GoogleFonts.inter(
@@ -203,8 +176,6 @@ class ShadcnTheme {
         behavior: SnackBarBehavior.floating,
         elevation: 0,
       ),
-      
-      // Divider
       dividerTheme: const DividerThemeData(
         color: border,
         thickness: 1,
@@ -212,14 +183,10 @@ class ShadcnTheme {
       ),
     );
   }
-
-  /// Tema escuro Shadcn/UI
   static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      
-      // Esquema de cores
       colorScheme: const ColorScheme.dark(
         brightness: Brightness.dark,
         primary: darkPrimary,
@@ -235,11 +202,7 @@ class ShadcnTheme {
         outline: darkBorder,
         outlineVariant: darkInput,
       ),
-      
-      // Tipografia
       textTheme: _buildTextTheme(darkForeground, darkMutedForeground),
-      
-      // AppBar
       appBarTheme: AppBarTheme(
         backgroundColor: darkBackground,
         foregroundColor: darkForeground,
@@ -252,8 +215,6 @@ class ShadcnTheme {
         ),
         iconTheme: const IconThemeData(color: darkForeground),
       ),
-      
-      // Cards
       cardTheme: CardThemeData(
         color: darkCard,
         elevation: 0,
@@ -263,8 +224,6 @@ class ShadcnTheme {
           side: const BorderSide(color: darkBorder, width: 1),
         ),
       ),
-      
-      // Botões Elevated
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: darkPrimary,
@@ -281,8 +240,6 @@ class ShadcnTheme {
           ),
         ),
       ),
-      
-      // Botões Outlined
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: darkForeground,
@@ -297,8 +254,6 @@ class ShadcnTheme {
           ),
         ),
       ),
-      
-      // Botões Text
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: darkForeground,
@@ -312,8 +267,6 @@ class ShadcnTheme {
           ),
         ),
       ),
-      
-      // Bottom Navigation
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: darkBackground,
         selectedItemColor: darkForeground,
@@ -323,8 +276,6 @@ class ShadcnTheme {
         selectedLabelStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500),
         unselectedLabelStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w400),
       ),
-      
-      // Input fields
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: darkBackground,
@@ -355,8 +306,6 @@ class ShadcnTheme {
           fontWeight: FontWeight.w400,
         ),
       ),
-      
-      // SnackBar
       snackBarTheme: SnackBarThemeData(
         backgroundColor: darkPrimary,
         contentTextStyle: GoogleFonts.inter(
@@ -371,8 +320,6 @@ class ShadcnTheme {
         behavior: SnackBarBehavior.floating,
         elevation: 0,
       ),
-      
-      // Divider
       dividerTheme: const DividerThemeData(
         color: darkBorder,
         thickness: 1,
@@ -380,11 +327,8 @@ class ShadcnTheme {
       ),
     );
   }
-
-  /// Constrói o tema de tipografia Shadcn/UI
   static TextTheme _buildTextTheme(Color foreground, Color mutedForeground) {
     return TextTheme(
-      // Display
       displayLarge: GoogleFonts.inter(
         fontSize: 36,
         fontWeight: FontWeight.w800,
@@ -406,8 +350,6 @@ class ShadcnTheme {
         height: 1.2,
         letterSpacing: -0.01,
       ),
-      
-      // Headlines
       headlineLarge: GoogleFonts.inter(
         fontSize: 32,
         fontWeight: FontWeight.w700,
@@ -428,8 +370,6 @@ class ShadcnTheme {
         color: foreground,
         height: 1.3,
       ),
-      
-      // Titles
       titleLarge: GoogleFonts.inter(
         fontSize: 20,
         fontWeight: FontWeight.w600,
@@ -448,8 +388,6 @@ class ShadcnTheme {
         color: foreground,
         height: 1.4,
       ),
-      
-      // Body
       bodyLarge: GoogleFonts.inter(
         fontSize: 16,
         fontWeight: FontWeight.w400,
@@ -468,8 +406,6 @@ class ShadcnTheme {
         color: mutedForeground,
         height: 1.5,
       ),
-      
-      // Labels
       labelLarge: GoogleFonts.inter(
         fontSize: 14,
         fontWeight: FontWeight.w500,

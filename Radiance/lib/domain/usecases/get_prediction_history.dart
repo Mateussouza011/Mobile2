@@ -2,8 +2,6 @@ import 'package:dartz/dartz.dart';
 import '../../core/errors/failures.dart';
 import '../entities/diamond_prediction.dart';
 import '../repositories/prediction_repository.dart';
-
-/// Use case para obter histórico de predições
 class GetPredictionHistoryUseCase {
   final PredictionRepository repository;
 

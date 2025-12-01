@@ -81,8 +81,6 @@ class _ShadcnAlertState extends State<ShadcnAlert>
     ));
 
     _animationController.forward();
-
-    // Auto dismiss
     if (widget.autoDismiss != null) {
       Future.delayed(widget.autoDismiss!, () {
         if (mounted) {
@@ -233,7 +231,6 @@ class _ShadcnAlertState extends State<ShadcnAlert>
   }
 
   BoxDecoration _getDecoration(_AlertColors colors, ColorScheme colorScheme) {
-    // Handle legacy destructive variant
     if (widget.variant == ShadcnAlertVariant.destructive) {
       return BoxDecoration(
         color: colorScheme.errorContainer.withValues(alpha: 0.1),
@@ -277,7 +274,6 @@ class _ShadcnAlertState extends State<ShadcnAlert>
   }
 
   Color _getIconColor(_AlertColors colors) {
-    // Handle legacy destructive variant
     if (widget.variant == ShadcnAlertVariant.destructive) {
       return Theme.of(context).colorScheme.error;
     }
@@ -291,7 +287,6 @@ class _ShadcnAlertState extends State<ShadcnAlert>
   }
 
   Color _getTitleColor(_AlertColors colors, ColorScheme colorScheme) {
-    // Handle legacy destructive variant
     if (widget.variant == ShadcnAlertVariant.destructive) {
       return colorScheme.error;
     }
@@ -305,7 +300,6 @@ class _ShadcnAlertState extends State<ShadcnAlert>
   }
 
   Color _getDescriptionColor(_AlertColors colors, ColorScheme colorScheme) {
-    // Handle legacy destructive variant
     if (widget.variant == ShadcnAlertVariant.destructive) {
       return colorScheme.onErrorContainer;
     }
@@ -330,8 +324,6 @@ class _AlertColors {
     required this.border,
   });
 }
-
-// Alert Manager for showing global alerts
 class ShadcnAlertManager {
   static OverlayEntry? _currentOverlay;
 
@@ -346,7 +338,6 @@ class ShadcnAlertManager {
     bool dismissible = true,
     Duration? autoDismiss = const Duration(seconds: 4),
   }) {
-    // Remove any existing alert
     dismiss();
 
     final overlay = Overlay.of(context);
@@ -385,8 +376,6 @@ class ShadcnAlertManager {
     _currentOverlay?.remove();
     _currentOverlay = null;
   }
-
-  // Convenience methods
   static void showInfo({
     required BuildContext context,
     required String title,

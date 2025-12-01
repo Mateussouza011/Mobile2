@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
-
-/// Variantes do skeleton
 enum ShadcnSkeletonVariant {
   rectangular,
   rounded,
   circular,
   text,
 }
-
-/// Animações do skeleton
 enum ShadcnSkeletonAnimation {
   none,
   pulse,
   wave,
   shimmer,
 }
-
-/// Componente Skeleton baseado no Shadcn/UI
 class ShadcnSkeleton extends StatefulWidget {
   final double? width;
   final double? height;
@@ -40,8 +34,6 @@ class ShadcnSkeleton extends StatefulWidget {
     this.animationDuration = const Duration(milliseconds: 1500),
     this.child,
   });
-
-  /// Skeleton circular (para avatares)
   const ShadcnSkeleton.avatar({
     super.key,
     this.width = 40.0,
@@ -53,8 +45,6 @@ class ShadcnSkeleton extends StatefulWidget {
   }) : variant = ShadcnSkeletonVariant.circular,
        borderRadius = null,
        child = null;
-
-  /// Skeleton para texto
   const ShadcnSkeleton.text({
     super.key,
     this.width,
@@ -66,8 +56,6 @@ class ShadcnSkeleton extends StatefulWidget {
   }) : variant = ShadcnSkeletonVariant.text,
        borderRadius = null,
        child = null;
-
-  /// Skeleton retangular arredondado
   const ShadcnSkeleton.rounded({
     super.key,
     this.width,
@@ -211,8 +199,6 @@ class _ShadcnSkeletonState extends State<ShadcnSkeleton> with SingleTickerProvid
     };
   }
 }
-
-/// Componente para criar layouts skeleton complexos
 class ShadcnSkeletonList extends StatelessWidget {
   final int itemCount;
   final Widget Function(BuildContext context, int index) itemBuilder;
@@ -242,10 +228,7 @@ class ShadcnSkeletonList extends StatelessWidget {
     );
   }
 }
-
-/// Skeletons pré-definidos para casos comuns
 class ShadcnSkeletonTemplates {
-  /// Skeleton para card de post
   static Widget postCard() {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -256,7 +239,6 @@ class ShadcnSkeletonTemplates {
       child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header com avatar e nome
           Row(
             children: [
               ShadcnSkeleton.avatar(width: 40, height: 40),
@@ -272,23 +254,17 @@ class ShadcnSkeletonTemplates {
             ],
           ),
           SizedBox(height: 16),
-          
-          // Conteúdo do post
           ShadcnSkeleton.text(width: double.infinity),
           SizedBox(height: 8),
           ShadcnSkeleton.text(width: 250),
           SizedBox(height: 8),
           ShadcnSkeleton.text(width: 180),
           SizedBox(height: 16),
-          
-          // Imagem
           ShadcnSkeleton.rounded(
             width: double.infinity,
             height: 200,
           ),
           SizedBox(height: 16),
-          
-          // Ações
           Row(
             children: [
               ShadcnSkeleton.rounded(width: 60, height: 32),
@@ -302,8 +278,6 @@ class ShadcnSkeletonTemplates {
       ),
     );
   }
-
-  /// Skeleton para item de lista
   static Widget listItem() {
     return const Row(
       children: [
@@ -324,8 +298,6 @@ class ShadcnSkeletonTemplates {
       ],
     );
   }
-
-  /// Skeleton para card de produto
   static Widget productCard() {
     return Container(
       decoration: BoxDecoration(
@@ -335,7 +307,6 @@ class ShadcnSkeletonTemplates {
       child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Imagem do produto
           ShadcnSkeleton.rounded(
             width: double.infinity,
             height: 150,
@@ -346,19 +317,12 @@ class ShadcnSkeletonTemplates {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Nome do produto
                 ShadcnSkeleton.text(width: double.infinity),
                 SizedBox(height: 8),
-                
-                // Descrição
                 ShadcnSkeleton.text(width: 120, height: 12),
                 SizedBox(height: 12),
-                
-                // Preço
                 ShadcnSkeleton.text(width: 80, height: 18),
                 SizedBox(height: 12),
-                
-                // Botão
                 ShadcnSkeleton.rounded(
                   width: double.infinity,
                   height: 36,
@@ -370,26 +334,17 @@ class ShadcnSkeletonTemplates {
       ),
     );
   }
-
-  /// Skeleton para perfil de usuário
   static Widget userProfile() {
     return const Column(
       children: [
-        // Avatar grande
         ShadcnSkeleton.avatar(width: 100, height: 100),
         SizedBox(height: 16),
-        
-        // Nome
         ShadcnSkeleton.text(width: 150, height: 20),
         SizedBox(height: 8),
-        
-        // Bio
         ShadcnSkeleton.text(width: 200, height: 14),
         SizedBox(height: 4),
         ShadcnSkeleton.text(width: 180, height: 14),
         SizedBox(height: 16),
-        
-        // Estatísticas
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [

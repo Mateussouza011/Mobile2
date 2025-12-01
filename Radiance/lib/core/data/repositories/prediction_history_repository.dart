@@ -4,9 +4,6 @@ import '../database/local_database.dart';
 import '../database/web_storage.dart';
 import '../models/prediction_model.dart';
 import '../../constants/api_constants.dart';
-
-/// Repositório para histórico de predições
-/// Suporta tanto plataformas nativas (SQLite) quanto Web (memória)
 class PredictionHistoryRepository {
   final LocalDatabase _localDatabase;
   final WebStorage _webStorage;
@@ -14,16 +11,11 @@ class PredictionHistoryRepository {
   PredictionHistoryRepository({LocalDatabase? localDatabase})
       : _localDatabase = localDatabase ?? LocalDatabase.instance,
         _webStorage = WebStorage.instance;
-
-  /// Salva uma nova predição no histórico
   Future<PredictionHistoryModel> savePrediction(PredictionHistoryModel prediction) async {
     try {
-      // Web: usar WebStorage
       if (kIsWeb) {
         return await _webStorage.savePrediction(prediction);
       }
-
-      // Nativo: usar SQLite
       final db = await _localDatabase.database;
       
       final id = await db.insert(
@@ -37,16 +29,11 @@ class PredictionHistoryRepository {
       throw Exception('Erro ao salvar predição: ${e.toString()}');
     }
   }
-
-  /// Obtém todas as predições de um usuário
   Future<List<PredictionHistoryModel>> getPredictionsForUser(int userId) async {
     try {
-      // Web: usar WebStorage
       if (kIsWeb) {
         return await _webStorage.getPredictionsForUser(userId);
       }
-
-      // Nativo: usar SQLite
       final db = await _localDatabase.database;
       
       final results = await db.query(
@@ -61,15 +48,12 @@ class PredictionHistoryRepository {
       throw Exception('Erro ao buscar histórico: ${e.toString()}');
     }
   }
-
-  /// Obtém predições paginadas
   Future<List<PredictionHistoryModel>> getPaginatedPredictions({
     required int userId,
     int page = 1,
     int pageSize = 20,
   }) async {
     try {
-      // Web: usar WebStorage
       if (kIsWeb) {
         return await _webStorage.getPaginatedPredictions(
           userId: userId,
@@ -77,8 +61,6 @@ class PredictionHistoryRepository {
           pageSize: pageSize,
         );
       }
-
-      // Nativo: usar SQLite
       final db = await _localDatabase.database;
       final offset = (page - 1) * pageSize;
       
@@ -96,16 +78,11 @@ class PredictionHistoryRepository {
       throw Exception('Erro ao buscar histórico: ${e.toString()}');
     }
   }
-
-  /// Conta o total de predições de um usuário
   Future<int> countPredictionsForUser(int userId) async {
     try {
-      // Web: usar WebStorage
       if (kIsWeb) {
         return await _webStorage.countPredictionsForUser(userId);
       }
-
-      // Nativo: usar SQLite
       final db = await _localDatabase.database;
       
       final result = await db.rawQuery(
@@ -118,16 +95,11 @@ class PredictionHistoryRepository {
       return 0;
     }
   }
-
-  /// Calcula o preço médio das predições
   Future<double> getAveragePrice(int userId) async {
     try {
-      // Web: usar WebStorage
       if (kIsWeb) {
         return await _webStorage.getAveragePrice(userId);
       }
-
-      // Nativo: usar SQLite
       final db = await _localDatabase.database;
       
       final result = await db.rawQuery(
@@ -142,17 +114,12 @@ class PredictionHistoryRepository {
       return 0.0;
     }
   }
-
-  /// Obtém a última predição do usuário
   Future<PredictionHistoryModel?> getLastPrediction(int userId) async {
     try {
-      // Web: usar WebStorage
       if (kIsWeb) {
         final predictions = await _webStorage.getPredictionsForUser(userId);
         return predictions.isNotEmpty ? predictions.first : null;
       }
-
-      // Nativo: usar SQLite
       final db = await _localDatabase.database;
       
       final results = await db.query(
@@ -169,16 +136,11 @@ class PredictionHistoryRepository {
       return null;
     }
   }
-
-  /// Remove uma predição do histórico
   Future<bool> deletePrediction(int predictionId) async {
     try {
-      // Web: usar WebStorage
       if (kIsWeb) {
         return await _webStorage.deletePrediction(predictionId);
       }
-
-      // Nativo: usar SQLite
       final db = await _localDatabase.database;
       
       final count = await db.delete(
@@ -192,16 +154,11 @@ class PredictionHistoryRepository {
       return false;
     }
   }
-
-  /// Limpa todo o histórico de um usuário
   Future<bool> clearHistoryForUser(int userId) async {
     try {
-      // Web: usar WebStorage
       if (kIsWeb) {
         return await _webStorage.clearHistoryForUser(userId);
       }
-
-      // Nativo: usar SQLite
       final db = await _localDatabase.database;
       
       await db.delete(
@@ -215,8 +172,6 @@ class PredictionHistoryRepository {
       return false;
     }
   }
-
-  /// Obtém estatísticas do usuário
   Future<UserPredictionStats> getStats(int userId) async {
     final totalPredictions = await countPredictionsForUser(userId);
     final averagePrice = await getAveragePrice(userId);
@@ -229,8 +184,6 @@ class PredictionHistoryRepository {
     );
   }
 }
-
-/// Estatísticas de predições do usuário
 class UserPredictionStats {
   final int totalPredictions;
   final double averagePrice;

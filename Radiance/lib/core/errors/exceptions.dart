@@ -1,4 +1,3 @@
-/// Exceção de servidor
 class ServerException implements Exception {
   final String message;
   final int? statusCode;
@@ -8,8 +7,6 @@ class ServerException implements Exception {
   @override
   String toString() => 'ServerException: $message (Status: $statusCode)';
 }
-
-/// Exceção de conexão
 class ConnectionException implements Exception {
   final String message;
   
@@ -18,8 +15,6 @@ class ConnectionException implements Exception {
   @override
   String toString() => 'ConnectionException: $message';
 }
-
-/// Exceção de cache
 class CacheException implements Exception {
   final String message;
   
@@ -28,8 +23,6 @@ class CacheException implements Exception {
   @override
   String toString() => 'CacheException: $message';
 }
-
-/// Exceção de validação
 class ValidationException implements Exception {
   final String message;
   

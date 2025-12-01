@@ -7,8 +7,6 @@ import '../../domain/repositories/prediction_repository.dart';
 import '../datasources/local/prediction_local_datasource.dart';
 import '../datasources/remote/prediction_remote_datasource.dart';
 import '../models/diamond_prediction_model.dart';
-
-/// Implementação do repositório de predições
 class PredictionRepositoryImpl implements PredictionRepository {
   final PredictionRemoteDataSource remoteDataSource;
   final PredictionLocalDataSource localDataSource;

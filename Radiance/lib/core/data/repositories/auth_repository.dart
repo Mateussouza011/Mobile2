@@ -6,57 +6,39 @@ import '../database/local_database.dart';
 import '../database/web_storage.dart';
 import '../models/user_model.dart';
 import '../../constants/api_constants.dart';
-
-/// Repositório para autenticação e gerenciamento de usuários locais
-/// Suporta tanto plataformas nativas (SQLite) quanto Web (memória)
 class AuthRepository {
   final LocalDatabase _localDatabase;
   final WebStorage _webStorage;
-  
-  /// Usuário atualmente logado (em memória)
   UserModel? _currentUser;
 
   AuthRepository({LocalDatabase? localDatabase})
       : _localDatabase = localDatabase ?? LocalDatabase.instance,
         _webStorage = WebStorage.instance;
-
-  /// Obtém o usuário atualmente logado
   UserModel? get currentUser => kIsWeb ? _webStorage.currentUser : _currentUser;
-
-  /// Verifica se há um usuário logado
   bool get isLoggedIn => currentUser != null;
-
-  /// Hash de senha usando SHA-256
   String _hashPassword(String password) {
     final bytes = utf8.encode(password);
     final digest = sha256.convert(bytes);
     return digest.toString();
   }
-
-  /// Valida o formato do email
   bool _isValidEmail(String email) {
     final emailRegex = RegExp(
       r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
     );
     return emailRegex.hasMatch(email);
   }
-
-  /// Valida a força da senha
   String? _validatePassword(String password) {
     if (password.length < 6) {
       return 'A senha deve ter pelo menos 6 caracteres';
     }
     return null;
   }
-
-  /// Registra um novo usuário
   Future<AuthResult> register({
     required String name,
     required String email,
     required String password,
   }) async {
     try {
-      // Validações
       if (name.trim().isEmpty) {
         return AuthResult.failure('Nome é obrigatório');
       }
@@ -71,8 +53,6 @@ class AuthRepository {
       }
 
       final passwordHash = _hashPassword(password);
-
-      // Web: usar WebStorage
       if (kIsWeb) {
         try {
           final user = await _webStorage.registerUser(
@@ -85,11 +65,7 @@ class AuthRepository {
           return AuthResult.failure(e.toString());
         }
       }
-
-      // Nativo: usar SQLite
       final db = await _localDatabase.database;
-
-      // Verifica se o email já existe
       final existingUsers = await db.query(
         StorageConstants.usersTable,
         where: 'email = ?',
@@ -99,8 +75,6 @@ class AuthRepository {
       if (existingUsers.isNotEmpty) {
         return AuthResult.failure('Este email já está cadastrado');
       }
-
-      // Cria o novo usuário
       final user = UserModel(
         name: name.trim(),
         email: email.toLowerCase().trim(),
@@ -122,8 +96,6 @@ class AuthRepository {
       return AuthResult.failure('Erro ao registrar: ${e.toString()}');
     }
   }
-
-  /// Realiza login do usuário
   Future<AuthResult> login({
     required String email,
     required String password,
@@ -138,8 +110,6 @@ class AuthRepository {
       }
 
       final passwordHash = _hashPassword(password);
-
-      // Web: usar WebStorage
       if (kIsWeb) {
         final user = await _webStorage.login(email.toLowerCase(), passwordHash);
         if (user != null) {
@@ -147,8 +117,6 @@ class AuthRepository {
         }
         return AuthResult.failure('Email ou senha incorretos');
       }
-
-      // Nativo: usar SQLite
       final db = await _localDatabase.database;
 
       final users = await db.query(
@@ -169,8 +137,6 @@ class AuthRepository {
       return AuthResult.failure('Erro ao fazer login: ${e.toString()}');
     }
   }
-
-  /// Realiza logout do usuário
   Future<void> logout() async {
     if (kIsWeb) {
       _webStorage.logout();
@@ -178,16 +144,11 @@ class AuthRepository {
       _currentUser = null;
     }
   }
-
-  /// Busca um usuário pelo email
   Future<UserModel?> findUserByEmail(String email) async {
     try {
-      // Web: usar WebStorage
       if (kIsWeb) {
         return _webStorage.findUserByEmail(email.toLowerCase());
       }
-
-      // Nativo: usar SQLite
       final db = await _localDatabase.database;
       final users = await db.query(
         StorageConstants.usersTable,
@@ -201,8 +162,6 @@ class AuthRepository {
       return null;
     }
   }
-
-  /// Atualiza a senha do usuário
   Future<AuthResult> updatePassword({
     required String email,
     required String newPassword,
@@ -214,8 +173,6 @@ class AuthRepository {
       }
 
       final passwordHash = _hashPassword(newPassword);
-
-      // Web: usar WebStorage
       if (kIsWeb) {
         final success = await _webStorage.updatePassword(
           email.toLowerCase(),
@@ -226,8 +183,6 @@ class AuthRepository {
         }
         return AuthResult.failure('Usuário não encontrado');
       }
-
-      // Nativo: usar SQLite
       final db = await _localDatabase.database;
 
       final count = await db.update(
@@ -249,16 +204,12 @@ class AuthRepository {
       return AuthResult.failure('Erro ao atualizar senha: ${e.toString()}');
     }
   }
-
-  /// Define o usuário atual (para restaurar sessão)
   void setCurrentUser(UserModel? user) {
     if (!kIsWeb) {
       _currentUser = user;
     }
   }
 }
-
-/// Resultado de operações de autenticação
 class AuthResult {
   final bool isSuccess;
   final UserModel? user;

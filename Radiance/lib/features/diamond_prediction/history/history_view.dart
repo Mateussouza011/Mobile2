@@ -5,6 +5,7 @@ import 'history_delegate.dart';
 import '../../../ui/widgets/shadcn/shadcn_card.dart';
 import '../../../ui/widgets/shadcn/shadcn_button.dart';
 import '../../../core/data/models/prediction_model.dart';
+import '../../../ui/widgets/theme_toggle_button.dart';
 
 class HistoryView extends StatefulWidget {
   final HistoryDelegate delegate;
@@ -54,6 +55,7 @@ class _HistoryViewState extends State<HistoryView> {
             ),
             title: const Text('Historico'),
             actions: [
+              const ThemeToggleButton(size: 36),
               IconButton(
                 icon: const Icon(Icons.refresh),
                 onPressed: () => widget.delegate.refresh(),

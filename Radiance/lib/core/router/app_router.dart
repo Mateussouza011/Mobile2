@@ -16,21 +16,16 @@ import '../../features/avatars/avatars_page.dart';
 import '../../features/forms/forms_page.dart';
 import '../../features/navigation/navigation_bars_page.dart';
 import '../../features/alerts/alerts_page.dart';
-// MVVM Architecture
 import '../../presentation/views/diamond_prediction_view.dart';
 import '../../presentation/viewmodels/diamond_prediction_viewmodel.dart';
 import '../di/dependency_injection.dart';
-// Diamond Prediction App - Imports
 import '../../features/diamond_prediction/landing/landing_factory.dart';
 import '../../features/diamond_prediction/home/home_factory.dart';
 import '../../features/diamond_prediction/prediction/prediction_factory.dart';
 import '../../features/diamond_prediction/history/history_factory.dart';
-// Auth - Imports
 import '../../features/auth/login/login_factory.dart';
 import '../../features/auth/register/register_factory.dart';
 import '../../features/auth/forgot_password/forgot_password_factory.dart';
-
-/// Configuração de rotas usando GoRouter
 class AppRouter {
   static final _routerKey = GlobalKey<NavigatorState>();
 
@@ -41,9 +36,6 @@ class AppRouter {
     debugLogDiagnostics: true,
     initialLocation: '/',
     routes: [
-      // ============================================
-      // Diamond Prediction App - Landing Page (Inicial)
-      // ============================================
       GoRoute(
         path: '/',
         name: 'landing',
@@ -52,16 +44,11 @@ class AppRouter {
           transitionsBuilder: _fadeTransition,
         ),
       ),
-      
-      // ============================================
-      // Design System Sample - Rotas do showcase
-      // ============================================
       ShellRoute(
         builder: (context, state, child) {
           return MainLayout(child: child);
         },
         routes: [
-          // Página do Design System
           GoRoute(
             path: '/design-system',
             name: 'design-system',
@@ -69,8 +56,6 @@ class AppRouter {
               child: HomePage(),
             ),
           ),
-          
-          // Seções de componentes
           GoRoute(
             path: '/buttons',
             name: 'buttons',
@@ -133,8 +118,6 @@ class AppRouter {
               transitionsBuilder: _slideTransition,
             ),
           ),
-          
-          // Novos componentes
           GoRoute(
             path: '/badges',
             name: 'badges',
@@ -190,12 +173,6 @@ class AppRouter {
           ),
         ],
       ),
-      
-      // ============================================
-      // Diamond Prediction App - Rotas independentes
-      // ============================================
-      
-      // Login do Diamond App (com banco de dados local)
       GoRoute(
         path: '/diamond-login',
         name: 'diamond-login',
@@ -208,8 +185,6 @@ class AppRouter {
           transitionsBuilder: _fadeTransition,
         ),
       ),
-      
-      // Cadastro de usuário
       GoRoute(
         path: '/auth/register',
         name: 'auth-register',
@@ -218,7 +193,6 @@ class AppRouter {
             builder: (context) {
               return RegisterFactory.create(
                 context: context,
-                // Após cadastro, redireciona para login (não loga automaticamente)
                 onRegisterSuccess: () => context.go('/diamond-login'),
                 onGoToLogin: () => context.go('/diamond-login'),
               );
@@ -227,8 +201,6 @@ class AppRouter {
           transitionsBuilder: _slideTransition,
         ),
       ),
-      
-      // Recuperação de senha
       GoRoute(
         path: '/auth/forgot-password',
         name: 'auth-forgot-password',
@@ -245,8 +217,6 @@ class AppRouter {
           transitionsBuilder: _slideTransition,
         ),
       ),
-      
-      // Home/Dashboard do Diamond App
       GoRoute(
         path: '/diamond-home',
         name: 'diamond-home',
@@ -255,8 +225,6 @@ class AppRouter {
           transitionsBuilder: _fadeTransition,
         ),
       ),
-      
-      // Predição do Diamond App (Legado)
       GoRoute(
         path: '/diamond-prediction',
         name: 'diamond-prediction',
@@ -265,8 +233,6 @@ class AppRouter {
           transitionsBuilder: _slideTransition,
         ),
       ),
-      
-      // Predição MVVM (Nova Arquitetura)
       GoRoute(
         path: '/prediction-mvvm',
         name: 'prediction-mvvm',
@@ -278,8 +244,6 @@ class AppRouter {
           transitionsBuilder: _slideTransition,
         ),
       ),
-      
-      // Histórico do Diamond App
       GoRoute(
         path: '/diamond-history',
         name: 'diamond-history',
@@ -322,8 +286,6 @@ class AppRouter {
       ),
     ),
   );
-
-  /// Transição de slide personalizada
   static Widget _slideTransition(
     BuildContext context,
     Animation<double> animation,
@@ -343,8 +305,6 @@ class AppRouter {
       child: child,
     );
   }
-  
-  /// Transição de fade personalizada
   static Widget _fadeTransition(
     BuildContext context,
     Animation<double> animation,

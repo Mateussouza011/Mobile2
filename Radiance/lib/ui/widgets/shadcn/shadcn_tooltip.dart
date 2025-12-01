@@ -117,8 +117,6 @@ class _ShadcnTooltipState extends State<ShadcnTooltip>
 
     overlayState.insert(_overlayEntry!);
     _animationController.forward();
-
-    // Auto hide after duration
     Future.delayed(widget.showDuration, () {
       _removeTooltip();
     });
@@ -272,7 +270,7 @@ class _TooltipOverlay extends StatelessWidget {
     switch (position) {
       case ShadcnTooltipPosition.top:
         return (
-          targetOffset.dx + targetSize.width / 2 - 50,  // Center horizontally
+          targetOffset.dx + targetSize.width / 2 - 50,  
           targetOffset.dy - 40 - (showArrow ? arrowSize : 0),
         );
       case ShadcnTooltipPosition.bottom:

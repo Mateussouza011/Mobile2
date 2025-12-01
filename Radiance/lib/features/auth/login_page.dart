@@ -30,18 +30,12 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     setState(() => _isLoading = true);
-
-    // Simula uma chamada de API
     await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
 
     setState(() => _isLoading = false);
-
-    // Navega para a home após o login bem-sucedido
     context.go('/home');
-
-    // Mostra mensagem de sucesso
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -87,7 +81,6 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Logo e título
                     Icon(
                       Icons.lock_outline,
                       size: 80,
@@ -112,8 +105,6 @@ class _LoginPageState extends State<LoginPage> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 32),
-
-                    // Campo de email
                     Text(
                       'Email',
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
@@ -154,8 +145,6 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-
-                    // Campo de senha
                     Text(
                       'Senha',
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
@@ -207,8 +196,6 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(height: 24),
-
-                    // Botão de entrar
                     CustomButton(
                       text: 'Entrar',
                       onPressed: _isLoading ? null : _handleLogin,
@@ -218,8 +205,6 @@ class _LoginPageState extends State<LoginPage> {
                       variant: CustomButtonVariant.primary,
                     ),
                     const SizedBox(height: 16),
-
-                    // Link "esqueceu a senha"
                     TextButton(
                       onPressed: () {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -237,8 +222,6 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(height: 32),
-
-                    // Botão secundário - Criar conta
                     CustomButton(
                       text: 'Criar nova conta',
                       onPressed: () {

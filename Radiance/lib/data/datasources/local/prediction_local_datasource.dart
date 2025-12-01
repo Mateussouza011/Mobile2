@@ -2,8 +2,6 @@ import 'package:sqflite/sqflite.dart';
 import '../../../core/errors/exceptions.dart';
 import '../../models/diamond_prediction_model.dart';
 import 'database_helper.dart';
-
-/// Interface do data source local
 abstract class PredictionLocalDataSource {
   Future<void> savePrediction(
     DiamondPredictionModel prediction,
@@ -16,8 +14,6 @@ abstract class PredictionLocalDataSource {
   
   Future<void> deletePrediction(int predictionId);
 }
-
-/// Implementação do data source local
 class PredictionLocalDataSourceImpl implements PredictionLocalDataSource {
   final DatabaseHelper databaseHelper;
 

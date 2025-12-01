@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
-
-/// Orientação do separador
 enum ShadcnSeparatorOrientation {
   horizontal,
   vertical,
 }
-
-/// Variantes do separador
 enum ShadcnSeparatorVariant {
   solid,
   dashed,
   dotted,
   gradient,
 }
-
-/// Componente separador baseado no Shadcn/UI
 class ShadcnSeparator extends StatelessWidget {
   final ShadcnSeparatorOrientation orientation;
   final ShadcnSeparatorVariant variant;
@@ -42,8 +36,6 @@ class ShadcnSeparator extends StatelessWidget {
     this.labelStyle,
     this.labelPadding,
   });
-
-  /// Separador horizontal
   const ShadcnSeparator.horizontal({
     super.key,
     this.variant = ShadcnSeparatorVariant.solid,
@@ -57,8 +49,6 @@ class ShadcnSeparator extends StatelessWidget {
   }) : orientation = ShadcnSeparatorOrientation.horizontal,
        length = null,
        gradientColors = null;
-
-  /// Separador vertical
   const ShadcnSeparator.vertical({
     super.key,
     this.variant = ShadcnSeparatorVariant.solid,
@@ -72,8 +62,6 @@ class ShadcnSeparator extends StatelessWidget {
        label = null,
        labelStyle = null,
        labelPadding = null;
-
-  /// Separador com gradiente
   const ShadcnSeparator.gradient({
     super.key,
     this.orientation = ShadcnSeparatorOrientation.horizontal,
@@ -87,8 +75,6 @@ class ShadcnSeparator extends StatelessWidget {
        label = null,
        labelStyle = null,
        labelPadding = null;
-
-  /// Separador tracejado
   const ShadcnSeparator.dashed({
     super.key,
     this.orientation = ShadcnSeparatorOrientation.horizontal,
@@ -102,8 +88,6 @@ class ShadcnSeparator extends StatelessWidget {
        label = null,
        labelStyle = null,
        labelPadding = null;
-
-  /// Separador pontilhado
   const ShadcnSeparator.dotted({
     super.key,
     this.orientation = ShadcnSeparatorOrientation.horizontal,
@@ -236,8 +220,6 @@ class ShadcnSeparator extends StatelessWidget {
     );
   }
 }
-
-/// Painter para linha tracejada
 class _DashedLinePainter extends CustomPainter {
   final Color color;
   final double strokeWidth;
@@ -287,8 +269,6 @@ class _DashedLinePainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
-
-/// Painter para linha pontilhada
 class _DottedLinePainter extends CustomPainter {
   final Color color;
   final double strokeWidth;
@@ -328,8 +308,6 @@ class _DottedLinePainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
-
-/// Componente de seção com separadores
 class ShadcnSection extends StatelessWidget {
   final String? title;
   final String? subtitle;

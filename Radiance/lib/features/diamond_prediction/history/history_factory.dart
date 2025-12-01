@@ -5,8 +5,6 @@ import 'history_service.dart';
 import 'history_view.dart';
 import '../../../core/data/repositories/auth_repository.dart';
 import '../../../core/data/repositories/prediction_history_repository.dart';
-
-/// Factory para criar a tela de History com todas as dependencias
 class HistoryFactory {
   static Widget create(BuildContext context) {
     final viewModel = HistoryViewModel();

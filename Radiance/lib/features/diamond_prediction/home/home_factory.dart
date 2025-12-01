@@ -5,8 +5,6 @@ import 'home_service.dart';
 import 'home_view.dart';
 import '../../../core/data/repositories/auth_repository.dart';
 import '../../../core/data/repositories/prediction_history_repository.dart';
-
-/// Factory para criar a tela Home com todas as dependencias
 class HomeFactory {
   static Widget create(BuildContext context) {
     final viewModel = HomeViewModel();
@@ -21,8 +19,6 @@ class HomeFactory {
             historyRepository: PredictionHistoryRepository(),
             context: context,
           );
-          
-          // Carregar usuario atual
           viewModel.setCurrentUser(service.getCurrentUser());
           
           return HomeView(delegate: service);

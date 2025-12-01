@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../ui/widgets/shadcn/shadcn_tooltip.dart';
 import '../../ui/widgets/shadcn/shadcn_button.dart';
+import '../../ui/widgets/theme_toggle_button.dart';
 
 class TooltipsPage extends StatelessWidget {
   const TooltipsPage({super.key});
@@ -22,6 +23,7 @@ class TooltipsPage extends StatelessWidget {
         backgroundColor: colorScheme.surface,
         elevation: 0,
         iconTheme: IconThemeData(color: colorScheme.onSurface),
+        actions: const [ThemeToggleButton(size: 36), SizedBox(width: 8)],
       ),
       body: ListView(
         padding: const EdgeInsets.all(24.0),
@@ -37,7 +39,6 @@ class TooltipsPage extends StatelessWidget {
               Center(
                 child: Column(
                   children: [
-                    // Top row
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -72,8 +73,6 @@ class TooltipsPage extends StatelessWidget {
                     ),
                     
                     const SizedBox(height: 24),
-                    
-                    // Middle row
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -110,8 +109,6 @@ class TooltipsPage extends StatelessWidget {
                     ),
                     
                     const SizedBox(height: 24),
-                    
-                    // Bottom row
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [

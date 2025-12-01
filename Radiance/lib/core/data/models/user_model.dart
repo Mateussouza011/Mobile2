@@ -1,4 +1,3 @@
-/// Modelo de usuário para autenticação local
 class UserModel {
   final int? id;
   final String name;
@@ -15,8 +14,6 @@ class UserModel {
     required this.createdAt,
     this.updatedAt,
   });
-
-  /// Cria uma instância de UserModel a partir de um Map (do SQLite)
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       id: map['id'] as int?,
@@ -29,8 +26,6 @@ class UserModel {
           : null,
     );
   }
-
-  /// Converte o UserModel para Map (para inserção no SQLite)
   Map<String, dynamic> toMap() {
     return {
       if (id != null) 'id': id,
@@ -41,8 +36,6 @@ class UserModel {
       'updated_at': updatedAt?.toIso8601String(),
     };
   }
-
-  /// Copia o modelo com novas propriedades
   UserModel copyWith({
     int? id,
     String? name,

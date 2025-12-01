@@ -4,6 +4,7 @@ import 'home_view_model.dart';
 import 'home_delegate.dart';
 import '../../../ui/widgets/shadcn/shadcn_card.dart';
 import '../../../ui/widgets/shadcn/shadcn_alert.dart';
+import '../../../ui/widgets/theme_toggle_button.dart';
 
 class HomeView extends StatefulWidget {
   final HomeDelegate delegate;
@@ -43,6 +44,7 @@ class _HomeViewState extends State<HomeView> {
               ],
             ),
             actions: [
+              const ThemeToggleButton(size: 36),
               IconButton(
                 icon: const Icon(Icons.refresh),
                 onPressed: () => widget.delegate.loadStats(),

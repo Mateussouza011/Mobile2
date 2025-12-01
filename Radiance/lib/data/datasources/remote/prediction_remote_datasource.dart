@@ -2,8 +2,6 @@ import '../../../core/errors/exceptions.dart';
 import '../../../core/network/api_client.dart';
 import '../../models/diamond_prediction_model.dart';
 import 'api_endpoints.dart';
-
-/// Interface do data source remoto
 abstract class PredictionRemoteDataSource {
   Future<DiamondPredictionModel> getPrediction({
     required double carat,
@@ -17,8 +15,6 @@ abstract class PredictionRemoteDataSource {
     required double z,
   });
 }
-
-/// Implementação do data source remoto
 class PredictionRemoteDataSourceImpl implements PredictionRemoteDataSource {
   final ApiClient apiClient;
 

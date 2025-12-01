@@ -13,17 +13,10 @@ import '../../domain/usecases/save_prediction.dart';
 import '../../presentation/viewmodels/diamond_prediction_viewmodel.dart';
 
 final getIt = GetIt.instance;
-
-/// Configura todas as dependências da aplicação
 Future<void> setupDependencyInjection() async {
-  // ============ Core ============
-  
-  // Network
   getIt.registerLazySingleton<NetworkInfo>(
     () => NetworkInfoImpl(),
   );
-
-  // API Client
   getIt.registerLazySingleton<ApiClient>(
     () => ApiClient(
       baseUrl: ApiEndpoints.baseUrl,
@@ -31,29 +24,19 @@ Future<void> setupDependencyInjection() async {
       receiveTimeout: 30000,
     ),
   );
-
-  // Database
   getIt.registerLazySingleton<DatabaseHelper>(
     () => DatabaseHelper.instance,
   );
-
-  // ============ Data Sources ============
-  
-  // Remote
   getIt.registerLazySingleton<PredictionRemoteDataSource>(
     () => PredictionRemoteDataSourceImpl(
       apiClient: getIt<ApiClient>(),
     ),
   );
-
-  // Local
   getIt.registerLazySingleton<PredictionLocalDataSource>(
     () => PredictionLocalDataSourceImpl(
       databaseHelper: getIt<DatabaseHelper>(),
     ),
   );
-
-  // ============ Repositories ============
   
   getIt.registerLazySingleton<PredictionRepository>(
     () => PredictionRepositoryImpl(
@@ -62,8 +45,6 @@ Future<void> setupDependencyInjection() async {
       networkInfo: getIt<NetworkInfo>(),
     ),
   );
-
-  // ============ Use Cases ============
   
   getIt.registerLazySingleton<GetPredictionUseCase>(
     () => GetPredictionUseCase(getIt<PredictionRepository>()),
@@ -76,8 +57,6 @@ Future<void> setupDependencyInjection() async {
   getIt.registerLazySingleton<GetPredictionHistoryUseCase>(
     () => GetPredictionHistoryUseCase(getIt<PredictionRepository>()),
   );
-
-  // ============ ViewModels ============
   
   getIt.registerFactory<DiamondPredictionViewModel>(
     () => DiamondPredictionViewModel(
