@@ -88,7 +88,7 @@ class SubscriptionRepository {
       );
 
       if (maps.isEmpty) {
-        return Left(NotFoundFailure('Assinatura não encontrada para a empresa'));
+        return const Left(NotFoundFailure('Assinatura não encontrada para a empresa'));
       }
 
       return Right(_subscriptionFromMap(maps.first));
@@ -109,7 +109,7 @@ class SubscriptionRepository {
       );
 
       if (maps.isEmpty) {
-        return Left(NotFoundFailure('Assinatura não encontrada'));
+        return const Left(NotFoundFailure('Assinatura não encontrada'));
       }
 
       return Right(_subscriptionFromMap(maps.first));
@@ -171,7 +171,7 @@ class SubscriptionRepository {
       );
 
       if (rowsAffected == 0) {
-        return Left(NotFoundFailure('Assinatura não encontrada'));
+        return const Left(NotFoundFailure('Assinatura não encontrada'));
       }
 
       return const Right(null);
@@ -213,7 +213,7 @@ class SubscriptionRepository {
       );
 
       if (rowsAffected == 0) {
-        return Left(NotFoundFailure('Assinatura não encontrada'));
+        return const Left(NotFoundFailure('Assinatura não encontrada'));
       }
 
       return const Right(null);
@@ -245,7 +245,7 @@ class SubscriptionRepository {
       );
 
       if (rowsAffected == 0) {
-        return Left(NotFoundFailure('Assinatura não encontrada'));
+        return const Left(NotFoundFailure('Assinatura não encontrada'));
       }
 
       return const Right(null);
@@ -270,7 +270,7 @@ class SubscriptionRepository {
       );
 
       if (rowsAffected == 0) {
-        return Left(NotFoundFailure('Assinatura não encontrada'));
+        return const Left(NotFoundFailure('Assinatura não encontrada'));
       }
 
       return const Right(null);

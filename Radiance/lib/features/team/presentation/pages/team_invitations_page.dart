@@ -192,7 +192,7 @@ class _TeamInvitationsPageState extends State<TeamInvitationsPage>
                   backgroundColor: RadianceColors.primary.withOpacity(0.1),
                   child: Text(
                     invitation.email[0].toUpperCase(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: RadianceColors.primary,
                       fontWeight: FontWeight.bold,
                     ),
@@ -322,7 +322,7 @@ class _TeamInvitationsPageState extends State<TeamInvitationsPage>
       child: ListTile(
         leading: CircleAvatar(
           backgroundColor: RadianceColors.success.withOpacity(0.1),
-          child: Icon(Icons.check, color: RadianceColors.success),
+          child: const Icon(Icons.check, color: RadianceColors.success),
         ),
         title: Text(invitation.email),
         subtitle: Column(

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../../domain/entities/admin_audit_log.dart';
-import '../repositories/admin_audit_repository.dart';
+import '../../data/repositories/admin_audit_repository.dart';
 
 class AdminAuditProvider with ChangeNotifier {
   final AdminAuditRepository _repository;

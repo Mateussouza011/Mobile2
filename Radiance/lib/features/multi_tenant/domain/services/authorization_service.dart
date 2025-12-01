@@ -82,7 +82,7 @@ class AuthorizationService {
     CompanyUser? companyUser,
   ) {
     if (companyUser == null) {
-      return Left(
+      return const Left(
         ForbiddenFailure(
           'Você não tem acesso a esta empresa',
         ),
@@ -90,7 +90,7 @@ class AuthorizationService {
     }
 
     if (companyUser.userId != userId || companyUser.companyId != companyId) {
-      return Left(
+      return const Left(
         ForbiddenFailure(
           'Acesso negado',
         ),

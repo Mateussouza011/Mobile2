@@ -165,7 +165,7 @@ class AdminCompanyRepository {
       final db = await _databaseHelper.database;
 
       // Query específica para uma empresa
-      final query = '''
+      const query = '''
         SELECT 
           c.*,
           COUNT(DISTINCT cu.user_id) as total_members,
@@ -189,7 +189,7 @@ class AdminCompanyRepository {
       final results = await db.rawQuery(query, [companyId]);
 
       if (results.isEmpty) {
-        return Left(DatabaseFailure('Empresa não encontrada'));
+        return const Left(DatabaseFailure('Empresa não encontrada'));
       }
 
       final row = results.first;

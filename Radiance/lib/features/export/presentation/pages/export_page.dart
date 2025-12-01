@@ -94,7 +94,7 @@ class _ExportPageState extends State<ExportPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.workspace_premium,
               size: 80,
               color: RadianceColors.warning,
@@ -259,14 +259,14 @@ class _ExportPageState extends State<ExportPage> {
                 border: OutlineInputBorder(),
                 contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               ),
-              items: [
+              items: const [
                 DropdownMenuItem(
                   value: ReportType.predictions,
                   child: Row(
                     children: [
                       Icon(Icons.analytics, size: 20, color: RadianceColors.primary),
-                      const SizedBox(width: 12),
-                      const Text('Relatório de Previsões'),
+                      SizedBox(width: 12),
+                      Text('Relatório de Previsões'),
                     ],
                   ),
                 ),
@@ -275,8 +275,8 @@ class _ExportPageState extends State<ExportPage> {
                   child: Row(
                     children: [
                       Icon(Icons.people, size: 20, color: RadianceColors.info),
-                      const SizedBox(width: 12),
-                      const Text('Atividade da Equipe'),
+                      SizedBox(width: 12),
+                      Text('Atividade da Equipe'),
                     ],
                   ),
                 ),
@@ -285,8 +285,8 @@ class _ExportPageState extends State<ExportPage> {
                   child: Row(
                     children: [
                       Icon(Icons.bar_chart, size: 20, color: RadianceColors.success),
-                      const SizedBox(width: 12),
-                      const Text('Uso de Recursos'),
+                      SizedBox(width: 12),
+                      Text('Uso de Recursos'),
                     ],
                   ),
                 ),
@@ -411,7 +411,7 @@ class _ExportPageState extends State<ExportPage> {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            Icon(Icons.check_circle, color: RadianceColors.success),
+            const Icon(Icons.check_circle, color: RadianceColors.success),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -445,12 +445,12 @@ class _ExportPageState extends State<ExportPage> {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            Icon(Icons.error_outline, color: RadianceColors.error),
+            const Icon(Icons.error_outline, color: RadianceColors.error),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 provider.error!,
-                style: TextStyle(color: RadianceColors.error),
+                style: const TextStyle(color: RadianceColors.error),
               ),
             ),
             IconButton(

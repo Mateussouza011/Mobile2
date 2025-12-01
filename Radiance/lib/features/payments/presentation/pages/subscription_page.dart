@@ -62,13 +62,13 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     if (subscription == null) {
       return Card(
         color: RadianceColors.warning.withOpacity(0.1),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
+        child: const Padding(
+          padding: EdgeInsets.all(16),
           child: Row(
             children: [
               Icon(Icons.info_outline, color: RadianceColors.warning),
-              const SizedBox(width: 12),
-              const Expanded(
+              SizedBox(width: 12),
+              Expanded(
                 child: Text('Você ainda não possui uma assinatura ativa.'),
               ),
             ],
@@ -192,7 +192,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
         const SizedBox(width: 8),
         Text(
           '$label: ',
-          style: TextStyle(color: RadianceColors.textSecondary),
+          style: const TextStyle(color: RadianceColors.textSecondary),
         ),
         Text(
           value,
@@ -387,7 +387,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
               ],
             ),
             if (_selectedInterval == BillingInterval.yearly && tier != SubscriptionTier.free)
-              Text(
+              const Text(
                 'Economia de 17%',
                 style: TextStyle(
                   color: RadianceColors.success,
@@ -400,7 +400,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                   padding: const EdgeInsets.only(bottom: 12),
                   child: Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.check_circle,
                         color: RadianceColors.success,
                         size: 20,
@@ -660,8 +660,8 @@ class _ConfirmPlanDialogState extends State<_ConfirmPlanDialog> {
       (subscription) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Assinatura criada com sucesso!'),
+          const SnackBar(
+            content: Text('Assinatura criada com sucesso!'),
             backgroundColor: RadianceColors.success,
           ),
         );

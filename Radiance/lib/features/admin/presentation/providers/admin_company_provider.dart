@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../../domain/entities/admin_company_stats.dart';
 import '../../data/repositories/admin_company_repository.dart';
 import '../../../../core/error/failures.dart';
+import '../../../multi_tenant/domain/entities/subscription.dart';
 
 /// Provider para administração de empresas
 class AdminCompanyProvider extends ChangeNotifier {

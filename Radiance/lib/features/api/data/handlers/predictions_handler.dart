@@ -27,7 +27,7 @@ class PredictionsHandler {
     try {
       // Verificar permissão
       if (!apiKey.permissions.contains('read:predictions')) {
-        return Left(UnauthorizedFailure('Missing permission: read:predictions'));
+        return const Left(UnauthorizedFailure('Missing permission: read:predictions'));
       }
 
       // Validar paginação
@@ -86,7 +86,7 @@ class PredictionsHandler {
     try {
       // Verificar permissão
       if (!apiKey.permissions.contains('write:predictions')) {
-        return Left(UnauthorizedFailure('Missing permission: write:predictions'));
+        return const Left(UnauthorizedFailure('Missing permission: write:predictions'));
       }
 
       // Validar campos obrigatórios
@@ -143,7 +143,7 @@ class PredictionsHandler {
     try {
       // Verificar permissão
       if (!apiKey.permissions.contains('read:predictions')) {
-        return Left(UnauthorizedFailure('Missing permission: read:predictions'));
+        return const Left(UnauthorizedFailure('Missing permission: read:predictions'));
       }
 
       // Buscar todas as previsões da empresa e filtrar por ID
@@ -159,7 +159,7 @@ class PredictionsHandler {
 
       // Verificar se pertence à empresa
       if (prediction.companyId != apiKey.companyId) {
-        return Left(UnauthorizedFailure('Access denied to this prediction'));
+        return const Left(UnauthorizedFailure('Access denied to this prediction'));
       }
 
       return Right(

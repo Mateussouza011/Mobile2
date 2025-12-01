@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import '../../../../core/theme/radiance_colors.dart';
 import '../providers/admin_audit_provider.dart';
 import '../../domain/entities/admin_audit_log.dart';
 
@@ -155,32 +156,32 @@ class _AdminAuditLogsPageState extends State<AdminAuditLogsPage> {
     
     return Container(
       padding: const EdgeInsets.all(16.0),
-      color: Theme.of(context).colorScheme.surfaceVariant,
+      color: Theme.of(context).colorScheme.surfaceContainerHighest,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildStatChip(
             'Total',
             stats.totalLogs.toString(),
-            Colors.blue,
+            RadianceColors.primary,
             Icons.list,
           ),
           _buildStatChip(
             'Info',
             stats.infoCount.toString(),
-            Colors.grey,
+            RadianceColors.iconMuted,
             Icons.info_outline,
           ),
           _buildStatChip(
             'Avisos',
             stats.warningCount.toString(),
-            Colors.orange,
+            RadianceColors.warning,
             Icons.warning_amber,
           ),
           _buildStatChip(
             'Críticos',
             stats.criticalCount.toString(),
-            Colors.red,
+            RadianceColors.error,
             Icons.error_outline,
           ),
         ],
@@ -219,7 +220,7 @@ class _AdminAuditLogsPageState extends State<AdminAuditLogsPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, size: 48, color: Colors.red),
+            const Icon(Icons.error_outline, size: 48, color: RadianceColors.error),
             const SizedBox(height: 16),
             Text(provider.error!),
             const SizedBox(height: 16),
@@ -237,7 +238,7 @@ class _AdminAuditLogsPageState extends State<AdminAuditLogsPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.history, size: 64, color: Colors.grey[400]),
+            Icon(Icons.history, size: 64, color: RadianceColors.iconMuted),
             const SizedBox(height: 16),
             Text(
               'Nenhum log encontrado',
@@ -306,14 +307,14 @@ class _AdminAuditLogsPageState extends State<AdminAuditLogsPage> {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  Icon(Icons.person, size: 14, color: Colors.grey[600]),
+                  Icon(Icons.person, size: 14, color: RadianceColors.iconMuted),
                   const SizedBox(width: 4),
                   Text(
                     log.userName ?? 'Sistema',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const SizedBox(width: 16),
-                  Icon(Icons.schedule, size: 14, color: Colors.grey[600]),
+                  Icon(Icons.schedule, size: 14, color: RadianceColors.iconMuted),
                   const SizedBox(width: 4),
                   Text(
                     _formatDateTime(log.createdAt),
@@ -325,7 +326,7 @@ class _AdminAuditLogsPageState extends State<AdminAuditLogsPage> {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Icon(Icons.target, size: 14, color: Colors.grey[600]),
+                    Icon(Icons.gps_fixed, size: 14, color: RadianceColors.iconMuted),
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
@@ -342,7 +343,7 @@ class _AdminAuditLogsPageState extends State<AdminAuditLogsPage> {
                 Text(
                   log.formattedMetadata,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.grey[600],
+                    color: RadianceColors.textSecondary,
                     fontStyle: FontStyle.italic,
                   ),
                   maxLines: 2,
@@ -362,15 +363,15 @@ class _AdminAuditLogsPageState extends State<AdminAuditLogsPage> {
     
     switch (severity) {
       case AuditLogSeverity.info:
-        color = Colors.blue;
+        color = RadianceColors.primary;
         label = 'INFO';
         break;
       case AuditLogSeverity.warning:
-        color = Colors.orange;
+        color = RadianceColors.warning;
         label = 'AVISO';
         break;
       case AuditLogSeverity.critical:
-        color = Colors.red;
+        color = RadianceColors.error;
         label = 'CRÍTICO';
         break;
     }
@@ -450,7 +451,7 @@ class _AdminAuditLogsPageState extends State<AdminAuditLogsPage> {
                 Container(
                   padding: const EdgeInsets.all(12.0),
                   decoration: BoxDecoration(
-                    color: Colors.grey[100],
+                    color: RadianceColors.cardBackground,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Column(
@@ -690,7 +691,7 @@ class _AdminAuditLogsPageState extends State<AdminAuditLogsPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Logs exportados: $fileName'),
-            backgroundColor: Colors.green,
+            backgroundColor: RadianceColors.success,
             action: SnackBarAction(
               label: 'OK',
               textColor: Colors.white,
@@ -701,9 +702,9 @@ class _AdminAuditLogsPageState extends State<AdminAuditLogsPage> {
       } else {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Erro ao exportar logs'),
-            backgroundColor: Colors.red,
+          SnackBar(
+            content: const Text('Erro ao exportar logs'),
+            backgroundColor: RadianceColors.error,
           ),
         );
       }
@@ -713,7 +714,7 @@ class _AdminAuditLogsPageState extends State<AdminAuditLogsPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Erro: $e'),
-          backgroundColor: Colors.red,
+          backgroundColor: RadianceColors.error,
         ),
       );
     }
@@ -722,11 +723,11 @@ class _AdminAuditLogsPageState extends State<AdminAuditLogsPage> {
   Color _getSeverityColor(AuditLogSeverity severity) {
     switch (severity) {
       case AuditLogSeverity.info:
-        return Colors.blue;
+        return RadianceColors.primary;
       case AuditLogSeverity.warning:
-        return Colors.orange;
+        return RadianceColors.warning;
       case AuditLogSeverity.critical:
-        return Colors.red;
+        return RadianceColors.error;
     }
   }
 

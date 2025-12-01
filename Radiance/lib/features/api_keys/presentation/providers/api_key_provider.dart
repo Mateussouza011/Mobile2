@@ -75,12 +75,12 @@ class ApiKeyProvider extends ChangeNotifier {
   }) async {
     final company = _tenantProvider.currentCompany;
     if (company == null) {
-      return Left(ValidationFailure('Nenhuma empresa selecionada'));
+      return const Left(ValidationFailure('Nenhuma empresa selecionada'));
     }
 
     // Verificar limites do plano
     if (!_tenantProvider.hasFeatureAccess('api_access')) {
-      return Left(SubscriptionFailure('Recurso disponível apenas no plano Enterprise'));
+      return const Left(SubscriptionFailure('Recurso disponível apenas no plano Enterprise'));
     }
 
     _setLoading(true);

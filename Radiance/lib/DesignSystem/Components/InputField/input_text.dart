@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'input_text_view_model.dart';
+import '../../../core/theme/radiance_colors.dart';
 
 class StyledInputField extends StatefulWidget {
   final InputTextViewModel viewModel;
@@ -55,28 +56,28 @@ class StyledInputFieldState extends State<StyledInputField> {
               onPressed: togglePasswordVisibility,
             )
           : widget.viewModel.suffixIcon,
-      fillColor: widget.viewModel.isEnabled ? Colors.white : Colors.grey.shade400,
+      fillColor: widget.viewModel.isEnabled ? RadianceColors.background : RadianceColors.surfaceVariant,
       labelText: widget.viewModel.placeholder.isNotEmpty ? widget.viewModel.placeholder : null,
-      labelStyle: const TextStyle(color: Colors.black),
+      labelStyle: TextStyle(color: RadianceColors.textSecondary),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(4),
-        borderSide: const BorderSide(color: Colors.black),
+        borderRadius: BorderRadius.circular(RadianceColors.inputRadius),
+        borderSide: BorderSide(color: RadianceColors.border),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(4),
-        borderSide: const BorderSide(color: Colors.red),
+        borderRadius: BorderRadius.circular(RadianceColors.inputRadius),
+        borderSide: BorderSide(color: RadianceColors.error),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(4),
-        borderSide: const BorderSide(color: Colors.black),
+        borderRadius: BorderRadius.circular(RadianceColors.inputRadius),
+        borderSide: BorderSide(color: RadianceColors.primary),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(4),
-        borderSide: const BorderSide(color: Colors.black),
+        borderRadius: BorderRadius.circular(RadianceColors.inputRadius),
+        borderSide: BorderSide(color: RadianceColors.border),
       ),
       disabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(4),
-        borderSide: const BorderSide(color: Colors.grey),
+        borderRadius: BorderRadius.circular(RadianceColors.inputRadius),
+        borderSide: BorderSide(color: RadianceColors.textDisabled),
       ),
       errorText: errorMsg,
     );
@@ -85,7 +86,7 @@ class StyledInputFieldState extends State<StyledInputField> {
       controller: widget.viewModel.controller,
       obscureText: obscureText,
       decoration: decoration,
-      style: const TextStyle(color: Colors.black),
+      style: TextStyle(color: RadianceColors.textPrimary),
       enabled: widget.viewModel.isEnabled,
     );
   }

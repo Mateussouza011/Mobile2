@@ -180,4 +180,70 @@ class RadianceColors {
         return textSecondary;
     }
   }
+
+  // ============================================
+  // UI SEMANTIC COLORS (for consistent styling)
+  // ============================================
+  
+  /// Cor de ícone desabilitado/muted
+  static const Color iconMuted = textSecondary;
+  static const Color darkIconMuted = darkTextSecondary;
+  
+  /// Cor de fundo de hover em listas
+  static const Color listHover = surfaceVariant;
+  static const Color darkListHover = darkSurfaceVariant;
+  
+  /// Cor de fundo de item selecionado
+  static const Color selectedBackground = Color(0xFFEFF6FF); // Blue 50
+  static const Color darkSelectedBackground = Color(0xFF1E3A5F); // Blue 900/20
+  
+  /// Cor de badge/chip neutro
+  static const Color chipBackground = surfaceVariant;
+  static const Color darkChipBackground = darkSurfaceVariant;
+  
+  /// Destructive action color
+  static const Color destructive = Color(0xFFEF4444); // Red 500
+  static const Color destructiveForeground = Color(0xFFFFFFFF);
+  
+  /// Card background color
+  static const Color cardBackground = surfaceVariant;
+  static const Color darkCardBackground = darkSurfaceVariant;
+  
+  /// Input border color
+  static const Color inputBorder = border;
+  static const Color darkInputBorder = darkBorder;
+
+  // ============================================
+  // SHADCN-STYLE CONSTANTS
+  // ============================================
+  
+  /// Border radius padrão para botões
+  static const double buttonRadius = 6.0;
+  
+  /// Border radius padrão para cards
+  static const double cardRadius = 12.0;
+  
+  /// Border radius padrão para inputs
+  static const double inputRadius = 6.0;
+  
+  /// Border radius para chips/badges
+  static const double chipRadius = 9999.0; // Full rounded
+  
+  /// Sombra sutil para cards (shadcn style)
+  static List<BoxShadow> get cardShadow => [
+    BoxShadow(
+      color: Colors.black.withOpacity(0.04),
+      blurRadius: 6,
+      offset: const Offset(0, 2),
+    ),
+  ];
+  
+  /// Sombra para dropdowns/popovers
+  static List<BoxShadow> get dropdownShadow => [
+    BoxShadow(
+      color: Colors.black.withOpacity(0.08),
+      blurRadius: 12,
+      offset: const Offset(0, 4),
+    ),
+  ];
 }

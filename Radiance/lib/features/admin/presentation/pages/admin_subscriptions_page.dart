@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import '../../../../core/theme/radiance_colors.dart';
 import '../providers/admin_subscription_provider.dart';
 import '../../../multi_tenant/domain/entities/subscription.dart';
 import '../../domain/entities/admin_subscription_stats.dart';
 
 class AdminSubscriptionsPage extends StatefulWidget {
-  const AdminSubscriptionsPage({Key? key}) : super(key: key);
+  const AdminSubscriptionsPage({super.key});
 
   @override
   State<AdminSubscriptionsPage> createState() => _AdminSubscriptionsPageState();
@@ -100,28 +101,28 @@ class _AdminSubscriptionsPageState extends State<AdminSubscriptionsPage> {
                   'Total',
                   provider.totalSubscriptions.toString(),
                   Icons.subscriptions,
-                  Colors.blue,
+                  RadianceColors.primary,
                 ),
                 const SizedBox(width: 8),
                 _buildStatCard(
                   'Ativas',
                   provider.activeSubscriptions.toString(),
                   Icons.check_circle,
-                  Colors.green,
+                  RadianceColors.success,
                 ),
                 const SizedBox(width: 8),
                 _buildStatCard(
                   'Vencidas',
                   provider.overdueSubscriptions.toString(),
                   Icons.warning,
-                  Colors.orange,
+                  RadianceColors.warning,
                 ),
                 const SizedBox(width: 8),
                 _buildStatCard(
                   'MRR',
                   'R\$ ${provider.totalMRR.toStringAsFixed(2)}',
                   Icons.attach_money,
-                  Colors.purple,
+                  RadianceColors.secondary,
                 ),
               ],
             ),
@@ -145,7 +146,7 @@ class _AdminSubscriptionsPageState extends State<AdminSubscriptionsPage> {
             ),
             Text(
               label,
-              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+              style: TextStyle(fontSize: 12, color: RadianceColors.textSecondary),
             ),
           ],
         ),
@@ -165,7 +166,7 @@ class _AdminSubscriptionsPageState extends State<AdminSubscriptionsPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                const Icon(Icons.error_outline, size: 64, color: RadianceColors.error),
                 const SizedBox(height: 16),
                 Text(provider.error!),
                 const SizedBox(height: 16),
@@ -183,11 +184,11 @@ class _AdminSubscriptionsPageState extends State<AdminSubscriptionsPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.subscriptions_outlined, size: 64, color: Colors.grey[400]),
+                Icon(Icons.subscriptions_outlined, size: 64, color: RadianceColors.iconMuted),
                 const SizedBox(height: 16),
                 Text(
                   'Nenhuma assinatura encontrada',
-                  style: TextStyle(color: Colors.grey[600]),
+                  style: TextStyle(color: RadianceColors.textSecondary),
                 ),
               ],
             ),
@@ -313,17 +314,17 @@ class _AdminSubscriptionsPageState extends State<AdminSubscriptionsPage> {
                   _buildInfoChip(
                     Icons.attach_money,
                     'MRR: R\$ ${stats.monthlyRecurringRevenue.toStringAsFixed(2)}',
-                    Colors.green,
+                    RadianceColors.success,
                   ),
                   _buildInfoChip(
                     Icons.monetization_on,
                     'Total: R\$ ${stats.totalRevenue.toStringAsFixed(2)}',
-                    Colors.blue,
+                    RadianceColors.primary,
                   ),
                   _buildInfoChip(
                     Icons.payment,
                     '${stats.successfulPayments} pagamentos',
-                    Colors.purple,
+                    RadianceColors.secondary,
                   ),
                 ],
               ),
@@ -350,7 +351,7 @@ class _AdminSubscriptionsPageState extends State<AdminSubscriptionsPage> {
                     stats.renewalStatus,
                     style: TextStyle(
                       fontSize: 12,
-                      color: stats.needsAttention ? Colors.orange : Colors.grey[600],
+                      color: stats.needsAttention ? RadianceColors.warning : RadianceColors.textSecondary,
                     ),
                   ),
                 ],
@@ -549,7 +550,7 @@ class _AdminSubscriptionsPageState extends State<AdminSubscriptionsPage> {
                               ? 'Plano atualizado com sucesso'
                               : 'Erro ao atualizar plano',
                         ),
-                        backgroundColor: success ? Colors.green : Colors.red,
+                        backgroundColor: success ? RadianceColors.success : RadianceColors.error,
                       ),
                     );
                   }
@@ -595,12 +596,12 @@ class _AdminSubscriptionsPageState extends State<AdminSubscriptionsPage> {
                           ? 'Assinatura cancelada'
                           : 'Erro ao cancelar',
                     ),
-                    backgroundColor: success ? Colors.green : Colors.red,
+                    backgroundColor: success ? RadianceColors.success : RadianceColors.error,
                   ),
                 );
               }
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            style: ElevatedButton.styleFrom(backgroundColor: RadianceColors.error),
             child: const Text('Cancelar Assinatura'),
           ),
         ],
@@ -638,12 +639,12 @@ class _AdminSubscriptionsPageState extends State<AdminSubscriptionsPage> {
                     content: Text(
                       success ? 'Assinatura reativada' : 'Erro ao reativar',
                     ),
-                    backgroundColor: success ? Colors.green : Colors.red,
+                    backgroundColor: success ? RadianceColors.success : RadianceColors.error,
                   ),
                 );
               }
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            style: ElevatedButton.styleFrom(backgroundColor: RadianceColors.success),
             child: const Text('Reativar'),
           ),
         ],
@@ -681,12 +682,12 @@ class _AdminSubscriptionsPageState extends State<AdminSubscriptionsPage> {
                     content: Text(
                       success ? 'Assinatura suspensa' : 'Erro ao suspender',
                     ),
-                    backgroundColor: success ? Colors.green : Colors.red,
+                    backgroundColor: success ? RadianceColors.success : RadianceColors.error,
                   ),
                 );
               }
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+            style: ElevatedButton.styleFrom(backgroundColor: RadianceColors.warning),
             child: const Text('Suspender'),
           ),
         ],
@@ -726,12 +727,12 @@ class _AdminSubscriptionsPageState extends State<AdminSubscriptionsPage> {
                           ? 'Reembolso processado'
                           : 'Erro ao processar reembolso',
                     ),
-                    backgroundColor: success ? Colors.green : Colors.red,
+                    backgroundColor: success ? RadianceColors.success : RadianceColors.error,
                   ),
                 );
               }
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            style: ElevatedButton.styleFrom(backgroundColor: RadianceColors.error),
             child: const Text('Processar Reembolso'),
           ),
         ],

@@ -43,7 +43,7 @@ void main() {
 
   group('AdminSubscriptionRepository - getAllSubscriptions', () {
     test('should return all subscriptions without filters', () async {
-      final filters = SubscriptionFilters();
+      const filters = SubscriptionFilters();
       
       final result = await repository.getAllSubscriptions(filters);
       
@@ -60,7 +60,7 @@ void main() {
     });
 
     test('should filter subscriptions by company search', () async {
-      final filters = SubscriptionFilters(searchQuery: 'Diamond');
+      const filters = SubscriptionFilters(searchQuery: 'Diamond');
       
       final result = await repository.getAllSubscriptions(filters);
       
@@ -75,7 +75,7 @@ void main() {
     });
 
     test('should filter subscriptions by tier', () async {
-      final filters = SubscriptionFilters(tier: SubscriptionTier.pro);
+      const filters = SubscriptionFilters(tier: SubscriptionTier.pro);
       
       final result = await repository.getAllSubscriptions(filters);
       
@@ -90,7 +90,7 @@ void main() {
     });
 
     test('should filter subscriptions by status', () async {
-      final filters = SubscriptionFilters(status: SubscriptionStatus.active);
+      const filters = SubscriptionFilters(status: SubscriptionStatus.active);
       
       final result = await repository.getAllSubscriptions(filters);
       
@@ -122,7 +122,7 @@ void main() {
     });
 
     test('should filter overdue subscriptions', () async {
-      final filters = SubscriptionFilters(isOverdue: true);
+      const filters = SubscriptionFilters(isOverdue: true);
       
       final result = await repository.getAllSubscriptions(filters);
       
@@ -136,7 +136,7 @@ void main() {
     });
 
     test('should sort by company name ascending', () async {
-      final filters = SubscriptionFilters(
+      const filters = SubscriptionFilters(
         sortBy: SubscriptionSortBy.companyName,
         ascending: true,
       );
@@ -154,7 +154,7 @@ void main() {
     });
 
     test('should sort by tier descending', () async {
-      final filters = SubscriptionFilters(
+      const filters = SubscriptionFilters(
         sortBy: SubscriptionSortBy.tier,
         ascending: false,
       );
@@ -171,7 +171,7 @@ void main() {
     });
 
     test('should combine multiple filters', () async {
-      final filters = SubscriptionFilters(
+      const filters = SubscriptionFilters(
         status: SubscriptionStatus.active,
         tier: SubscriptionTier.pro,
       );
@@ -190,7 +190,7 @@ void main() {
     });
 
     test('should return empty list when no matches', () async {
-      final filters = SubscriptionFilters(
+      const filters = SubscriptionFilters(
         searchQuery: 'NonExistentCompany',
       );
       
@@ -206,7 +206,7 @@ void main() {
     });
 
     test('should include payment history in stats', () async {
-      final filters = SubscriptionFilters();
+      const filters = SubscriptionFilters();
       
       final result = await repository.getAllSubscriptions(filters);
       
@@ -224,7 +224,7 @@ void main() {
     });
 
     test('should calculate MRR correctly', () async {
-      final filters = SubscriptionFilters();
+      const filters = SubscriptionFilters();
       
       final result = await repository.getAllSubscriptions(filters);
       
@@ -243,7 +243,7 @@ void main() {
     test('should handle database errors gracefully', () async {
       await testDatabase.close();
       
-      final filters = SubscriptionFilters();
+      const filters = SubscriptionFilters();
       final result = await repository.getAllSubscriptions(filters);
       
       expect(result.isLeft(), true);

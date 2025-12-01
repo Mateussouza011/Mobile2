@@ -356,8 +356,8 @@ class AppRouter {
       GoRoute(
         path: '/api-docs',
         name: 'api-docs',
-        pageBuilder: (context, state) => CustomTransitionPage(
-          child: const ApiDocumentationPage(),
+        pageBuilder: (context, state) => const CustomTransitionPage(
+          child: ApiDocumentationPage(),
           transitionsBuilder: _slideTransition,
         ),
       ),

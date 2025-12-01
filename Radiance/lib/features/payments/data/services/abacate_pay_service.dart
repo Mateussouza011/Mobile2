@@ -64,7 +64,7 @@ class AbacatePayService {
         return Right(_customerFromJson(response.data));
       }
 
-      return Left(NotFoundFailure('Cliente não encontrado'));
+      return const Left(NotFoundFailure('Cliente não encontrado'));
     } on DioException catch (e) {
       return Left(_handleDioError(e));
     } catch (e) {
@@ -93,7 +93,7 @@ class AbacatePayService {
         return Right(_paymentMethodFromJson(response.data));
       }
 
-      return Left(ServerFailure('Erro ao adicionar método de pagamento'));
+      return const Left(ServerFailure('Erro ao adicionar método de pagamento'));
     } on DioException catch (e) {
       return Left(_handleDioError(e));
     } catch (e) {
@@ -115,7 +115,7 @@ class AbacatePayService {
         return Right(methods);
       }
 
-      return Left(ServerFailure('Erro ao listar métodos de pagamento'));
+      return const Left(ServerFailure('Erro ao listar métodos de pagamento'));
     } on DioException catch (e) {
       return Left(_handleDioError(e));
     } catch (e) {
@@ -132,7 +132,7 @@ class AbacatePayService {
         return const Right(null);
       }
 
-      return Left(ServerFailure('Erro ao remover método de pagamento'));
+      return const Left(ServerFailure('Erro ao remover método de pagamento'));
     } on DioException catch (e) {
       return Left(_handleDioError(e));
     } catch (e) {
@@ -177,7 +177,7 @@ class AbacatePayService {
         return Right(response.data['id'] as String);
       }
 
-      return Left(ServerFailure('Erro ao criar assinatura'));
+      return const Left(ServerFailure('Erro ao criar assinatura'));
     } on DioException catch (e) {
       return Left(_handleDioError(e));
     } catch (e) {
@@ -223,7 +223,7 @@ class AbacatePayService {
         return const Right(null);
       }
 
-      return Left(ServerFailure('Erro ao atualizar assinatura'));
+      return const Left(ServerFailure('Erro ao atualizar assinatura'));
     } on DioException catch (e) {
       return Left(_handleDioError(e));
     } catch (e) {
@@ -246,7 +246,7 @@ class AbacatePayService {
         return const Right(null);
       }
 
-      return Left(ServerFailure('Erro ao cancelar assinatura'));
+      return const Left(ServerFailure('Erro ao cancelar assinatura'));
     } on DioException catch (e) {
       return Left(_handleDioError(e));
     } catch (e) {
@@ -263,7 +263,7 @@ class AbacatePayService {
         return const Right(null);
       }
 
-      return Left(ServerFailure('Erro ao pausar assinatura'));
+      return const Left(ServerFailure('Erro ao pausar assinatura'));
     } on DioException catch (e) {
       return Left(_handleDioError(e));
     } catch (e) {
@@ -280,7 +280,7 @@ class AbacatePayService {
         return const Right(null);
       }
 
-      return Left(ServerFailure('Erro ao retomar assinatura'));
+      return const Left(ServerFailure('Erro ao retomar assinatura'));
     } on DioException catch (e) {
       return Left(_handleDioError(e));
     } catch (e) {
@@ -313,7 +313,7 @@ class AbacatePayService {
         return Right(_paymentIntentFromJson(response.data));
       }
 
-      return Left(ServerFailure('Erro ao criar pagamento'));
+      return const Left(ServerFailure('Erro ao criar pagamento'));
     } on DioException catch (e) {
       return Left(_handleDioError(e));
     } catch (e) {
@@ -334,11 +334,11 @@ class AbacatePayService {
         case 400:
           return ValidationFailure(message ?? 'Dados inválidos');
         case 401:
-          return UnauthorizedFailure('Credenciais inválidas');
+          return const UnauthorizedFailure('Credenciais inválidas');
         case 404:
           return NotFoundFailure(message ?? 'Recurso não encontrado');
         case 429:
-          return ServerFailure('Muitas requisições. Tente novamente mais tarde.');
+          return const ServerFailure('Muitas requisições. Tente novamente mais tarde.');
         default:
           return ServerFailure(message ?? 'Erro no servidor');
       }
@@ -346,7 +346,7 @@ class AbacatePayService {
 
     if (e.type == DioExceptionType.connectionTimeout ||
         e.type == DioExceptionType.receiveTimeout) {
-      return NetworkFailure('Timeout na conexão');
+      return const NetworkFailure('Timeout na conexão');
     }
 
     return NetworkFailure('Erro de conexão: ${e.message}');

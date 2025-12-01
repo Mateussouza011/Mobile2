@@ -410,15 +410,15 @@ class _SelectDropdownState<T> extends State<_SelectDropdown<T>> {
                             prefixIcon: const Icon(Icons.search, size: 16),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(color: AppColors.border),
+                              borderSide: BorderSide(color: AppColors.border),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(color: AppColors.border),
+                              borderSide: BorderSide(color: AppColors.border),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(color: AppColors.ring),
+                              borderSide: BorderSide(color: AppColors.ring),
                             ),
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 8,
@@ -429,7 +429,7 @@ class _SelectDropdownState<T> extends State<_SelectDropdown<T>> {
                           style: theme.textTheme.bodySmall,
                         ),
                       ),
-                      const Divider(height: 1, color: AppColors.border),
+                      Divider(height: 1, color: AppColors.border),
                     ],
 
                     // Options List

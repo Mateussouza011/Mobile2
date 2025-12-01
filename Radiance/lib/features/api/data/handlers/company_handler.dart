@@ -19,7 +19,7 @@ class CompanyHandler {
     try {
       // Verificar permissão
       if (!apiKey.permissions.contains('read:company')) {
-        return Left(UnauthorizedFailure('Missing permission: read:company'));
+        return const Left(UnauthorizedFailure('Missing permission: read:company'));
       }
 
       // Buscar empresa
@@ -54,7 +54,7 @@ class CompanyHandler {
     try {
       // Verificar permissão
       if (!apiKey.permissions.contains('read:analytics')) {
-        return Left(UnauthorizedFailure('Missing permission: read:analytics'));
+        return const Left(UnauthorizedFailure('Missing permission: read:analytics'));
       }
 
       // Buscar métricas de uso (temporário: retornar dados mockados)
@@ -88,7 +88,7 @@ class CompanyHandler {
     try {
       // Verificar permissão
       if (!apiKey.permissions.contains('read:users')) {
-        return Left(UnauthorizedFailure('Missing permission: read:users'));
+        return const Left(UnauthorizedFailure('Missing permission: read:users'));
       }
 
       // Buscar membros

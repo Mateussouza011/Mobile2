@@ -12,55 +12,55 @@ abstract class Failure extends Equatable {
 
 /// Falha no servidor/API
 class ServerFailure extends Failure {
-  const ServerFailure(String message) : super(message);
+  const ServerFailure(super.message);
 }
 
 /// Falha no cache/banco de dados local
 class CacheFailure extends Failure {
-  const CacheFailure(String message) : super(message);
+  const CacheFailure(super.message);
 }
 
 /// Falha de banco de dados
 class DatabaseFailure extends Failure {
-  const DatabaseFailure(String message) : super(message);
+  const DatabaseFailure(super.message);
 }
 
 /// Falha de rede/conectividade
 class NetworkFailure extends Failure {
-  const NetworkFailure(String message) : super(message);
+  const NetworkFailure(super.message);
 }
 
 /// Falha de validação
 class ValidationFailure extends Failure {
-  const ValidationFailure(String message) : super(message);
+  const ValidationFailure(super.message);
 }
 
 /// Recurso não encontrado
 class NotFoundFailure extends Failure {
-  const NotFoundFailure(String message) : super(message);
+  const NotFoundFailure(super.message);
 }
 
 /// Não autorizado
 class UnauthorizedFailure extends Failure {
-  const UnauthorizedFailure(String message) : super(message);
+  const UnauthorizedFailure(super.message);
 }
 
 /// Acesso negado/Permissão insuficiente
 class ForbiddenFailure extends Failure {
-  const ForbiddenFailure(String message) : super(message);
+  const ForbiddenFailure(super.message);
 }
 
 /// Falha de autenticação
 class AuthenticationFailure extends Failure {
-  const AuthenticationFailure(String message) : super(message);
+  const AuthenticationFailure(super.message);
 }
 
 /// Limite de uso excedido
 class UsageLimitFailure extends Failure {
-  const UsageLimitFailure(String message) : super(message);
+  const UsageLimitFailure(super.message);
 }
 
 /// Assinatura inválida ou expirada
 class SubscriptionFailure extends Failure {
-  const SubscriptionFailure(String message) : super(message);
+  const SubscriptionFailure(super.message);
 }

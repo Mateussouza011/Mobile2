@@ -47,7 +47,7 @@ class ApiDocumentationPage extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.api, size: 32, color: RadianceColors.primary),
+                const Icon(Icons.api, size: 32, color: RadianceColors.primary),
                 const SizedBox(width: 12),
                 Text(
                   'Radiance REST API v1',
@@ -485,7 +485,7 @@ class ApiDocumentationPage extends StatelessWidget {
             ),
             child: Text(
               code,
-              style: TextStyle(
+              style: const TextStyle(
                 color: RadianceColors.error,
                 fontWeight: FontWeight.bold,
                 fontSize: 12,

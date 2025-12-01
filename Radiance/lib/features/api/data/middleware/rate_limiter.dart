@@ -131,5 +131,5 @@ class RequestLog {
 class RateLimitFailure extends Failure {
   final DateTime resetAt;
 
-  RateLimitFailure(String message, {required this.resetAt}) : super(message);
+  const RateLimitFailure(super.message, {required this.resetAt});
 }

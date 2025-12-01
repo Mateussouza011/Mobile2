@@ -37,7 +37,7 @@ class InvitationRepository {
       );
 
       if (existing.isNotEmpty) {
-        return Left(
+        return const Left(
           DatabaseFailure('Já existe um convite pendente para este email'),
         );
       }
@@ -50,7 +50,7 @@ class InvitationRepository {
       );
 
       if (member.isNotEmpty) {
-        return Left(
+        return const Left(
           DatabaseFailure('Este email já é membro da empresa'),
         );
       }
@@ -131,7 +131,7 @@ class InvitationRepository {
       );
 
       if (results.isEmpty) {
-        return Left(DatabaseFailure('Convite não encontrado'));
+        return const Left(DatabaseFailure('Convite não encontrado'));
       }
 
       final invitation = _mapToInvitation(results.first);
@@ -139,7 +139,7 @@ class InvitationRepository {
       if (invitation.isExpired) {
         // Atualizar status para expirado
         await _updateStatus(invitation.id, InvitationStatus.expired);
-        return Left(DatabaseFailure('Convite expirado'));
+        return const Left(DatabaseFailure('Convite expirado'));
       }
 
       return Right(invitation);
@@ -164,13 +164,13 @@ class InvitationRepository {
       );
 
       if (results.isEmpty) {
-        return Left(DatabaseFailure('Convite não encontrado'));
+        return const Left(DatabaseFailure('Convite não encontrado'));
       }
 
       final invitation = _mapToInvitation(results.first);
 
       if (!invitation.isPending) {
-        return Left(DatabaseFailure('Convite não está mais pendente'));
+        return const Left(DatabaseFailure('Convite não está mais pendente'));
       }
 
       // Atualizar convite
@@ -242,13 +242,13 @@ class InvitationRepository {
       );
 
       if (results.isEmpty) {
-        return Left(DatabaseFailure('Convite não encontrado'));
+        return const Left(DatabaseFailure('Convite não encontrado'));
       }
 
       final invitation = _mapToInvitation(results.first);
 
       if (!invitation.canBeResent) {
-        return Left(DatabaseFailure('Este convite não pode ser reenviado'));
+        return const Left(DatabaseFailure('Este convite não pode ser reenviado'));
       }
 
       final newToken = _generateToken();

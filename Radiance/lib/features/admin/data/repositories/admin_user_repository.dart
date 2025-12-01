@@ -144,7 +144,7 @@ class AdminUserRepository {
       );
 
       if (results.isEmpty) {
-        return Left(DatabaseFailure('Usuário não encontrado'));
+        return const Left(DatabaseFailure('Usuário não encontrado'));
       }
 
       final user = _mapToUser(results.first);

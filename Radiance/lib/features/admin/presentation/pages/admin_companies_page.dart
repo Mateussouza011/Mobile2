@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/admin_company_provider.dart';
 import '../../domain/entities/admin_company_stats.dart';
 import '../../../../core/theme/radiance_colors.dart';
+import '../../../multi_tenant/domain/entities/subscription.dart';
 
 class AdminCompaniesPage extends StatefulWidget {
   const AdminCompaniesPage({super.key});
@@ -102,7 +103,7 @@ class _AdminCompaniesPageState extends State<AdminCompaniesPage> {
               'Total',
               provider.totalCompanies.toString(),
               Icons.business,
-              Colors.blue,
+              RadianceColors.primary,
             ),
           ),
           const SizedBox(width: 8),
@@ -111,7 +112,7 @@ class _AdminCompaniesPageState extends State<AdminCompaniesPage> {
               'Ativas',
               provider.activeCompanies.toString(),
               Icons.check_circle,
-              Colors.green,
+              RadianceColors.success,
             ),
           ),
           const SizedBox(width: 8),
@@ -120,7 +121,7 @@ class _AdminCompaniesPageState extends State<AdminCompaniesPage> {
               'Atenção',
               provider.companiesNeedingAttention.toString(),
               Icons.warning,
-              Colors.orange,
+              RadianceColors.warning,
             ),
           ),
         ],
@@ -144,7 +145,7 @@ class _AdminCompaniesPageState extends State<AdminCompaniesPage> {
                 color: color,
               ),
             ),
-            Text(label, style: TextStyle(fontSize: 11, color: Colors.grey[600])),
+            Text(label, style: TextStyle(fontSize: 11, color: RadianceColors.textSecondary)),
           ],
         ),
       ),
@@ -157,9 +158,9 @@ class _AdminCompaniesPageState extends State<AdminCompaniesPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.business_outlined, size: 64, color: Colors.grey[400]),
+            Icon(Icons.business_outlined, size: 64, color: RadianceColors.iconMuted),
             const SizedBox(height: 16),
-            Text('Nenhuma empresa encontrada', style: TextStyle(color: Colors.grey[600])),
+            Text('Nenhuma empresa encontrada', style: TextStyle(color: RadianceColors.textSecondary)),
           ],
         ),
       );
@@ -211,11 +212,11 @@ class _AdminCompaniesPageState extends State<AdminCompaniesPage> {
             const SizedBox(height: 8),
             Row(
               children: [
-                Icon(Icons.people, size: 14, color: Colors.grey[600]),
+                Icon(Icons.people, size: 14, color: RadianceColors.iconMuted),
                 const SizedBox(width: 4),
                 Text('${stats.totalMembers} membros', style: const TextStyle(fontSize: 12)),
                 const SizedBox(width: 16),
-                Icon(Icons.analytics, size: 14, color: Colors.grey[600]),
+                Icon(Icons.analytics, size: 14, color: RadianceColors.iconMuted),
                 const SizedBox(width: 4),
                 Text('${stats.totalPredictions} previsões', style: const TextStyle(fontSize: 12)),
               ],
@@ -244,7 +245,7 @@ class _AdminCompaniesPageState extends State<AdminCompaniesPage> {
               const PopupMenuItem(value: 'activate', child: Text('Ativar')),
             const PopupMenuItem(
               value: 'delete',
-              child: Text('Excluir', style: TextStyle(color: Colors.red)),
+              child: Text('Excluir', style: TextStyle(color: RadianceColors.error)),
             ),
           ],
         ),
@@ -254,14 +255,14 @@ class _AdminCompaniesPageState extends State<AdminCompaniesPage> {
   }
 
   Color _getTierColor(SubscriptionTier? tier) {
-    if (tier == null) return Colors.grey;
+    if (tier == null) return RadianceColors.tierFree;
     switch (tier) {
       case SubscriptionTier.free:
-        return RadianceColors.subscriptionFree;
+        return RadianceColors.tierFree;
       case SubscriptionTier.pro:
-        return RadianceColors.subscriptionPro;
+        return RadianceColors.tierPro;
       case SubscriptionTier.enterprise:
-        return RadianceColors.subscriptionEnterprise;
+        return RadianceColors.tierEnterprise;
     }
   }
 
@@ -372,7 +373,7 @@ class _AdminCompaniesPageState extends State<AdminCompaniesPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(success ? successMsg : errorMsg),
-        backgroundColor: success ? Colors.green : Colors.red,
+        backgroundColor: success ? RadianceColors.success : RadianceColors.error,
       ),
     );
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../../domain/entities/admin_metrics_stats.dart';
-import '../repositories/admin_metrics_repository.dart';
+import '../../data/repositories/admin_metrics_repository.dart';
 
 class AdminMetricsProvider with ChangeNotifier {
   final AdminMetricsRepository _repository;
@@ -57,47 +57,45 @@ class AdminMetricsProvider with ChangeNotifier {
 
     try {
       // Load all metrics in parallel
-      final results = await Future.wait([
-        _repository.getSystemMetrics(),
-        _repository.getRevenueMetrics(),
-        _repository.getUserGrowthMetrics(),
-        _repository.getTierDistribution(),
-        _repository.getUsageMetrics(),
-        _repository.getSystemHealthMetrics(),
-      ]);
+      final systemResult = await _repository.getSystemMetrics();
+      final revenueResult = await _repository.getRevenueMetrics();
+      final userGrowthResult = await _repository.getUserGrowthMetrics();
+      final tierResult = await _repository.getTierDistribution();
+      final usageResult = await _repository.getUsageMetrics();
+      final healthResult = await _repository.getSystemHealthMetrics();
 
       // System metrics
-      results[0].fold(
+      systemResult.fold(
         (failure) => throw Exception(failure.message),
         (metrics) => _systemMetrics = metrics,
       );
 
       // Revenue metrics
-      results[1].fold(
+      revenueResult.fold(
         (failure) => throw Exception(failure.message),
         (metrics) => _revenueMetrics = metrics,
       );
 
       // User growth metrics
-      results[2].fold(
+      userGrowthResult.fold(
         (failure) => throw Exception(failure.message),
         (metrics) => _userGrowthMetrics = metrics,
       );
 
       // Tier distribution
-      results[3].fold(
+      tierResult.fold(
         (failure) => throw Exception(failure.message),
         (distribution) => _tierDistribution = distribution,
       );
 
       // Usage metrics
-      results[4].fold(
+      usageResult.fold(
         (failure) => throw Exception(failure.message),
         (metrics) => _usageMetrics = metrics,
       );
 
       // Health metrics
-      results[5].fold(
+      healthResult.fold(
         (failure) => throw Exception(failure.message),
         (metrics) => _healthMetrics = metrics,
       );

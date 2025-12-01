@@ -43,7 +43,7 @@ class CompanyRepository {
       );
 
       if (results.isEmpty) {
-        return Left(NotFoundFailure('Empresa não encontrada'));
+        return const Left(NotFoundFailure('Empresa não encontrada'));
       }
 
       return Right(_companyFromMap(results.first));
@@ -65,7 +65,7 @@ class CompanyRepository {
       );
 
       if (results.isEmpty) {
-        return Left(NotFoundFailure('Empresa não encontrada'));
+        return const Left(NotFoundFailure('Empresa não encontrada'));
       }
 
       return Right(_companyFromMap(results.first));
@@ -151,7 +151,7 @@ class CompanyRepository {
       );
 
       if (results.isEmpty) {
-        return Left(NotFoundFailure('Assinatura não encontrada'));
+        return const Left(NotFoundFailure('Assinatura não encontrada'));
       }
 
       return Right(_subscriptionFromMap(results.first));

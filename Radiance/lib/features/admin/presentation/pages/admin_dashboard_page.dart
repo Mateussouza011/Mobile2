@@ -4,6 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import '../providers/admin_metrics_provider.dart';
 import '../../domain/entities/admin_metrics_stats.dart';
+import '../../../../core/theme/radiance_colors.dart';
 
 class AdminDashboardPage extends StatefulWidget {
   const AdminDashboardPage({super.key});
@@ -80,7 +81,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                  const Icon(Icons.error_outline, size: 48, color: RadianceColors.error),
                   const SizedBox(height: 16),
                   Text(provider.error!),
                   const SizedBox(height: 16),
@@ -164,7 +165,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
             value: provider.totalUsers.toString(),
             subtitle: '${provider.activeUsers} ativos',
             icon: Icons.people,
-            color: Colors.blue,
+            color: RadianceColors.primary,
             trend: provider.userGrowth,
           ),
           const SizedBox(width: 12),
@@ -174,7 +175,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
             value: provider.totalCompanies.toString(),
             subtitle: 'Total cadastradas',
             icon: Icons.business,
-            color: Colors.orange,
+            color: RadianceColors.secondary,
           ),
           const SizedBox(width: 12),
           _buildSummaryCard(
@@ -183,7 +184,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
             value: _formatCurrency(provider.mrr),
             subtitle: 'Receita mensal',
             icon: Icons.attach_money,
-            color: Colors.green,
+            color: RadianceColors.success,
             trend: provider.revenueGrowth,
           ),
           const SizedBox(width: 12),
@@ -235,7 +236,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
             Text(
               title,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
+                color: RadianceColors.textSecondary,
               ),
             ),
             const SizedBox(height: 4),
@@ -251,7 +252,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
 
   Widget _buildTrendIndicator(double trend) {
     final isPositive = trend >= 0;
-    final color = isPositive ? Colors.green : Colors.red;
+    final color = isPositive ? RadianceColors.success : RadianceColors.error;
     final icon = isPositive ? Icons.arrow_upward : Icons.arrow_downward;
     
     return Row(
@@ -334,12 +335,12 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
           children: [
             Row(
               children: [
-                Icon(icon, size: 20, color: Colors.grey[600]),
+                Icon(icon, size: 20, color: RadianceColors.textSecondary),
                 const SizedBox(width: 8),
                 Text(
                   title,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: Colors.grey[600],
+                    color: RadianceColors.textSecondary,
                   ),
                 ),
               ],
@@ -355,7 +356,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
             Text(
               subtitle,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey[600],
+                color: RadianceColors.textSecondary,
               ),
             ),
           ],
@@ -667,7 +668,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.warning_amber, color: Colors.orange),
+                      const Icon(Icons.warning_amber, color: RadianceColors.warning),
                       const SizedBox(width: 8),
                       Text(
                         'Alertas do Sistema',
@@ -677,8 +678,8 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
                       if (metrics.criticalIssues > 0)
                         Chip(
                           label: Text('${metrics.criticalIssues} críticos'),
-                          backgroundColor: Colors.red[100],
-                          labelStyle: const TextStyle(color: Colors.red, fontSize: 12),
+                          backgroundColor: RadianceColors.error.withOpacity(0.1),
+                          labelStyle: TextStyle(color: RadianceColors.error, fontSize: 12),
                         ),
                     ],
                   ),
@@ -695,7 +696,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
               child: Center(
                 child: Column(
                   children: [
-                    const Icon(Icons.check_circle, size: 48, color: Colors.green),
+                    const Icon(Icons.check_circle, size: 48, color: RadianceColors.success),
                     const SizedBox(height: 8),
                     Text(
                       'Nenhum alerta no momento',
@@ -746,7 +747,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
             const SizedBox(height: 8),
             LinearProgressIndicator(
               value: score / 100,
-              backgroundColor: Colors.grey[200],
+              backgroundColor: RadianceColors.inputBorder,
               valueColor: AlwaysStoppedAnimation<Color>(color),
             ),
           ],
@@ -761,15 +762,15 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
     
     switch (alert.severity) {
       case HealthAlertSeverity.critical:
-        color = Colors.red;
+        color = RadianceColors.error;
         icon = Icons.error;
         break;
       case HealthAlertSeverity.warning:
-        color = Colors.orange;
+        color = RadianceColors.warning;
         icon = Icons.warning;
         break;
       case HealthAlertSeverity.info:
-        color = Colors.blue;
+        color = RadianceColors.primary;
         icon = Icons.info;
         break;
     }
@@ -779,7 +780,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
       child: ListTile(
         leading: Icon(icon, color: color),
         title: Text(alert.message),
-        subtitle: Text(alert.details),
+        subtitle: Text(alert.details ?? ''),
         trailing: Text(
           _formatDate(alert.createdAt),
           style: Theme.of(context).textTheme.bodySmall,
@@ -795,7 +796,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
       PieChartData(
         sections: [
           PieChartSectionData(
-            color: Colors.grey,
+            color: RadianceColors.tierFree,
             value: distribution.freePercentage,
             title: 'Free\n${distribution.freePercentage.toStringAsFixed(1)}%',
             radius: 100,
@@ -806,7 +807,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
             ),
           ),
           PieChartSectionData(
-            color: Colors.blue,
+            color: RadianceColors.tierPro,
             value: distribution.proPercentage,
             title: 'Pro\n${distribution.proPercentage.toStringAsFixed(1)}%',
             radius: 100,
@@ -817,7 +818,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
             ),
           ),
           PieChartSectionData(
-            color: Colors.purple,
+            color: RadianceColors.tierEnterprise,
             value: distribution.enterprisePercentage,
             title: 'Enterprise\n${distribution.enterprisePercentage.toStringAsFixed(1)}%',
             radius: 100,
@@ -841,7 +842,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
 
     return LineChart(
       LineChartData(
-        gridData: FlGridData(show: true),
+        gridData: const FlGridData(show: true),
         titlesData: FlTitlesData(
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
@@ -877,12 +878,12 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
           LineChartBarData(
             spots: spots,
             isCurved: true,
-            color: Colors.green,
+            color: RadianceColors.success,
             barWidth: 3,
             dotData: const FlDotData(show: false),
             belowBarData: BarAreaData(
               show: true,
-              color: Colors.green.withOpacity(0.2),
+              color: RadianceColors.success.withOpacity(0.2),
             ),
           ),
         ],
@@ -900,7 +901,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
             barRods: [
               BarChartRodData(
                 toY: entry.value.value,
-                color: Colors.green,
+                color: RadianceColors.success,
                 width: 8,
               ),
             ],
@@ -936,7 +937,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
 
     return LineChart(
       LineChartData(
-        gridData: FlGridData(show: true),
+        gridData: const FlGridData(show: true),
         titlesData: FlTitlesData(
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
@@ -971,12 +972,12 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
           LineChartBarData(
             spots: spots,
             isCurved: true,
-            color: Colors.blue,
+            color: RadianceColors.primary,
             barWidth: 3,
             dotData: const FlDotData(show: false),
             belowBarData: BarAreaData(
               show: true,
-              color: Colors.blue.withOpacity(0.2),
+              color: RadianceColors.primary.withOpacity(0.2),
             ),
           ),
         ],
@@ -994,7 +995,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
             barRods: [
               BarChartRodData(
                 toY: entry.value.value,
-                color: Colors.blue,
+                color: RadianceColors.primary,
                 width: 12,
               ),
             ],
@@ -1014,7 +1015,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
               reservedSize: 30,
             ),
           ),
-          leftTitles: AxisTitles(
+          leftTitles: const AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
               reservedSize: 40,
@@ -1036,29 +1037,29 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
 
     return LineChart(
       LineChartData(
-        gridData: FlGridData(show: true),
-        titlesData: FlTitlesData(
-          bottomTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        gridData: const FlGridData(show: true),
+        titlesData: const FlTitlesData(
+          bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
               reservedSize: 40,
             ),
           ),
-          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
         ),
         borderData: FlBorderData(show: true),
         lineBarsData: [
           LineChartBarData(
             spots: spots,
             isCurved: true,
-            color: Colors.orange,
+            color: RadianceColors.warning,
             barWidth: 3,
             dotData: const FlDotData(show: false),
             belowBarData: BarAreaData(
               show: true,
-              color: Colors.orange.withOpacity(0.2),
+              color: RadianceColors.warning.withOpacity(0.2),
             ),
           ),
         ],
@@ -1095,9 +1096,9 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> with SingleTick
   }
 
   Color _getHealthColor(double score) {
-    if (score >= 80) return Colors.green;
-    if (score >= 60) return Colors.orange;
-    return Colors.red;
+    if (score >= 80) return RadianceColors.success;
+    if (score >= 60) return RadianceColors.warning;
+    return RadianceColors.error;
   }
 
   String _getHealthLabel(double score) {

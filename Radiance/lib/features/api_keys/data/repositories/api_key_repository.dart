@@ -117,7 +117,7 @@ class ApiKeyRepository {
       );
 
       if (maps.isEmpty) {
-        return Left(NotFoundFailure('API Key não encontrada'));
+        return const Left(NotFoundFailure('API Key não encontrada'));
       }
 
       return Right(_apiKeyFromMap(maps.first));
@@ -139,13 +139,13 @@ class ApiKeyRepository {
       );
 
       if (maps.isEmpty) {
-        return Left(UnauthorizedFailure('API Key inválida ou inativa'));
+        return const Left(UnauthorizedFailure('API Key inválida ou inativa'));
       }
 
       final key = _apiKeyFromMap(maps.first);
 
       if (key.isExpired) {
-        return Left(UnauthorizedFailure('API Key expirada'));
+        return const Left(UnauthorizedFailure('API Key expirada'));
       }
 
       // Atualizar último uso
@@ -190,7 +190,7 @@ class ApiKeyRepository {
       );
 
       if (rowsAffected == 0) {
-        return Left(NotFoundFailure('API Key não encontrada'));
+        return const Left(NotFoundFailure('API Key não encontrada'));
       }
 
       return const Right(null);
@@ -216,7 +216,7 @@ class ApiKeyRepository {
       );
 
       if (rowsAffected == 0) {
-        return Left(NotFoundFailure('API Key não encontrada'));
+        return const Left(NotFoundFailure('API Key não encontrada'));
       }
 
       return const Right(null);

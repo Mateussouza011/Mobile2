@@ -101,7 +101,7 @@ class AdminAuditRepository {
       );
 
       if (results.isEmpty) {
-        return Left(DatabaseFailure('Log não encontrado'));
+        return const Left(DatabaseFailure('Log não encontrado'));
       }
 
       return Right(_mapToAuditLog(results.first));

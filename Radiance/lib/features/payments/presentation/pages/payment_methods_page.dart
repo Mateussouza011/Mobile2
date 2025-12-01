@@ -75,7 +75,7 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.error_outline, size: 64, color: RadianceColors.error),
+                const Icon(Icons.error_outline, size: 64, color: RadianceColors.error),
                 const SizedBox(height: 16),
                 Text(
                   provider.error!,
@@ -159,13 +159,13 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage>
             ),
             const SizedBox(width: 8),
             if (method.isDefault)
-              Chip(
-                label: const Text(
+              const Chip(
+                label: Text(
                   'Padrão',
                   style: TextStyle(fontSize: 10, color: Colors.white),
                 ),
                 backgroundColor: RadianceColors.success,
-                padding: const EdgeInsets.symmetric(horizontal: 4),
+                padding: EdgeInsets.symmetric(horizontal: 4),
               ),
           ],
         ),
@@ -185,7 +185,7 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage>
                 ),
               ),
             if (method.isExpired)
-              Text(
+              const Text(
                 'Cartão expirado',
                 style: TextStyle(
                   fontSize: 12,
@@ -406,8 +406,8 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage>
                 },
                 (_) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('Cartão removido com sucesso'),
+                    const SnackBar(
+                      content: Text('Cartão removido com sucesso'),
                       backgroundColor: RadianceColors.success,
                     ),
                   );
@@ -726,8 +726,8 @@ class _AddPaymentMethodDialogState extends State<_AddPaymentMethodDialog> {
       (method) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Cartão adicionado com sucesso!'),
+          const SnackBar(
+            content: Text('Cartão adicionado com sucesso!'),
             backgroundColor: RadianceColors.success,
           ),
         );

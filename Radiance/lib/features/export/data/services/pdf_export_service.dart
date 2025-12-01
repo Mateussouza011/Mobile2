@@ -83,7 +83,7 @@ class PdfExportService {
           pw.SizedBox(height: 20),
           pw.Text(
             reportTitle,
-            style: pw.TextStyle(fontSize: 24, color: PdfColors.grey700),
+            style: const pw.TextStyle(fontSize: 24, color: PdfColors.grey700),
           ),
           pw.SizedBox(height: 40),
           pw.Container(
@@ -202,7 +202,7 @@ class PdfExportService {
         children: [
           pw.Text(
             label,
-            style: pw.TextStyle(fontSize: 12, color: PdfColors.grey700),
+            style: const pw.TextStyle(fontSize: 12, color: PdfColors.grey700),
           ),
           pw.SizedBox(height: 8),
           pw.Text(

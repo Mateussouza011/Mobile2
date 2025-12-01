@@ -45,7 +45,7 @@ class ExportProvider extends ChangeNotifier {
       
       if (companyId == null) {
         _setExporting(false);
-        return Left(ValidationFailure('Nenhuma empresa selecionada'));
+        return const Left(ValidationFailure('Nenhuma empresa selecionada'));
       }
 
       // Buscar previsões do período
@@ -63,7 +63,7 @@ class ExportProvider extends ChangeNotifier {
       if (predictions.isEmpty) {
         _setExporting(false);
         _error = 'Nenhuma previsão encontrada no período selecionado';
-        return Left(NotFoundFailure('Nenhuma previsão encontrada'));
+        return const Left(NotFoundFailure('Nenhuma previsão encontrada'));
       }
 
       // Exportar de acordo com o formato
@@ -86,7 +86,7 @@ class ExportProvider extends ChangeNotifier {
         case ExportFormat.excel:
           // TODO: Implementar exportação Excel
           _setExporting(false);
-          return Left(ValidationFailure('Formato Excel ainda não suportado'));
+          return const Left(ValidationFailure('Formato Excel ainda não suportado'));
       }
 
       _lastExport = result;
@@ -112,7 +112,7 @@ class ExportProvider extends ChangeNotifier {
       
       if (companyId == null) {
         _setExporting(false);
-        return Left(ValidationFailure('Nenhuma empresa selecionada'));
+        return const Left(ValidationFailure('Nenhuma empresa selecionada'));
       }
 
       // Calcular métricas

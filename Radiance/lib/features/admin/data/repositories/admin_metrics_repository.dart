@@ -84,8 +84,8 @@ class AdminMetricsRepository {
       final avgPredictionsPerUser = totalUsers > 0 ? totalPredictions ~/ totalUsers : 0;
       
       // Taxa de crescimento (mock - precisa histórico)
-      final growthRate = 5.0; // %
-      final churnRate = 2.0; // %
+      const growthRate = 5.0; // %
+      const churnRate = 2.0; // %
       
       // Health score
       final healthScore = _calculateHealthScore(
@@ -287,7 +287,7 @@ class AdminMetricsRepository {
 
       const predictionsLastMonth = 980;
       const predictionsThisMonth = 1120;
-      final growthRate = ((predictionsThisMonth - predictionsLastMonth) / predictionsLastMonth) * 100;
+      const growthRate = ((predictionsThisMonth - predictionsLastMonth) / predictionsLastMonth) * 100;
 
       return Right(UsageMetrics(
         dailyPredictions: dailyPredictions,

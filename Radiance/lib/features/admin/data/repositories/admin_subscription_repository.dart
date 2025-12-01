@@ -159,7 +159,7 @@ class AdminSubscriptionRepository {
       ''', [subscriptionId]);
 
       if (results.isEmpty) {
-        return Left(DatabaseFailure('Assinatura não encontrada'));
+        return const Left(DatabaseFailure('Assinatura não encontrada'));
       }
 
       final row = results.first;
@@ -208,7 +208,7 @@ class AdminSubscriptionRepository {
       );
 
       if (current.isEmpty) {
-        return Left(DatabaseFailure('Assinatura não encontrada'));
+        return const Left(DatabaseFailure('Assinatura não encontrada'));
       }
 
       final currentTier = SubscriptionTier.values.firstWhere(
@@ -363,7 +363,7 @@ class AdminSubscriptionRepository {
       );
 
       if (payment.isEmpty) {
-        return Left(DatabaseFailure('Pagamento não encontrado'));
+        return const Left(DatabaseFailure('Pagamento não encontrado'));
       }
 
       // Atualizar status

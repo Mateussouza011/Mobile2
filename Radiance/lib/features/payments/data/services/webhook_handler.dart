@@ -49,7 +49,7 @@ class WebhookHandler {
       final eventType = _parseEventType(payload['type'] as String?);
       if (eventType == null) {
         _logger.warning('Unknown webhook event type: ${payload['type']}');
-        return Left(ValidationFailure('Tipo de evento desconhecido'));
+        return const Left(ValidationFailure('Tipo de evento desconhecido'));
       }
 
       _logger.info('Processing webhook event: ${eventType.name}');
@@ -95,7 +95,7 @@ class WebhookHandler {
         return const Right(null);
       }
 
-      return Left(UnauthorizedFailure('Assinatura de webhook inválida'));
+      return const Left(UnauthorizedFailure('Assinatura de webhook inválida'));
     } catch (e) {
       return Left(ValidationFailure('Erro ao validar assinatura: $e'));
     }
@@ -121,7 +121,7 @@ class WebhookHandler {
     Map<String, dynamic>? data,
   ) async {
     if (data == null) {
-      return Left(ValidationFailure('Dados do evento não fornecidos'));
+      return const Left(ValidationFailure('Dados do evento não fornecidos'));
     }
 
     switch (eventType) {

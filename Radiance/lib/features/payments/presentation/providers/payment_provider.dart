@@ -107,11 +107,11 @@ class PaymentProvider extends ChangeNotifier {
   }) async {
     final company = _tenantProvider.currentCompany;
     if (company == null) {
-      return Left(ValidationFailure('Nenhuma empresa selecionada'));
+      return const Left(ValidationFailure('Nenhuma empresa selecionada'));
     }
 
     if (_customer == null) {
-      return Left(ValidationFailure('Cliente não encontrado. Crie um cliente primeiro.'));
+      return const Left(ValidationFailure('Cliente não encontrado. Crie um cliente primeiro.'));
     }
 
     _setLoading(true);
@@ -141,7 +141,7 @@ class PaymentProvider extends ChangeNotifier {
       final pricing = SubscriptionPricing.getByTier(tier.name);
       if (pricing == null) {
         _setLoading(false);
-        return Left(ValidationFailure('Tier inválido'));
+        return const Left(ValidationFailure('Tier inválido'));
       }
 
       final amount = billingInterval == BillingInterval.yearly
@@ -203,11 +203,11 @@ class PaymentProvider extends ChangeNotifier {
     BillingInterval? newBillingInterval,
   }) async {
     if (_currentSubscription == null) {
-      return Left(ValidationFailure('Nenhuma assinatura ativa'));
+      return const Left(ValidationFailure('Nenhuma assinatura ativa'));
     }
 
     if (newTier.index <= _currentSubscription!.tier.index) {
-      return Left(ValidationFailure('O novo tier deve ser superior ao atual'));
+      return const Left(ValidationFailure('O novo tier deve ser superior ao atual'));
     }
 
     _setLoading(true);
@@ -254,11 +254,11 @@ class PaymentProvider extends ChangeNotifier {
     required SubscriptionTier newTier,
   }) async {
     if (_currentSubscription == null) {
-      return Left(ValidationFailure('Nenhuma assinatura ativa'));
+      return const Left(ValidationFailure('Nenhuma assinatura ativa'));
     }
 
     if (newTier.index >= _currentSubscription!.tier.index) {
-      return Left(ValidationFailure('O novo tier deve ser inferior ao atual'));
+      return const Left(ValidationFailure('O novo tier deve ser inferior ao atual'));
     }
 
     _setLoading(true);
@@ -288,11 +288,11 @@ class PaymentProvider extends ChangeNotifier {
     bool immediate = false,
   }) async {
     if (_currentSubscription == null) {
-      return Left(ValidationFailure('Nenhuma assinatura ativa'));
+      return const Left(ValidationFailure('Nenhuma assinatura ativa'));
     }
 
     if (_currentSubscription!.abacatePaySubscriptionId == null) {
-      return Left(ValidationFailure('ID da assinatura não encontrado'));
+      return const Left(ValidationFailure('ID da assinatura não encontrado'));
     }
 
     _setLoading(true);
@@ -404,7 +404,7 @@ class PaymentProvider extends ChangeNotifier {
     bool setAsDefault = false,
   }) async {
     if (_customer == null) {
-      return Left(ValidationFailure('Cliente não encontrado'));
+      return const Left(ValidationFailure('Cliente não encontrado'));
     }
 
     _setLoading(true);

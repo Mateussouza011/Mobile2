@@ -5,7 +5,7 @@ mixin TenantScopeMixin {
   String addTenantFilter(String? existingWhere, String? companyId) {
     if (companyId == null) return existingWhere ?? '';
     
-    final tenantFilter = 'company_id = ?';
+    const tenantFilter = 'company_id = ?';
     
     if (existingWhere == null || existingWhere.isEmpty) {
       return tenantFilter;

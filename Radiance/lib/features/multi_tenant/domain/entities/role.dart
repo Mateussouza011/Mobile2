@@ -135,7 +135,7 @@ class Role extends Equatable {
     name: 'Administrador',
     type: RoleType.admin,
     description: 'Gerencia usuários e configurações',
-    permissions: [
+    permissions: const [
       Permission.updateCompanySettings,
       Permission.inviteUsers,
       Permission.removeUsers,
@@ -160,7 +160,7 @@ class Role extends Equatable {
     name: 'Gerente',
     type: RoleType.manager,
     description: 'Gerencia equipe e visualiza relatórios',
-    permissions: [
+    permissions: const [
       Permission.inviteUsers,
       Permission.viewUsers,
       Permission.createPredictions,
@@ -179,7 +179,7 @@ class Role extends Equatable {
     name: 'Analista',
     type: RoleType.analyst,
     description: 'Cria predições e visualiza histórico',
-    permissions: [
+    permissions: const [
       Permission.createPredictions,
       Permission.viewPredictions,
       Permission.exportPredictions,
@@ -194,7 +194,7 @@ class Role extends Equatable {
     name: 'Visualizador',
     type: RoleType.viewer,
     description: 'Apenas visualiza dados',
-    permissions: [
+    permissions: const [
       Permission.viewPredictions,
       Permission.viewReports,
     ],

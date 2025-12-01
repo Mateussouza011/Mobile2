@@ -14,40 +14,40 @@ class ApiAuthMiddleware {
   Future<Either<Failure, ApiKey>> authenticate(String? authHeader) async {
     // Verificar se o header existe
     if (authHeader == null || authHeader.isEmpty) {
-      return Left(UnauthorizedFailure('Authorization header is required'));
+      return const Left(UnauthorizedFailure('Authorization header is required'));
     }
 
     // Verificar formato Bearer
     if (!authHeader.startsWith('Bearer ')) {
-      return Left(UnauthorizedFailure('Invalid authorization format. Use: Bearer <api_key>'));
+      return const Left(UnauthorizedFailure('Invalid authorization format. Use: Bearer <api_key>'));
     }
 
     // Extrair token
     final token = authHeader.substring(7).trim();
 
     if (token.isEmpty) {
-      return Left(UnauthorizedFailure('API key is required'));
+      return const Left(UnauthorizedFailure('API key is required'));
     }
 
     // Validar formato da chave (deve começar com rdk_)
     if (!token.startsWith('rdk_')) {
-      return Left(UnauthorizedFailure('Invalid API key format'));
+      return const Left(UnauthorizedFailure('Invalid API key format'));
     }
 
     // Validar chave no repositório
     final result = await _apiKeyRepository.validateApiKey(token);
 
     return result.fold(
-      (failure) => Left(UnauthorizedFailure('Invalid or expired API key')),
+      (failure) => const Left(UnauthorizedFailure('Invalid or expired API key')),
       (apiKey) {
         // Verificar se a chave está ativa
         if (!apiKey.isActive) {
-          return Left(UnauthorizedFailure('API key has been revoked'));
+          return const Left(UnauthorizedFailure('API key has been revoked'));
         }
 
         // Verificar se a chave expirou
         if (apiKey.isExpired) {
-          return Left(UnauthorizedFailure('API key has expired'));
+          return const Left(UnauthorizedFailure('API key has expired'));
         }
 
         return Right(apiKey);

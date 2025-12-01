@@ -550,11 +550,11 @@ class _ShadcnCardState extends State<ShadcnCard> with SingleTickerProviderStateM
               child: Container(
                 width: 20,
                 height: 20,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: AppColors.primary,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.check,
                   size: 14,
                   color: AppColors.onPrimary,

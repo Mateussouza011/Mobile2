@@ -70,7 +70,7 @@ class _ApiKeysPageState extends State<ApiKeysPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.api,
               size: 80,
               color: RadianceColors.warning,
@@ -277,18 +277,18 @@ class _ApiKeysPageState extends State<ApiKeysPage> {
               ),
             ),
             if (!key.isActive)
-              Chip(
-                label: const Text('Revogada', style: TextStyle(fontSize: 10)),
+              const Chip(
+                label: Text('Revogada', style: TextStyle(fontSize: 10)),
                 backgroundColor: RadianceColors.error,
-                labelStyle: const TextStyle(color: Colors.white),
+                labelStyle: TextStyle(color: Colors.white),
                 padding: EdgeInsets.zero,
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
             if (key.isExpired)
-              Chip(
-                label: const Text('Expirada', style: TextStyle(fontSize: 10)),
+              const Chip(
+                label: Text('Expirada', style: TextStyle(fontSize: 10)),
                 backgroundColor: RadianceColors.warning,
-                labelStyle: const TextStyle(color: Colors.white),
+                labelStyle: TextStyle(color: Colors.white),
                 padding: EdgeInsets.zero,
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
@@ -448,8 +448,8 @@ class _ApiKeysPageState extends State<ApiKeysPage> {
                 },
                 (_) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('API Key revogada com sucesso'),
+                    const SnackBar(
+                      content: Text('API Key revogada com sucesso'),
                       backgroundColor: RadianceColors.success,
                     ),
                   );
@@ -493,8 +493,8 @@ class _ApiKeysPageState extends State<ApiKeysPage> {
                 },
                 (_) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('API Key deletada com sucesso'),
+                    const SnackBar(
+                      content: Text('API Key deletada com sucesso'),
                       backgroundColor: RadianceColors.success,
                     ),
                   );
@@ -691,11 +691,11 @@ class _CreateApiKeyDialogState extends State<_CreateApiKeyDialog> {
 
   Widget _buildSuccessDialog() {
     return AlertDialog(
-      title: Row(
+      title: const Row(
         children: [
           Icon(Icons.check_circle, color: RadianceColors.success),
-          const SizedBox(width: 8),
-          const Text('API Key Criada!'),
+          SizedBox(width: 8),
+          Text('API Key Criada!'),
         ],
       ),
       content: Column(
@@ -730,8 +730,8 @@ class _CreateApiKeyDialogState extends State<_CreateApiKeyDialog> {
             Clipboard.setData(ClipboardData(text: _createdKey!));
             Navigator.pop(context);
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: const Text('API Key copiada!'),
+              const SnackBar(
+                content: Text('API Key copiada!'),
                 backgroundColor: RadianceColors.success,
               ),
             );
@@ -905,8 +905,8 @@ class _EditApiKeyDialogState extends State<_EditApiKeyDialog> {
       (_) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('API Key atualizada com sucesso'),
+          const SnackBar(
+            content: Text('API Key atualizada com sucesso'),
             backgroundColor: RadianceColors.success,
           ),
         );

@@ -431,7 +431,7 @@ class _TeamDashboardPageState extends State<TeamDashboardPage> {
 
   Widget _buildPerformerTile(int rank, MemberActivity member) {
     final medals = ['🥇', '🥈', '🥉'];
-    final medal = rank <= 3 ? medals[rank - 1] : '${rank}º';
+    final medal = rank <= 3 ? medals[rank - 1] : '$rankº';
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
@@ -478,7 +478,7 @@ class _TeamDashboardPageState extends State<TeamDashboardPage> {
             ),
             child: Text(
               '${member.predictionsCount}',
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: RadianceColors.success,
               ),
@@ -530,7 +530,7 @@ class _TeamDashboardPageState extends State<TeamDashboardPage> {
         backgroundColor: RadianceColors.primary.withOpacity(0.1),
         child: Text(
           member.userName[0].toUpperCase(),
-          style: TextStyle(color: RadianceColors.primary),
+          style: const TextStyle(color: RadianceColors.primary),
         ),
       ),
       title: Text(member.userName),

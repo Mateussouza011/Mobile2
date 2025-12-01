@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import '../../../../core/theme/radiance_colors.dart';
 import '../providers/admin_user_provider.dart';
 import '../../../auth/domain/entities/user.dart';
 import '../../domain/entities/admin_user_stats.dart';
 
 class AdminUsersPage extends StatefulWidget {
-  const AdminUsersPage({Key? key}) : super(key: key);
+  const AdminUsersPage({super.key});
 
   @override
   State<AdminUsersPage> createState() => _AdminUsersPageState();
@@ -102,7 +103,7 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
                   'Total',
                   provider.totalUsers.toString(),
                   Icons.people,
-                  Colors.blue,
+                  RadianceColors.primary,
                 ),
               ),
               const SizedBox(width: 8),
@@ -111,7 +112,7 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
                   'Ativos',
                   provider.activeUsers.toString(),
                   Icons.check_circle,
-                  Colors.green,
+                  RadianceColors.success,
                 ),
               ),
               const SizedBox(width: 8),
@@ -120,7 +121,7 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
                   'Desativados',
                   provider.disabledUsers.toString(),
                   Icons.block,
-                  Colors.red,
+                  RadianceColors.error,
                 ),
               ),
               const SizedBox(width: 8),
@@ -129,7 +130,7 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
                   'Atenção',
                   provider.usersNeedingAttention.toString(),
                   Icons.warning,
-                  Colors.orange,
+                  RadianceColors.warning,
                 ),
               ),
             ],
@@ -153,7 +154,7 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
             ),
             Text(
               label,
-              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+              style: TextStyle(fontSize: 12, color: RadianceColors.textSecondary),
             ),
           ],
         ),
@@ -173,7 +174,7 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                const Icon(Icons.error_outline, size: 64, color: RadianceColors.error),
                 const SizedBox(height: 16),
                 Text(provider.error!),
                 const SizedBox(height: 16),
@@ -191,11 +192,11 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.people_outline, size: 64, color: Colors.grey[400]),
+                Icon(Icons.people_outline, size: 64, color: RadianceColors.iconMuted),
                 const SizedBox(height: 16),
                 Text(
                   'Nenhum usuário encontrado',
-                  style: TextStyle(color: Colors.grey[600]),
+                  style: TextStyle(color: RadianceColors.textSecondary),
                 ),
               ],
             ),
@@ -251,7 +252,7 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
                           userStats.user.email,
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.grey[600],
+                            color: RadianceColors.textSecondary,
                           ),
                         ),
                       ],
@@ -310,19 +311,19 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
                   _buildInfoChip(
                     Icons.business,
                     userStats.companiesDisplay,
-                    Colors.blue,
+                    RadianceColors.primary,
                   ),
                   const SizedBox(width: 8),
                   _buildInfoChip(
                     Icons.work,
                     userStats.rolesDisplay,
-                    Colors.purple,
+                    RadianceColors.secondary,
                   ),
                   const SizedBox(width: 8),
                   _buildInfoChip(
                     Icons.analytics,
                     '${userStats.totalPredictions} previsões',
-                    Colors.green,
+                    RadianceColors.success,
                   ),
                 ],
               ),
@@ -348,7 +349,7 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
                   if (userStats.lastLogin != null)
                     Text(
                       'Último login: ${_formatDate(userStats.lastLogin!)}',
-                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                      style: TextStyle(fontSize: 12, color: RadianceColors.textSecondary),
                     ),
                 ],
               ),
@@ -432,10 +433,8 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
                 _buildDetailRow('ID', userStats.user.id),
                 _buildDetailRow('Nome', userStats.user.name),
                 _buildDetailRow('Email', userStats.user.email),
-                if (userStats.user.cpf != null)
-                  _buildDetailRow('CPF', userStats.user.cpf!),
-                if (userStats.user.phoneNumber != null)
-                  _buildDetailRow('Telefone', userStats.user.phoneNumber!),
+                if (userStats.user.phone != null)
+                  _buildDetailRow('Telefone', userStats.user.phone!),
                 _buildDetailRow('Status', userStats.statusDisplay),
                 _buildDetailRow('Empresas', userStats.companiesDisplay),
                 _buildDetailRow('Funções', userStats.rolesDisplay),
@@ -504,12 +503,12 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
                           ? 'Usuário desativado com sucesso'
                           : 'Erro ao desativar usuário',
                     ),
-                    backgroundColor: success ? Colors.green : Colors.red,
+                    backgroundColor: success ? RadianceColors.success : RadianceColors.error,
                   ),
                 );
               }
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            style: ElevatedButton.styleFrom(backgroundColor: RadianceColors.error),
             child: const Text('Desativar'),
           ),
         ],
@@ -545,12 +544,12 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
                           ? 'Usuário reativado com sucesso'
                           : 'Erro ao reativar usuário',
                     ),
-                    backgroundColor: success ? Colors.green : Colors.red,
+                    backgroundColor: success ? RadianceColors.success : RadianceColors.error,
                   ),
                 );
               }
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            style: ElevatedButton.styleFrom(backgroundColor: RadianceColors.success),
             child: const Text('Reativar'),
           ),
         ],
@@ -596,7 +595,7 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: Colors.grey[200],
+                              color: RadianceColors.cardBackground,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Row(
@@ -635,9 +634,9 @@ class _AdminUsersPageState extends State<AdminUsersPage> {
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Erro ao resetar senha'),
-                      backgroundColor: Colors.red,
+                    SnackBar(
+                      content: const Text('Erro ao resetar senha'),
+                      backgroundColor: RadianceColors.error,
                     ),
                   );
                 }

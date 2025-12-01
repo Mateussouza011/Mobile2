@@ -70,7 +70,7 @@ void main() {
 
       test('should filter companies by search query', () async {
         // Arrange
-        final filters = CompanyFilters(searchQuery: 'Diamond');
+        const filters = CompanyFilters(searchQuery: 'Diamond');
 
         // Act
         final result = await repository.getAllCompanies(filters: filters);
@@ -88,7 +88,7 @@ void main() {
 
       test('should filter companies by active status', () async {
         // Arrange - filter for active companies
-        final filters = CompanyFilters(isActive: true);
+        const filters = CompanyFilters(isActive: true);
 
         // Act
         final result = await repository.getAllCompanies(filters: filters);
@@ -106,7 +106,7 @@ void main() {
 
       test('should filter companies by inactive status', () async {
         // Arrange - filter for inactive companies
-        final filters = CompanyFilters(isActive: false);
+        const filters = CompanyFilters(isActive: false);
 
         // Act
         final result = await repository.getAllCompanies(filters: filters);
@@ -148,7 +148,7 @@ void main() {
 
       test('should sort companies by name ascending', () async {
         // Arrange
-        final filters = CompanyFilters(
+        const filters = CompanyFilters(
           sortBy: CompanySortBy.name,
           ascending: true,
         );
@@ -179,7 +179,7 @@ void main() {
 
       test('should sort companies by totalMembers descending', () async {
         // Arrange
-        final filters = CompanyFilters(
+        const filters = CompanyFilters(
           sortBy: CompanySortBy.totalMembers,
           ascending: false,
         );
@@ -206,7 +206,7 @@ void main() {
 
       test('should combine multiple filters', () async {
         // Arrange
-        final filters = CompanyFilters(
+        const filters = CompanyFilters(
           searchQuery: 'Corp',
           isActive: true,
           sortBy: CompanySortBy.name,
@@ -230,7 +230,7 @@ void main() {
       test('should return empty list when no companies match filters',
           () async {
         // Arrange
-        final filters = CompanyFilters(searchQuery: 'NonExistentCompany');
+        const filters = CompanyFilters(searchQuery: 'NonExistentCompany');
 
         // Act
         final result = await repository.getAllCompanies(filters: filters);
