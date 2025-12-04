@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/colors.dart';
-import '../../ui/widgets/shadcn/shadcn_button.dart';
-import '../../ui/widgets/shadcn/shadcn_input.dart';
-import '../../ui/widgets/shadcn/shadcn_select.dart';
-import '../../ui/widgets/shadcn/shadcn_card.dart';
-import '../../ui/widgets/theme_toggle_button.dart';
+import '../../ui/widgets/shadcn/shadcn.dart';
+import '../../ui/widgets/theme_toggle/theme_toggle.dart';
 import '../viewmodels/diamond_prediction_viewmodel.dart';
 class DiamondPredictionView extends StatefulWidget {
   const DiamondPredictionView({super.key});

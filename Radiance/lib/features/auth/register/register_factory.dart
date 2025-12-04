@@ -5,12 +5,10 @@ import 'register_view.dart';
 import '../navigation/auth_coordinator.dart';
 import '../../../core/navigation/app_coordinator.dart';
 
-/// Factory for creating the Register feature with all dependencies.
 class RegisterFactory {
   RegisterFactory._();
 
   static Widget create({required BuildContext context}) {
-    // Create coordinators
     final appCoordinator = AppCoordinatorImpl(context);
     final authCoordinator = AuthCoordinatorImpl(appCoordinator);
     

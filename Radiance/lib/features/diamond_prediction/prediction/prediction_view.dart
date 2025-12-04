@@ -4,12 +4,8 @@ import 'prediction_view_model.dart';
 import 'prediction_delegate.dart';
 import '../../../core/data/models/prediction_model.dart';
 import '../../../core/theme/colors.dart';
-import '../../../ui/widgets/shadcn/shadcn_button.dart';
-import '../../../ui/widgets/shadcn/shadcn_card.dart';
-import '../../../ui/widgets/shadcn/shadcn_alert.dart';
-import '../../../ui/widgets/shadcn/shadcn_select.dart';
-import '../../../ui/widgets/shadcn/shadcn_slider.dart';
-import '../../../ui/widgets/theme_toggle_button.dart';
+import '../../../ui/widgets/shadcn/shadcn.dart';
+import '../../../ui/widgets/theme_toggle/theme_toggle.dart';
 
 class PredictionView extends StatelessWidget {
   final PredictionDelegate delegate;

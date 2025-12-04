@@ -8,12 +8,10 @@ import '../../../core/navigation/app_coordinator.dart';
 import '../../../core/data/repositories/auth_repository.dart';
 import '../../../core/data/repositories/prediction_history_repository.dart';
 
-/// Factory for creating the History feature with all dependencies.
 class HistoryFactory {
   static Widget create(BuildContext context) {
     final viewModel = HistoryViewModel();
     
-    // Create coordinators
     final appCoordinator = AppCoordinatorImpl(context);
     final diamondCoordinator = DiamondCoordinatorImpl(appCoordinator);
     

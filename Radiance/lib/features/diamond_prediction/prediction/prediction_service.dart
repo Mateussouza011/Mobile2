@@ -7,8 +7,6 @@ import '../../../core/data/repositories/auth_repository.dart';
 import '../../../core/data/repositories/prediction_history_repository.dart';
 import '../../../core/data/services/prediction_api_service.dart';
 
-/// Service that handles prediction business logic.
-/// Implements PredictionDelegate to respond to view events.
 class PredictionService implements PredictionDelegate {
   final PredictionViewModel viewModel;
   final PredictionApiService apiService;
@@ -26,7 +24,6 @@ class PredictionService implements PredictionDelegate {
 
   @override
   Future<void> predict() async {
-    // Validate form before proceeding
     if (!viewModel.isFormValid) {
       onError('Please fill in all required fields (Cut, Color, and Clarity)');
       return;
@@ -62,7 +59,6 @@ class PredictionService implements PredictionDelegate {
     final user = authRepository.currentUser;
     if (user == null || user.id == null) return;
     
-    // These should never be null at this point since we validated
     final cut = viewModel.cut;
     final color = viewModel.color;
     final clarity = viewModel.clarity;

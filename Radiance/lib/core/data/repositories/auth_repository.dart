@@ -8,14 +8,11 @@ import '../models/user_model.dart';
 import '../../constants/api_constants.dart';
 
 class AuthRepository {
-  // Singleton instance
   static final AuthRepository _instance = AuthRepository._internal();
   static AuthRepository get instance => _instance;
   
-  // Factory constructor returns singleton
   factory AuthRepository() => _instance;
   
-  // Private constructor
   AuthRepository._internal()
       : _localDatabase = LocalDatabase.instance,
         _webStorage = WebStorage.instance;

@@ -49,7 +49,6 @@ class ShadcnColors {
   static const Color darkInput = Color(0xFF27272A);
   static const Color darkRing = Color(0xFFFAFAFA);
 
-  // Semantic colors
   static const Color success = Color(0xFF22C55E);
   static const Color successForeground = Color(0xFFFFFFFF);
   static const Color warning = Color(0xFFF97316);
@@ -59,7 +58,6 @@ class ShadcnColors {
   static const Color error = Color(0xFFEF4444);
   static const Color errorForeground = Color(0xFFFFFFFF);
 
-  // Temperature colors
   static const Color cold = Color(0xFF06B6D4);
   static const Color cool = Color(0xFF3B82F6);
   static const Color warm = Color(0xFFF97316);

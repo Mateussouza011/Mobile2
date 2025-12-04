@@ -3,8 +3,6 @@ import '../../../core/navigation/app_coordinator.dart';
 import '../../../core/navigation/app_routes.dart';
 import '../../../core/theme/colors.dart';
 
-/// Coordinator for Diamond feature navigation.
-/// Encapsulates all navigation logic for the diamond prediction module.
 abstract class DiamondCoordinator {
   void goToLogin();
   void goToHome();
@@ -52,7 +50,7 @@ class DiamondCoordinatorImpl implements DiamondCoordinator {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(message),
-          backgroundColor: ShadcnColors.chart[2], // Green from Design System
+          backgroundColor: ShadcnColors.chart[2],
         ),
       );
     }

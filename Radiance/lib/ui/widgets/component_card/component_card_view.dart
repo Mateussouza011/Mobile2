@@ -1,0 +1,82 @@
+import 'package:flutter/material.dart';
+import 'component_card_view_model.dart';
+import 'component_card_delegate.dart';
+
+class ComponentCardView extends StatelessWidget {
+  final String title;
+  final String? description;
+  final IconData icon;
+  final VoidCallback onTap;
+  final ComponentCardViewModel? viewModel;
+  final ComponentCardDelegate? delegate;
+
+  const ComponentCardView({
+    super.key,
+    required this.title,
+    this.description,
+    required this.icon,
+    required this.onTap,
+    this.viewModel,
+    this.delegate,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SizedBox(
+          width: constraints.maxWidth,
+          height: constraints.maxHeight,
+          child: Card(
+            child: InkWell(
+              onTap: () {
+                delegate?.onTap();
+                onTap();
+              },
+              borderRadius: BorderRadius.circular(12),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        icon,
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 24,
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      title,
+                      style: Theme.of(context).textTheme.titleMedium,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    if (description != null) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        description!,
+                        style: Theme.of(context).textTheme.bodySmall,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}

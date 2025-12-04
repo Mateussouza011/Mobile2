@@ -3,8 +3,6 @@ import '../navigation/auth_coordinator.dart';
 import 'login_view_model.dart';
 import 'login_delegate.dart';
 
-/// Service that handles login business logic.
-/// Implements LoginDelegate to respond to view events.
 class LoginService implements LoginDelegate {
   final AuthRepository _authRepository;
   final AuthCoordinator _coordinator;

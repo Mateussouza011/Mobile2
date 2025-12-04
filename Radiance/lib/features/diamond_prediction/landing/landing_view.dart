@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/colors.dart';
 import '../navigation/diamond_coordinator.dart';
 import '../../auth/navigation/auth_coordinator.dart';
-import '../../../ui/widgets/shadcn/shadcn_button.dart';
-import '../../../ui/widgets/shadcn/shadcn_card.dart';
+import '../../../ui/widgets/shadcn/shadcn.dart';
 
 class LandingView extends StatelessWidget {
   final DiamondCoordinator diamondCoordinator;
@@ -202,7 +201,7 @@ class LandingView extends StatelessWidget {
           variant: ShadcnButtonVariant.ghost,
           size: ShadcnButtonSize.sm,
           trailingIcon: const Icon(Icons.open_in_new, size: 14),
-          onPressed: () => diamondCoordinator.goToHome(), // TODO: Add design system route
+          onPressed: () => diamondCoordinator.goToHome(),
         ),
       ],
     );

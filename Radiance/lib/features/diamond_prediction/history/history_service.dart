@@ -5,8 +5,6 @@ import '../../../core/data/models/prediction_model.dart';
 import '../../../core/data/repositories/auth_repository.dart';
 import '../../../core/data/repositories/prediction_history_repository.dart';
 
-/// Service that handles history business logic.
-/// Implements HistoryDelegate to respond to view events.
 class HistoryService implements HistoryDelegate {
   final HistoryViewModel viewModel;
   final PredictionHistoryRepository historyRepository;

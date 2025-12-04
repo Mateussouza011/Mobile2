@@ -3,9 +3,9 @@ import '../../../core/data/models/prediction_model.dart';
 
 class PredictionViewModel extends ChangeNotifier {
   double _carat = 1.0;
-  String? _cut; // No pre-selected value
-  String? _color; // No pre-selected value
-  String? _clarity; // No pre-selected value
+  String? _cut;
+  String? _color;
+  String? _clarity;
   double _depth = 61.5;
   double _table = 57.0;
   double _x = 5.0;
@@ -29,13 +29,10 @@ class PredictionViewModel extends ChangeNotifier {
   PredictionResponse? get result => _result;
   bool get showResult => _showResult;
   
-  // Cut: Best (Ideal) to Worst (Fair)
   static const List<String> cutOptions = ['Ideal', 'Premium', 'Very Good', 'Good', 'Fair'];
   
-  // Color: Best (D - colorless) to Worst (J - faint tint)
   static const List<String> colorOptions = ['D', 'E', 'F', 'G', 'H', 'I', 'J'];
   
-  // Clarity: Best (IF - flawless) to Worst (I1 - visible inclusions)
   static const List<String> clarityOptions = ['IF', 'VVS1', 'VVS2', 'VS1', 'VS2', 'SI1', 'SI2', 'I1'];
   
   void setCarat(double value) {
@@ -112,9 +109,9 @@ class PredictionViewModel extends ChangeNotifier {
 
   void reset() {
     _carat = 1.0;
-    _cut = null; // No pre-selected value
-    _color = null; // No pre-selected value
-    _clarity = null; // No pre-selected value
+    _cut = null;
+    _color = null;
+    _clarity = null;
     _depth = 61.5;
     _table = 57.0;
     _x = 5.0;

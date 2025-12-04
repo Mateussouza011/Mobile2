@@ -6,8 +6,6 @@ import '../../../core/data/models/user_model.dart';
 import '../../../core/data/repositories/auth_repository.dart';
 import '../../../core/data/repositories/prediction_history_repository.dart';
 
-/// Service that handles home business logic.
-/// Implements HomeDelegate to respond to view events.
 class HomeService implements HomeDelegate {
   final HomeViewModel viewModel;
   final AuthRepository authRepository;
@@ -95,4 +93,4 @@ class HomeService implements HomeDelegate {
     return authRepository.currentUser;
   }
 }
-
+

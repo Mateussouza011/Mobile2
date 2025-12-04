@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../ui/widgets/shadcn/shadcn_button.dart';
-import '../../../ui/widgets/shadcn/shadcn_input.dart';
-import '../../../ui/widgets/shadcn/shadcn_card.dart';
-import '../../../ui/widgets/shadcn/shadcn_alert.dart';
-import '../../../ui/widgets/shadcn/shadcn_checkbox.dart';
+import '../../../ui/widgets/shadcn/shadcn.dart';
 import 'register_view_model.dart';
 import 'register_delegate.dart';
 

@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'home_view_model.dart';
 import 'home_delegate.dart';
-import '../../../ui/widgets/shadcn/shadcn_card.dart';
-import '../../../ui/widgets/shadcn/shadcn_alert.dart';
-import '../../../ui/widgets/theme_toggle_button.dart';
+import '../../../ui/widgets/shadcn/shadcn.dart';
+import '../../../ui/widgets/theme_toggle/theme_toggle.dart';
 import '../../../core/theme/colors.dart';
 
 class HomeView extends StatefulWidget {

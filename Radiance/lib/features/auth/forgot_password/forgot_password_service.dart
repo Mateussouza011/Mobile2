@@ -3,8 +3,6 @@ import '../navigation/auth_coordinator.dart';
 import 'forgot_password_view_model.dart';
 import 'forgot_password_delegate.dart';
 
-/// Service that handles forgot password business logic.
-/// Implements ForgotPasswordDelegate to respond to view events.
 class ForgotPasswordService implements ForgotPasswordDelegate {
   final AuthRepository _authRepository;
   final AuthCoordinator _coordinator;

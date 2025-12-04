@@ -3,8 +3,6 @@ import '../navigation/auth_coordinator.dart';
 import 'register_view_model.dart';
 import 'register_delegate.dart';
 
-/// Service that handles register business logic.
-/// Implements RegisterDelegate to respond to view events.
 class RegisterService implements RegisterDelegate {
   final AuthRepository _authRepository;
   final AuthCoordinator _coordinator;

@@ -33,7 +33,7 @@ class WebStorage {
     );
 
     _users.add(user);
-    _currentUser = user; // Auto-login after registration
+    _currentUser = user;
     _log('User registered: ${user.email} (ID: ${user.id})');
     _log('User auto-logged in after registration');
     return user;

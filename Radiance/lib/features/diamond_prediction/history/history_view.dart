@@ -3,10 +3,9 @@ import 'package:provider/provider.dart';
 import 'history_view_model.dart';
 import 'history_delegate.dart';
 import '../../../core/theme/colors.dart';
-import '../../../ui/widgets/shadcn/shadcn_card.dart';
-import '../../../ui/widgets/shadcn/shadcn_button.dart';
+import '../../../ui/widgets/shadcn/shadcn.dart';
 import '../../../core/data/models/prediction_model.dart';
-import '../../../ui/widgets/theme_toggle_button.dart';
+import '../../../ui/widgets/theme_toggle/theme_toggle.dart';
 
 class HistoryView extends StatefulWidget {
   final HistoryDelegate delegate;

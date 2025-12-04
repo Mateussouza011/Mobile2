@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-/// Base navigation coordinator abstraction.
-/// All feature-specific coordinators should use this for navigation.
 abstract class AppCoordinator {
   void navigateTo(String route);
   void navigateToNamed(String name, {Object? extra});
