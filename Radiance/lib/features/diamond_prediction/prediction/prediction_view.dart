@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'prediction_view_model.dart';
 import 'prediction_delegate.dart';
 import '../../../core/data/models/prediction_model.dart';
+import '../../../core/theme/colors.dart';
 import '../../../ui/widgets/shadcn/shadcn_button.dart';
 import '../../../ui/widgets/shadcn/shadcn_card.dart';
 import '../../../ui/widgets/shadcn/shadcn_alert.dart';
@@ -33,13 +34,13 @@ class PredictionView extends StatelessWidget {
               icon: const Icon(Icons.arrow_back),
               onPressed: () => delegate.navigateBack(),
             ),
-            title: const Text('Nova Predicao'),
+            title: const Text('New Prediction'),
             actions: [
               const ThemeToggleButton(size: 36),
               IconButton(
                 icon: const Icon(Icons.refresh),
                 onPressed: () => delegate.resetForm(),
-                tooltip: 'Resetar',
+                tooltip: 'Reset',
               ),
             ],
           ),
@@ -94,7 +95,7 @@ class _FormView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Caracteristicas do Diamante',
+                'Diamond Characteristics',
                 style: textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: colorScheme.onSurface,
@@ -102,7 +103,7 @@ class _FormView extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Preencha os dados abaixo para calcular o preco estimado.',
+                'Fill in the details below to calculate the estimated price.',
                 style: textTheme.bodyMedium?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
@@ -111,14 +112,14 @@ class _FormView extends StatelessWidget {
               if (viewModel.errorMessage != null) ...[
                 ShadcnAlert(
                   variant: ShadcnAlertVariant.destructive,
-                  title: 'Erro',
+                  title: 'Error',
                   description: viewModel.errorMessage!,
                 ),
                 const SizedBox(height: 24),
               ],
               _SliderField(
-                label: 'Peso em Quilates (Carat)',
-                description: 'Quanto maior, mais valioso',
+                label: 'Carat Weight',
+                description: 'The larger, the more valuable',
                 value: viewModel.carat,
                 min: 0.2,
                 max: 5.0,
@@ -127,58 +128,61 @@ class _FormView extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               _SelectField(
-                label: 'Qualidade do Corte (Cut)',
-                description: 'Define o brilho do diamante',
+                label: 'Cut Quality',
+                description: 'Defines the diamond brilliance',
                 value: viewModel.cut,
+                placeholder: 'Select cut quality',
                 options: PredictionViewModel.cutOptions,
                 optionLabels: const {
-                  'Fair': 'Regular',
-                  'Good': 'Bom',
-                  'Very Good': 'Muito Bom',
-                  'Premium': 'Premium',
-                  'Ideal': 'Ideal',
+                  'Ideal': 'Ideal - Best',
+                  'Premium': 'Premium - Excellent',
+                  'Very Good': 'Very Good',
+                  'Good': 'Good',
+                  'Fair': 'Fair - Basic',
                 },
                 onChanged: viewModel.setCut,
               ),
               const SizedBox(height: 20),
               _SelectField(
-                label: 'Cor (Color)',
-                description: 'D = Mais transparente, J = Levemente amarelado',
+                label: 'Color',
+                description: 'D = Most transparent, J = Slightly yellow',
                 value: viewModel.color,
+                placeholder: 'Select color grade',
                 options: PredictionViewModel.colorOptions,
                 optionLabels: const {
-                  'D': 'D - Incolor',
-                  'E': 'E - Incolor',
-                  'F': 'F - Incolor',
-                  'G': 'G - Quase Incolor',
-                  'H': 'H - Quase Incolor',
-                  'I': 'I - Leve Tonalidade',
-                  'J': 'J - Leve Tonalidade',
+                  'D': 'D - Colorless (Best)',
+                  'E': 'E - Colorless',
+                  'F': 'F - Colorless',
+                  'G': 'G - Near Colorless',
+                  'H': 'H - Near Colorless',
+                  'I': 'I - Faint Tint',
+                  'J': 'J - Faint Tint (Lower)',
                 },
                 onChanged: viewModel.setColor,
               ),
               const SizedBox(height: 20),
               _SelectField(
-                label: 'Pureza (Clarity)',
-                description: 'Nivel de imperfeicoes internas',
+                label: 'Clarity',
+                description: 'Level of internal imperfections',
                 value: viewModel.clarity,
+                placeholder: 'Select clarity grade',
                 options: PredictionViewModel.clarityOptions,
                 optionLabels: const {
-                  'I1': 'I1 - Inclusoes Visiveis',
-                  'SI2': 'SI2 - Pequenas Inclusoes',
-                  'SI1': 'SI1 - Pequenas Inclusoes',
-                  'VS2': 'VS2 - Muito Pequenas',
-                  'VS1': 'VS1 - Muito Pequenas',
-                  'VVS2': 'VVS2 - Minusculas',
-                  'VVS1': 'VVS1 - Minusculas',
-                  'IF': 'IF - Internamente Perfeito',
+                  'IF': 'IF - Internally Flawless (Best)',
+                  'VVS1': 'VVS1 - Very Very Slight 1',
+                  'VVS2': 'VVS2 - Very Very Slight 2',
+                  'VS1': 'VS1 - Very Slight 1',
+                  'VS2': 'VS2 - Very Slight 2',
+                  'SI1': 'SI1 - Slight Inclusions 1',
+                  'SI2': 'SI2 - Slight Inclusions 2',
+                  'I1': 'I1 - Visible Inclusions (Lower)',
                 },
                 onChanged: viewModel.setClarity,
               ),
               const SizedBox(height: 20),
               _SliderField(
-                label: 'Profundidade (Depth %)',
-                description: 'Altura relativa do diamante',
+                label: 'Depth Percentage',
+                description: 'Relative height of the diamond',
                 value: viewModel.depth,
                 min: 43.0,
                 max: 79.0,
@@ -187,8 +191,8 @@ class _FormView extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               _SliderField(
-                label: 'Tamanho da Mesa (Table %)',
-                description: 'Face superior do diamante',
+                label: 'Table Percentage',
+                description: 'Top face of the diamond',
                 value: viewModel.table,
                 min: 43.0,
                 max: 95.0,
@@ -197,7 +201,7 @@ class _FormView extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                'Dimensoes Fisicas (mm)',
+                'Physical Dimensions (mm)',
                 style: textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                   color: colorScheme.onSurface,
@@ -217,7 +221,7 @@ class _FormView extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ShadcnButton(
-                  text: 'Calcular Preco',
+                  text: 'Calculate Price',
                   loading: viewModel.isLoading,
                   leadingIcon: const Icon(Icons.calculate, size: 18),
                   onPressed: viewModel.isLoading ? null : () => delegate.predict(),
@@ -298,10 +302,11 @@ class _SliderField extends StatelessWidget {
 class _SelectField extends StatelessWidget {
   final String label;
   final String? description;
-  final String value;
+  final String? value;
   final List<String> options;
   final Map<String, String>? optionLabels;
-  final ValueChanged<String> onChanged;
+  final ValueChanged<String?> onChanged;
+  final String placeholder;
 
   const _SelectField({
     required this.label,
@@ -310,6 +315,7 @@ class _SelectField extends StatelessWidget {
     required this.options,
     this.optionLabels,
     required this.onChanged,
+    this.placeholder = 'Select an option',
   });
 
   @override
@@ -334,12 +340,13 @@ class _SelectField extends StatelessWidget {
         const SizedBox(height: 8),
         ShadcnSelect<String>(
           value: value,
+          placeholder: placeholder,
           options: options.map((o) => ShadcnSelectOption(
             value: o,
             label: optionLabels?[o] ?? o,
           )).toList(),
           onChanged: (v) {
-            if (v != null) onChanged(v);
+            onChanged(v);
           },
         ),
       ],
@@ -364,9 +371,9 @@ class _DimensionField extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     
     final labelMap = {
-      'X': 'Largura (X)',
-      'Y': 'Comprimento (Y)',
-      'Z': 'Altura (Z)',
+      'X': 'Width (X)',
+      'Y': 'Length (Y)',
+      'Z': 'Height (Z)',
     };
 
     return ShadcnCard(
@@ -445,7 +452,7 @@ class _ResultModal extends StatelessWidget {
                 height: 80,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [colorScheme.primary, Colors.purple],
+                    colors: [colorScheme.primary, ShadcnColors.chart[0]],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -462,7 +469,7 @@ class _ResultModal extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                'Preco Estimado',
+                'Estimated Price',
                 style: textTheme.titleMedium?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
@@ -472,26 +479,26 @@ class _ResultModal extends StatelessWidget {
                 '\$${result.price.toStringAsFixed(2)}',
                 style: textTheme.headlineLarge?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Colors.green.shade600,
+                  color: ShadcnColors.chart[2],
                 ),
               ),
               const SizedBox(height: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Colors.green.shade50,
+                  color: ShadcnColors.chart[2].withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.green.shade200),
+                  border: Border.all(color: ShadcnColors.chart[2].withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.check_circle, size: 16, color: Colors.green.shade600),
+                    Icon(Icons.check_circle, size: 16, color: ShadcnColors.chart[2]),
                     const SizedBox(width: 6),
                     Text(
-                      'Salvo no historico',
+                      'Saved to history',
                       style: textTheme.bodySmall?.copyWith(
-                        color: Colors.green.shade700,
+                        color: ShadcnColors.chart[2],
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -507,16 +514,16 @@ class _ResultModal extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    _ModalSummaryRow(label: 'Quilates', value: '${viewModel.carat.toStringAsFixed(2)} ct'),
+                    _ModalSummaryRow(label: 'Carats', value: '${viewModel.carat.toStringAsFixed(2)} ct'),
                     const SizedBox(height: 8),
-                    _ModalSummaryRow(label: 'Corte', value: viewModel.cut),
+                    _ModalSummaryRow(label: 'Cut', value: viewModel.cut ?? '-'),
                     const SizedBox(height: 8),
-                    _ModalSummaryRow(label: 'Cor', value: viewModel.color),
+                    _ModalSummaryRow(label: 'Color', value: viewModel.color ?? '-'),
                     const SizedBox(height: 8),
-                    _ModalSummaryRow(label: 'Pureza', value: viewModel.clarity),
+                    _ModalSummaryRow(label: 'Clarity', value: viewModel.clarity ?? '-'),
                     const SizedBox(height: 8),
                     _ModalSummaryRow(
-                      label: 'Dimensoes',
+                      label: 'Dimensions',
                       value: '${viewModel.x.toStringAsFixed(1)} x ${viewModel.y.toStringAsFixed(1)} x ${viewModel.z.toStringAsFixed(1)}',
                     ),
                   ],
@@ -526,7 +533,7 @@ class _ResultModal extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ShadcnButton(
-                  text: 'Nova Predicao',
+                  text: 'New Prediction',
                   leadingIcon: const Icon(Icons.add, size: 18),
                   onPressed: onNewPrediction,
                 ),
@@ -535,7 +542,7 @@ class _ResultModal extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ShadcnButton(
-                  text: 'Voltar ao Inicio',
+                  text: 'Back to Home',
                   variant: ShadcnButtonVariant.outline,
                   onPressed: onGoHome,
                 ),

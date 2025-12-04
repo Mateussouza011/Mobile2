@@ -5,6 +5,7 @@ import 'home_delegate.dart';
 import '../../../ui/widgets/shadcn/shadcn_card.dart';
 import '../../../ui/widgets/shadcn/shadcn_alert.dart';
 import '../../../ui/widgets/theme_toggle_button.dart';
+import '../../../core/theme/colors.dart';
 
 class HomeView extends StatefulWidget {
   final HomeDelegate delegate;
@@ -48,12 +49,12 @@ class _HomeViewState extends State<HomeView> {
               IconButton(
                 icon: const Icon(Icons.refresh),
                 onPressed: () => widget.delegate.loadStats(),
-                tooltip: 'Atualizar',
+                tooltip: 'Refresh',
               ),
               IconButton(
                 icon: const Icon(Icons.logout),
                 onPressed: () => _showLogoutDialog(context),
-                tooltip: 'Sair',
+                tooltip: 'Logout',
               ),
               const SizedBox(width: 8),
             ],
@@ -74,7 +75,7 @@ class _HomeViewState extends State<HomeView> {
                             if (viewModel.errorMessage != null) ...[
                               ShadcnAlert(
                                 variant: ShadcnAlertVariant.destructive,
-                                title: 'Erro',
+                                title: 'Error',
                                 description: viewModel.errorMessage!,
                               ),
                               const SizedBox(height: 24),
@@ -112,7 +113,7 @@ class _HomeViewState extends State<HomeView> {
         ),
         const SizedBox(height: 8),
         Text(
-          'Acompanhe suas previsoes e faca novas consultas de precos de diamantes.',
+          'Track your predictions and make new diamond price queries.',
           style: textTheme.bodyLarge?.copyWith(
             color: colorScheme.onSurfaceVariant,
           ),
@@ -123,16 +124,18 @@ class _HomeViewState extends State<HomeView> {
 
   String _getGreeting() {
     final hour = DateTime.now().hour;
-    if (hour < 12) return 'Bom dia';
-    if (hour < 18) return 'Boa tarde';
-    return 'Boa noite';
+    if (hour < 12) return 'Good morning';
+    if (hour < 18) return 'Good afternoon';
+    return 'Good evening';
   }
 
   Widget _buildStatsCards(HomeViewModel viewModel, ColorScheme colorScheme, TextTheme textTheme, bool isDesktop) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     final cards = <Widget>[
       _buildStatCard(
         Icons.analytics_outlined,
-        'Total de Predicoes',
+        'Total Predictions',
         viewModel.totalPredictions.toString(),
         colorScheme.primary,
         colorScheme,
@@ -140,17 +143,17 @@ class _HomeViewState extends State<HomeView> {
       ),
       _buildStatCard(
         Icons.attach_money,
-        'Preco Medio',
+        'Average Price',
         viewModel.averagePrice > 0 ? '\$${viewModel.averagePrice.toStringAsFixed(2)}' : '--',
-        Colors.green,
+        isDark ? ShadcnColors.chart[2] : ShadcnColors.chart[2],
         colorScheme,
         textTheme,
       ),
       _buildStatCard(
         Icons.calendar_today_outlined,
-        'Ultima Consulta',
+        'Last Query',
         viewModel.lastPrediction != null ? _formatDate(viewModel.lastPrediction!.createdAt) : '--',
-        Colors.orange,
+        isDark ? ShadcnColors.chart[3] : ShadcnColors.chart[3],
         colorScheme,
         textTheme,
       ),
@@ -177,7 +180,7 @@ class _HomeViewState extends State<HomeView> {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: iconColor.withOpacity(0.1),
+              color: iconColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: iconColor, size: 24),
@@ -199,21 +202,23 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _buildActionCards(ColorScheme colorScheme, TextTheme textTheme, bool isDesktop) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     final cards = <Widget>[
-      _buildActionCard(
-        Icons.add_circle_outline,
-        'Nova Predicao',
-        'Calcule o valor de um novo diamante com base em suas caracteristicas',
-        colorScheme.primary,
-        () => widget.delegate.navigateToPrediction(),
-        colorScheme,
-        textTheme,
+      _buildPrimaryActionCard(
+        icon: Icons.add_circle_outline,
+        title: 'New Prediction',
+        description: 'Calculate the value of a new diamond based on its characteristics',
+        onTap: () => widget.delegate.navigateToPrediction(),
+        colorScheme: colorScheme,
+        textTheme: textTheme,
+        isDark: isDark,
       ),
       _buildActionCard(
         Icons.history,
-        'Ver Historico',
-        'Consulte todas as suas predicoes anteriores',
-        Colors.purple,
+        'View History',
+        'Check all your previous predictions',
+        isDark ? ShadcnColors.chart[0] : ShadcnColors.chart[0],
         () => widget.delegate.navigateToHistory(),
         colorScheme,
         textTheme,
@@ -231,6 +236,141 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
+  Widget _buildPrimaryActionCard({
+    required IconData icon,
+    required String title,
+    required String description,
+    required VoidCallback onTap,
+    required ColorScheme colorScheme,
+    required TextTheme textTheme,
+    required bool isDark,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: isDark
+                  ? [
+                      colorScheme.primary.withValues(alpha: 0.2),
+                      colorScheme.primary.withValues(alpha: 0.05),
+                    ]
+                  : [
+                      colorScheme.primary.withValues(alpha: 0.1),
+                      colorScheme.primary.withValues(alpha: 0.02),
+                    ],
+            ),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: colorScheme.primary.withValues(alpha: 0.3),
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: colorScheme.primary.withValues(alpha: 0.1),
+                blurRadius: 20,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.all(24),
+          child: Row(
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      colorScheme.primary,
+                      colorScheme.primary.withValues(alpha: 0.8),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: colorScheme.primary.withValues(alpha: 0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.diamond,
+                  color: Colors.white,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          title,
+                          style: textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: colorScheme.primary,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: colorScheme.primary,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            'AI',
+                            style: textTheme.labelSmall?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      description,
+                      style: textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: colorScheme.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.arrow_forward_rounded,
+                  color: colorScheme.primary,
+                  size: 20,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildActionCard(IconData icon, String title, String description, Color iconColor, VoidCallback onTap, ColorScheme colorScheme, TextTheme textTheme) {
     return InkWell(
       onTap: onTap,
@@ -244,7 +384,7 @@ class _HomeViewState extends State<HomeView> {
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.1),
+                color: iconColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Icon(icon, color: iconColor, size: 28),
@@ -269,11 +409,12 @@ class _HomeViewState extends State<HomeView> {
 
   Widget _buildLastPrediction(HomeViewModel viewModel, ColorScheme colorScheme, TextTheme textTheme) {
     final prediction = viewModel.lastPrediction!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Ultima Predicao', style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: colorScheme.onSurface)),
+        Text('Last Prediction', style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: colorScheme.onSurface)),
         const SizedBox(height: 16),
         ShadcnCard(
           variant: ShadcnCardVariant.outlined,
@@ -287,7 +428,7 @@ class _HomeViewState extends State<HomeView> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: colorScheme.primary.withOpacity(0.1),
+                      color: colorScheme.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(Icons.diamond, color: colorScheme.primary, size: 20),
@@ -296,7 +437,7 @@ class _HomeViewState extends State<HomeView> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('${prediction.carat} quilates', style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600)),
+                      Text('${prediction.carat} carats', style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600)),
                       Text('${prediction.cut} - ${prediction.color} - ${prediction.clarity}', style: textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant)),
                     ],
                   ),
@@ -305,7 +446,13 @@ class _HomeViewState extends State<HomeView> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text('\$${prediction.predictedPrice.toStringAsFixed(2)}', style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: Colors.green)),
+                  Text(
+                    '\$${prediction.predictedPrice.toStringAsFixed(2)}',
+                    style: textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? ShadcnColors.chart[2] : ShadcnColors.chart[2],
+                    ),
+                  ),
                   Text(_formatDate(prediction.createdAt), style: textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant)),
                 ],
               ),
@@ -320,9 +467,9 @@ class _HomeViewState extends State<HomeView> {
     final now = DateTime.now();
     final difference = now.difference(date);
 
-    if (difference.inDays == 0) return 'Hoje';
-    if (difference.inDays == 1) return 'Ontem';
-    if (difference.inDays < 7) return 'Ha ${difference.inDays} dias';
+    if (difference.inDays == 0) return 'Today';
+    if (difference.inDays == 1) return 'Yesterday';
+    if (difference.inDays < 7) return '${difference.inDays} days ago';
     return '${date.day}/${date.month}/${date.year}';
   }
 
@@ -330,19 +477,20 @@ class _HomeViewState extends State<HomeView> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Sair'),
-        content: const Text('Deseja realmente sair da sua conta?'),
+        title: const Text('Logout'),
+        content: const Text('Are you sure you want to logout?'),
         actions: [
-          TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('Cancelar')),
+          TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('Cancel')),
           TextButton(
             onPressed: () {
               Navigator.of(ctx).pop();
               widget.delegate.logout();
             },
-            child: const Text('Sair'),
+            child: const Text('Logout'),
           ),
         ],
       ),
     );
   }
 }
+

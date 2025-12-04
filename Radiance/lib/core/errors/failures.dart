@@ -8,26 +8,26 @@ abstract class Failure extends Equatable {
   List<Object> get props => [message];
 }
 class ServerFailure extends Failure {
-  const ServerFailure([super.message = 'Erro no servidor']);
+  const ServerFailure([super.message = 'Server error']);
 }
 class ConnectionFailure extends Failure {
-  const ConnectionFailure([super.message = 'Erro de conexão']);
+  const ConnectionFailure([super.message = 'Connection error']);
 }
 class CacheFailure extends Failure {
-  const CacheFailure([super.message = 'Erro ao acessar dados locais']);
+  const CacheFailure([super.message = 'Error accessing local data']);
 }
 class ValidationFailure extends Failure {
-  const ValidationFailure([super.message = 'Dados inválidos']);
+  const ValidationFailure([super.message = 'Invalid data']);
 }
 class AuthenticationFailure extends Failure {
-  const AuthenticationFailure([super.message = 'Erro de autenticação']);
+  const AuthenticationFailure([super.message = 'Authentication error']);
 }
 class AuthorizationFailure extends Failure {
-  const AuthorizationFailure([super.message = 'Sem permissão']);
+  const AuthorizationFailure([super.message = 'No permission']);
 }
 class NotFoundFailure extends Failure {
-  const NotFoundFailure([super.message = 'Recurso não encontrado']);
+  const NotFoundFailure([super.message = 'Resource not found']);
 }
 class UnexpectedFailure extends Failure {
-  const UnexpectedFailure([super.message = 'Erro inesperado']);
+  const UnexpectedFailure([super.message = 'Unexpected error']);
 }

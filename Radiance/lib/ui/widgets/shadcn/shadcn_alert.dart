@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/colors.dart';
 
 enum ShadcnAlertType {
   info,
@@ -198,15 +199,15 @@ class _ShadcnAlertState extends State<ShadcnAlert>
         );
       case ShadcnAlertType.success:
         return _AlertColors(
-          primary: Colors.green,
-          background: Colors.green.withValues(alpha: 0.1),
-          border: Colors.green.withValues(alpha: 0.3),
+          primary: ShadcnColors.success,
+          background: ShadcnColors.success.withValues(alpha: 0.1),
+          border: ShadcnColors.success.withValues(alpha: 0.3),
         );
       case ShadcnAlertType.warning:
         return _AlertColors(
-          primary: Colors.orange,
-          background: Colors.orange.withValues(alpha: 0.1),
-          border: Colors.orange.withValues(alpha: 0.3),
+          primary: ShadcnColors.warning,
+          background: ShadcnColors.warning.withValues(alpha: 0.1),
+          border: ShadcnColors.warning.withValues(alpha: 0.3),
         );
       case ShadcnAlertType.error:
         return _AlertColors(

@@ -165,7 +165,7 @@ class ShadcnButton extends StatefulWidget {
 
 class _ShadcnButtonState extends State<ShadcnButton> with SingleTickerProviderStateMixin {
   bool _isHovered = false;
-  bool _isPressed = false;
+  bool _isPressed = false; // Used for press state tracking in gesture callbacks
   late AnimationController _scaleController;
   late Animation<double> _scaleAnimation;
 

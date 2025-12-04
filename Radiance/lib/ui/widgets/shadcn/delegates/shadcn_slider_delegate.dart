@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/colors.dart';
+
 abstract class ShadcnSliderDelegate {
   void onSliderChangeStart(double value) {}
   void onSliderChanged(double value) {}
@@ -91,9 +93,9 @@ class VolumeSliderDelegate extends DefaultShadcnSliderDelegate {
   
   @override
   Color getSliderColor(double value, ColorScheme colorScheme) {
-    if (value >= 0.8) return Colors.red;
-    if (value >= 0.5) return Colors.orange;
-    return Colors.green;
+    if (value >= 0.8) return ShadcnColors.error;
+    if (value >= 0.5) return ShadcnColors.warning;
+    return ShadcnColors.success;
   }
   
   @override
@@ -141,12 +143,12 @@ class TemperatureSliderDelegate extends DefaultShadcnSliderDelegate {
   
   @override
   Color getSliderColor(double value, ColorScheme colorScheme) {
-    if (value >= 30) return Colors.red;
-    if (value >= 25) return Colors.orange;
+    if (value >= 30) return ShadcnColors.hot;
+    if (value >= 25) return ShadcnColors.warning;
     if (value >= 20) return Colors.yellow;
     if (value >= 15) return Colors.lightBlue;
-    if (value >= 10) return Colors.blue;
-    return Colors.cyan;
+    if (value >= 10) return ShadcnColors.info;
+    return ShadcnColors.cold;
   }
   
   @override
@@ -159,7 +161,7 @@ class TemperatureSliderDelegate extends DefaultShadcnSliderDelegate {
     return Icon(
       value < 10 ? Icons.ac_unit : Icons.wb_sunny,
       size: 24,
-      color: value < 10 ? Colors.blue : Colors.orange,
+      color: value < 10 ? ShadcnColors.info : ShadcnColors.warning,
     );
   }
   
@@ -242,10 +244,10 @@ class SpeedSliderDelegate extends DefaultShadcnSliderDelegate {
   
   @override
   String formatSliderLabel(double value) {
-    if (value < 0.3) return 'Lento';
+    if (value < 0.3) return 'Slow';
     if (value < 0.6) return 'Normal';
-    if (value < 0.9) return 'Rápido';
-    return 'Muito Rápido';
+    if (value < 0.9) return 'Fast';
+    return 'Very Fast';
   }
   
   @override
@@ -298,7 +300,7 @@ class ValidatedSliderDelegate extends DefaultShadcnSliderDelegate {
   @override
   String formatSliderLabel(double value) {
     if (!isValueAllowed(value)) {
-      return '${value.toStringAsFixed(1)} (Inválido)';
+      return '${value.toStringAsFixed(1)} (Invalid)';
     }
     return value.toStringAsFixed(1);
   }

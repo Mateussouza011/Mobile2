@@ -90,7 +90,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
           height: 64,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [colorScheme.primary, colorScheme.primary.withOpacity(0.7)],
+              colors: [colorScheme.primary, colorScheme.primary.withValues(alpha: 0.7)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -100,7 +100,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         ),
         const SizedBox(height: 16),
         Text(
-          'Recuperar Senha',
+          'Reset Password',
           style: textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.bold,
             color: colorScheme.onSurface,
@@ -108,7 +108,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         ),
         const SizedBox(height: 8),
         Text(
-          'Digite seu email para receber instrucoes',
+          'Enter your email to receive instructions',
           style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant),
           textAlign: TextAlign.center,
         ),
@@ -125,7 +125,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         children: [
           if (widget.viewModel.errorMessage != null) ...[
             ShadcnAlert(
-              title: 'Erro',
+              title: 'Error',
               description: widget.viewModel.errorMessage,
               type: ShadcnAlertType.error,
               variant: ShadcnAlertVariant.filled,
@@ -136,7 +136,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
           ],
           if (widget.viewModel.successMessage != null) ...[
             ShadcnAlert(
-              title: 'Sucesso',
+              title: 'Success',
               description: widget.viewModel.successMessage,
               type: ShadcnAlertType.success,
               variant: ShadcnAlertVariant.filled,
@@ -156,7 +156,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
           ),
           const SizedBox(height: 24),
           ShadcnButton(
-            text: widget.viewModel.isLoading ? 'Enviando...' : 'Enviar instrucoes',
+            text: widget.viewModel.isLoading ? 'Sending...' : 'Send instructions',
             loading: widget.viewModel.isLoading,
             disabled: widget.viewModel.isLoading,
             onPressed: () => widget.delegate.onRecoverPressed(viewModel: widget.viewModel),
@@ -171,11 +171,11 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Lembrou a senha? ',
+          'Remember your password? ',
           style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant),
         ),
         ShadcnButton(
-          text: 'Voltar ao login',
+          text: 'Back to login',
           variant: ShadcnButtonVariant.link,
           disabled: widget.viewModel.isLoading,
           onPressed: () => widget.delegate.onGoToLoginPressed(viewModel: widget.viewModel),

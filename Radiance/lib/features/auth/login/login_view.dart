@@ -92,7 +92,7 @@ class _LoginViewState extends State<LoginView> {
             gradient: LinearGradient(
               colors: [
                 colorScheme.primary,
-                colorScheme.primary.withOpacity(0.7),
+                colorScheme.primary.withValues(alpha: 0.7),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -100,7 +100,7 @@ class _LoginViewState extends State<LoginView> {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: colorScheme.primary.withOpacity(0.3),
+                color: colorScheme.primary.withValues(alpha: 0.3),
                 blurRadius: 20,
                 offset: const Offset(0, 8),
               ),
@@ -126,7 +126,7 @@ class _LoginViewState extends State<LoginView> {
         const SizedBox(height: 8),
         
         Text(
-          'Faça login para continuar',
+          'Log in to continue',
           style: textTheme.bodyLarge?.copyWith(
             color: colorScheme.onSurfaceVariant,
           ),
@@ -144,7 +144,7 @@ class _LoginViewState extends State<LoginView> {
         children: [
           if (widget.viewModel.errorMessage != null) ...[
             ShadcnAlert(
-              title: 'Erro',
+              title: 'Error',
               description: widget.viewModel.errorMessage,
               type: ShadcnAlertType.error,
               variant: ShadcnAlertVariant.filled,
@@ -167,8 +167,8 @@ class _LoginViewState extends State<LoginView> {
           
           const SizedBox(height: 16),
           ShadcnInput.password(
-            label: 'Senha',
-            placeholder: 'Digite sua senha',
+            label: 'Password',
+            placeholder: 'Enter your password',
             controller: _passwordController,
             errorText: widget.viewModel.passwordError,
             enabled: !widget.viewModel.isLoading,
@@ -192,7 +192,7 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'Lembrar-me',
+                    'Remember me',
                     style: textTheme.bodyMedium?.copyWith(
                       color: colorScheme.onSurfaceVariant,
                     ),
@@ -200,7 +200,7 @@ class _LoginViewState extends State<LoginView> {
                 ],
               ),
               ShadcnButton(
-                text: 'Esqueci a senha',
+                text: 'Forgot password',
                 variant: ShadcnButtonVariant.link,
                 size: ShadcnButtonSize.sm,
                 disabled: widget.viewModel.isLoading,
@@ -213,7 +213,7 @@ class _LoginViewState extends State<LoginView> {
           
           const SizedBox(height: 24),
           ShadcnButton(
-            text: widget.viewModel.isLoading ? 'Entrando...' : 'Entrar',
+            text: widget.viewModel.isLoading ? 'Signing in...' : 'Sign In',
             loading: widget.viewModel.isLoading,
             disabled: widget.viewModel.isLoading,
             onPressed: () => widget.delegate.onLoginPressed(
@@ -230,13 +230,13 @@ class _LoginViewState extends State<LoginView> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Não tem uma conta? ',
+          "Don't have an account? ",
           style: textTheme.bodyMedium?.copyWith(
             color: colorScheme.onSurfaceVariant,
           ),
         ),
         ShadcnButton(
-          text: 'Cadastre-se',
+          text: 'Sign Up',
           variant: ShadcnButtonVariant.link,
           disabled: widget.viewModel.isLoading,
           onPressed: () => widget.delegate.onRegisterPressed(

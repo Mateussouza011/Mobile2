@@ -27,15 +27,15 @@ class GetPredictionUseCase {
   }
 
   String? _validate(PredictionParams params) {
-    if (params.carat <= 0) return 'Quilates deve ser maior que 0';
-    if (params.depth <= 0 || params.depth > 100) return 'Profundidade inválida';
-    if (params.table <= 0 || params.table > 100) return 'Mesa inválida';
+    if (params.carat <= 0) return 'Carat must be greater than 0';
+    if (params.depth <= 0 || params.depth > 100) return 'Invalid depth';
+    if (params.table <= 0 || params.table > 100) return 'Invalid table';
     if (params.x <= 0 || params.y <= 0 || params.z <= 0) {
-      return 'Dimensões devem ser maiores que 0';
+      return 'Dimensions must be greater than 0';
     }
-    if (params.cut.isEmpty) return 'Corte é obrigatório';
-    if (params.color.isEmpty) return 'Cor é obrigatória';
-    if (params.clarity.isEmpty) return 'Claridade é obrigatória';
+    if (params.cut.isEmpty) return 'Cut is required';
+    if (params.color.isEmpty) return 'Color is required';
+    if (params.clarity.isEmpty) return 'Clarity is required';
     return null;
   }
 }

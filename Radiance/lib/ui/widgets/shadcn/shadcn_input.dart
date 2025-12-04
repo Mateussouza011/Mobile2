@@ -424,19 +424,19 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
       case ShadcnInputType.email:
         final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
         if (!emailRegex.hasMatch(value)) {
-          return 'Email inválido';
+          return 'Invalid email';
         }
         break;
       case ShadcnInputType.url:
         final urlRegex = RegExp(r'^https?:\/\/');
         if (!urlRegex.hasMatch(value)) {
-          return 'URL inválida';
+          return 'Invalid URL';
         }
         break;
       case ShadcnInputType.phone:
         final phoneRegex = RegExp(r'^\(\d{2}\)\s\d{4,5}-\d{4}$');
         if (!phoneRegex.hasMatch(value)) {
-          return 'Telefone inválido';
+          return 'Invalid phone';
         }
         break;
       default:
@@ -611,17 +611,6 @@ class _ShadcnInputState extends State<ShadcnInput> with SingleTickerProviderStat
         return Colors.transparent;
       default:
         return colorScheme.surface;
-    }
-  }
-
-  Color _getBorderColor(ColorScheme colorScheme) {
-    switch (widget.variant) {
-      case ShadcnInputVariant.borderless:
-        return Colors.transparent;
-      case ShadcnInputVariant.underlined:
-        return colorScheme.outline;
-      default:
-        return colorScheme.outline;
     }
   }
 

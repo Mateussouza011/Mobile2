@@ -76,7 +76,7 @@ class LoginViewModel extends ChangeNotifier {
     );
     
     if (!emailRegex.hasMatch(_email)) {
-      _emailError = 'Email inválido';
+      _emailError = 'Invalid email';
     } else {
       _emailError = null;
     }
@@ -89,7 +89,7 @@ class LoginViewModel extends ChangeNotifier {
     }
     
     if (_password.length < 6) {
-      _passwordError = 'Mínimo 6 caracteres';
+      _passwordError = 'Minimum 6 characters';
     } else {
       _passwordError = null;
     }
@@ -114,7 +114,7 @@ class LoginViewModel extends ChangeNotifier {
     bool isValid = true;
     
     if (_email.isEmpty) {
-      _emailError = 'Email é obrigatório';
+      _emailError = 'Email is required';
       isValid = false;
     } else {
       _validateEmail();
@@ -122,7 +122,7 @@ class LoginViewModel extends ChangeNotifier {
     }
     
     if (_password.isEmpty) {
-      _passwordError = 'Senha é obrigatória';
+      _passwordError = 'Password is required';
       isValid = false;
     } else {
       _validatePassword();

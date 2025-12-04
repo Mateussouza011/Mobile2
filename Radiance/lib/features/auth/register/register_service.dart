@@ -1,17 +1,18 @@
 import '../../../core/data/repositories/auth_repository.dart';
+import '../navigation/auth_coordinator.dart';
 import 'register_view_model.dart';
 import 'register_delegate.dart';
+
+/// Service that handles register business logic.
+/// Implements RegisterDelegate to respond to view events.
 class RegisterService implements RegisterDelegate {
   final AuthRepository _authRepository;
-  final VoidCallback _onRegisterSuccess;
-  final VoidCallback _onGoToLogin;
+  final AuthCoordinator _coordinator;
 
   RegisterService({
-    required VoidCallback onRegisterSuccess,
-    required VoidCallback onGoToLogin,
+    required AuthCoordinator coordinator,
     AuthRepository? authRepository,
-  })  : _onRegisterSuccess = onRegisterSuccess,
-        _onGoToLogin = onGoToLogin,
+  })  : _coordinator = coordinator,
         _authRepository = authRepository ?? AuthRepository();
 
   @override
@@ -66,12 +67,12 @@ class RegisterService implements RegisterDelegate {
       );
 
       if (result.isSuccess) {
-        _onRegisterSuccess();
+        _coordinator.goToHome();
       } else {
-        viewModel.setError(result.message ?? 'Erro ao cadastrar');
+        viewModel.setError(result.message ?? 'Registration failed');
       }
     } catch (e) {
-      viewModel.setError('Erro inesperado. Tente novamente.');
+      viewModel.setError('Unexpected error. Please try again.');
     } finally {
       viewModel.setLoading(false);
     }
@@ -79,8 +80,6 @@ class RegisterService implements RegisterDelegate {
 
   @override
   void onGoToLoginPressed({required RegisterViewModel viewModel}) {
-    _onGoToLogin();
+    _coordinator.goToLogin();
   }
 }
-
-typedef VoidCallback = void Function();

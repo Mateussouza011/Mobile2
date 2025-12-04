@@ -95,35 +95,35 @@ class ApiClient {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return ConnectionException('Tempo de conexão esgotado');
+        return ConnectionException('Connection timeout');
       
       case DioExceptionType.badResponse:
         final statusCode = error.response?.statusCode;
         final message = error.response?.data?['message'] ?? 
                        error.response?.data?['error'] ??
-                       'Erro no servidor';
+                       'Server error';
         return ServerException(message, statusCode);
       
       case DioExceptionType.cancel:
-        return ConnectionException('Requisição cancelada');
+        return ConnectionException('Request cancelled');
       
       case DioExceptionType.unknown:
         final errorMsg = error.error?.toString() ?? '';
         if (errorMsg.contains('SocketException') || 
             errorMsg.contains('Failed host lookup') ||
             errorMsg.contains('Network is unreachable')) {
-          return ConnectionException('Sem conexão com a internet');
+          return ConnectionException('No internet connection');
         }
         if (errorMsg.contains('Connection refused')) {
-          return ConnectionException('Não foi possível conectar ao servidor');
+          return ConnectionException('Could not connect to server');
         }
         if (errorMsg.contains('XMLHttpRequest error')) {
-          return ConnectionException('Erro de conexão (CORS ou rede)');
+          return ConnectionException('Connection error (CORS or network)');
         }
-        return ServerException('Erro desconhecido: ${error.message}\nDetalhes: $errorMsg');
+        return ServerException('Unknown error: ${error.message}\nDetails: $errorMsg');
       
       default:
-        return ServerException('Erro inesperado');
+        return ServerException('Unexpected error');
     }
   }
 }

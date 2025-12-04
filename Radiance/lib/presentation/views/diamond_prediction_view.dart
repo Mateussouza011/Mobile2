@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../core/theme/colors.dart';
 import '../../ui/widgets/shadcn/shadcn_button.dart';
 import '../../ui/widgets/shadcn/shadcn_input.dart';
 import '../../ui/widgets/shadcn/shadcn_select.dart';
@@ -30,7 +31,7 @@ class _DiamondPredictionViewState extends State<DiamondPredictionView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Predição de Diamantes',
+          'Diamond Prediction',
           style: theme.textTheme.titleLarge?.copyWith(
             color: colorScheme.onSurface,
             fontWeight: FontWeight.w600,
@@ -48,14 +49,14 @@ class _DiamondPredictionViewState extends State<DiamondPredictionView> {
             padding: const EdgeInsets.all(24.0),
             children: [
               Text(
-                'Características do Diamante',
+                'Diamond Characteristics',
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
-                'Preencha as informações para prever o preço',
+                'Fill in the information to predict the price',
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
@@ -96,7 +97,7 @@ class _DiamondPredictionViewState extends State<DiamondPredictionView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Quilates (carat)', style: theme.textTheme.labelMedium),
+                  Text('Carat', style: theme.textTheme.labelMedium),
                   const SizedBox(height: 8),
                   Slider(
                     value: viewModel.carat,
@@ -131,7 +132,7 @@ class _DiamondPredictionViewState extends State<DiamondPredictionView> {
           children: [
             Expanded(
               child: ShadcnSelect<String>(
-                label: 'Corte',
+                label: 'Cut',
                 value: viewModel.cut,
                 options: const [
                   ShadcnSelectOption(value: 'Fair', label: 'Fair'),
@@ -146,7 +147,7 @@ class _DiamondPredictionViewState extends State<DiamondPredictionView> {
             const SizedBox(width: 12),
             Expanded(
               child: ShadcnSelect<String>(
-                label: 'Cor',
+                label: 'Color',
                 value: viewModel.color,
                 options: const [
                   ShadcnSelectOption(value: 'D', label: 'D'),
@@ -165,7 +166,7 @@ class _DiamondPredictionViewState extends State<DiamondPredictionView> {
         const SizedBox(height: 16),
 
         ShadcnSelect<String>(
-          label: 'Claridade',
+          label: 'Clarity',
           value: viewModel.clarity,
           options: const [
             ShadcnSelectOption(value: 'I1', label: 'I1'),
@@ -184,7 +185,7 @@ class _DiamondPredictionViewState extends State<DiamondPredictionView> {
           children: [
             Expanded(
               child: ShadcnInput(
-                label: 'Profundidade (%)',
+                label: 'Depth (%)',
                 placeholder: '0.0',
                 initialValue: viewModel.depth.toStringAsFixed(1),
                 inputType: ShadcnInputType.number,
@@ -197,7 +198,7 @@ class _DiamondPredictionViewState extends State<DiamondPredictionView> {
             const SizedBox(width: 12),
             Expanded(
               child: ShadcnInput(
-                label: 'Mesa (%)',
+                label: 'Table (%)',
                 placeholder: '0.0',
                 initialValue: viewModel.table.toStringAsFixed(1),
                 inputType: ShadcnInputType.number,
@@ -268,14 +269,14 @@ class _DiamondPredictionViewState extends State<DiamondPredictionView> {
                     width: 20,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
-                : const Text('Prever Preço'),
+                : const Text('Predict Price'),
           ),
         ),
         const SizedBox(width: 12),
         ShadcnButton(
           variant: ShadcnButtonVariant.outline,
           onPressed: viewModel.resetForm,
-          child: const Text('Limpar'),
+          child: const Text('Clear'),
         ),
       ],
     );
@@ -299,14 +300,14 @@ class _DiamondPredictionViewState extends State<DiamondPredictionView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Preço Estimado',
+                      'Estimated Price',
                       style: theme.textTheme.titleMedium,
                     ),
                     Text(
                       prediction.formattedPrice,
                       style: theme.textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: Colors.green,
+                        color: ShadcnColors.success,
                       ),
                     ),
                   ],
@@ -334,11 +335,11 @@ class _DiamondPredictionViewState extends State<DiamondPredictionView> {
         padding: const EdgeInsets.all(20.0),
         child: Row(
           children: [
-            const Icon(Icons.error_outline, color: Colors.red),
+            const Icon(Icons.error_outline, color: ShadcnColors.destructive),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                viewModel.errorMessage ?? 'Erro desconhecido',
+                viewModel.errorMessage ?? 'Unknown error',
                 style: theme.textTheme.bodyMedium,
               ),
             ),
@@ -355,7 +356,7 @@ class _DiamondPredictionViewState extends State<DiamondPredictionView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Histórico de Predições',
+          'Prediction History',
           style: theme.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -383,7 +384,7 @@ class _DiamondPredictionViewState extends State<DiamondPredictionView> {
                           Text(
                             history.prediction.formattedPrice,
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: Colors.green,
+                              color: ShadcnColors.success,
                               fontWeight: FontWeight.bold,
                             ),
                           ),

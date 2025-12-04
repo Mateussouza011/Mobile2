@@ -1,33 +1,47 @@
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter/foundation.dart';
 import 'prediction_delegate.dart';
 import 'prediction_view_model.dart';
+import '../navigation/diamond_coordinator.dart';
 import '../../../core/data/models/prediction_model.dart';
 import '../../../core/data/repositories/auth_repository.dart';
 import '../../../core/data/repositories/prediction_history_repository.dart';
 import '../../../core/data/services/prediction_api_service.dart';
+
+/// Service that handles prediction business logic.
+/// Implements PredictionDelegate to respond to view events.
 class PredictionService implements PredictionDelegate {
   final PredictionViewModel viewModel;
   final PredictionApiService apiService;
   final PredictionHistoryRepository historyRepository;
   final AuthRepository authRepository;
-  final BuildContext context;
+  final DiamondCoordinator _coordinator;
 
   PredictionService({
     required this.viewModel,
     required this.apiService,
     required this.historyRepository,
     required this.authRepository,
-    required this.context,
-  });
+    required DiamondCoordinator coordinator,
+  }) : _coordinator = coordinator;
 
   @override
   Future<void> predict() async {
+    // Validate form before proceeding
+    if (!viewModel.isFormValid) {
+      onError('Please fill in all required fields (Cut, Color, and Clarity)');
+      return;
+    }
+    
     viewModel.setLoading(true);
     viewModel.clearError();
 
     try {
       final request = viewModel.buildRequest();
+      if (request == null) {
+        onError('Invalid form data');
+        return;
+      }
+      
       final result = await apiService.predictPrice(request);
       
       if (result.isSuccess && result.price != null) {
@@ -35,25 +49,32 @@ class PredictionService implements PredictionDelegate {
         onPredictionSuccess(response);
         await _saveToHistory(response);
       } else {
-        onError(result.errorMessage ?? 'Erro desconhecido na predicao');
+        onError(result.errorMessage ?? 'Unknown prediction error');
       }
     } catch (e) {
-      onError('Erro ao fazer predicao: ${e.toString()}');
+      onError('Error making prediction: ${e.toString()}');
     } finally {
       viewModel.setLoading(false);
     }
   }
+
   Future<void> _saveToHistory(PredictionResponse result) async {
     final user = authRepository.currentUser;
     if (user == null || user.id == null) return;
+    
+    // These should never be null at this point since we validated
+    final cut = viewModel.cut;
+    final color = viewModel.color;
+    final clarity = viewModel.clarity;
+    if (cut == null || color == null || clarity == null) return;
 
     try {
       final prediction = PredictionHistoryModel(
         userId: user.id!,
         carat: viewModel.carat,
-        cut: viewModel.cut,
-        color: viewModel.color,
-        clarity: viewModel.clarity,
+        cut: cut,
+        color: color,
+        clarity: clarity,
         depth: viewModel.depth,
         table: viewModel.table,
         x: viewModel.x,
@@ -65,7 +86,7 @@ class PredictionService implements PredictionDelegate {
 
       await historyRepository.savePrediction(prediction);
     } catch (e) {
-      debugPrint('Erro ao salvar histórico: $e');
+      debugPrint('Error saving to history: $e');
     }
   }
 
@@ -73,13 +94,21 @@ class PredictionService implements PredictionDelegate {
   Future<void> savePrediction() async {
     final result = viewModel.result;
     if (result == null) {
-      onError('Nenhuma predicao para salvar');
+      onError('No prediction to save');
       return;
     }
 
     final user = authRepository.currentUser;
     if (user == null || user.id == null) {
-      onError('Usuario nao autenticado');
+      onError('User not authenticated');
+      return;
+    }
+    
+    final cut = viewModel.cut;
+    final color = viewModel.color;
+    final clarity = viewModel.clarity;
+    if (cut == null || color == null || clarity == null) {
+      onError('Please fill in all required fields');
       return;
     }
 
@@ -89,9 +118,9 @@ class PredictionService implements PredictionDelegate {
       final prediction = PredictionHistoryModel(
         userId: user.id!,
         carat: viewModel.carat,
-        cut: viewModel.cut,
-        color: viewModel.color,
-        clarity: viewModel.clarity,
+        cut: cut,
+        color: color,
+        clarity: clarity,
         depth: viewModel.depth,
         table: viewModel.table,
         x: viewModel.x,
@@ -104,7 +133,7 @@ class PredictionService implements PredictionDelegate {
       await historyRepository.savePrediction(prediction);
       onPredictionSaved();
     } catch (e) {
-      onError('Erro ao salvar predicao: ${e.toString()}');
+      onError('Error saving prediction: ${e.toString()}');
     } finally {
       viewModel.setLoading(false);
     }
@@ -122,7 +151,7 @@ class PredictionService implements PredictionDelegate {
 
   @override
   void navigateBack() {
-    GoRouter.of(context).go('/diamond-home');
+    _coordinator.goToHome();
   }
 
   @override
@@ -137,13 +166,6 @@ class PredictionService implements PredictionDelegate {
 
   @override
   void onPredictionSaved() {
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Predicao salva com sucesso!'),
-          backgroundColor: Colors.green,
-        ),
-      );
-    }
+    _coordinator.showSuccessMessage('Prediction saved successfully!');
   }
 }

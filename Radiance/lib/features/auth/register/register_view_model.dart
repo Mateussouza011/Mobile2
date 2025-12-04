@@ -106,7 +106,7 @@ class RegisterViewModel extends ChangeNotifier {
     }
     
     if (_name.trim().length < 2) {
-      _nameError = 'Nome muito curto';
+      _nameError = 'Name too short';
     } else {
       _nameError = null;
     }
@@ -123,7 +123,7 @@ class RegisterViewModel extends ChangeNotifier {
     );
     
     if (!emailRegex.hasMatch(_email)) {
-      _emailError = 'Email inválido';
+      _emailError = 'Invalid email';
     } else {
       _emailError = null;
     }
@@ -136,7 +136,7 @@ class RegisterViewModel extends ChangeNotifier {
     }
     
     if (_password.length < 6) {
-      _passwordError = 'Mínimo 6 caracteres';
+      _passwordError = 'Minimum 6 characters';
     } else {
       _passwordError = null;
     }
@@ -149,7 +149,7 @@ class RegisterViewModel extends ChangeNotifier {
     }
     
     if (_confirmPassword != _password) {
-      _confirmPasswordError = 'Senhas não conferem';
+      _confirmPasswordError = 'Passwords do not match';
     } else {
       _confirmPasswordError = null;
     }
@@ -165,27 +165,27 @@ class RegisterViewModel extends ChangeNotifier {
     bool isValid = true;
     
     if (_name.isEmpty) {
-      _nameError = 'Nome é obrigatório';
+      _nameError = 'Name is required';
       isValid = false;
     }
     
     if (_email.isEmpty) {
-      _emailError = 'Email é obrigatório';
+      _emailError = 'Email is required';
       isValid = false;
     }
     
     if (_password.isEmpty) {
-      _passwordError = 'Senha é obrigatória';
+      _passwordError = 'Password is required';
       isValid = false;
     }
     
     if (_confirmPassword.isEmpty) {
-      _confirmPasswordError = 'Confirme sua senha';
+      _confirmPasswordError = 'Confirm your password';
       isValid = false;
     }
     
     if (!_acceptTerms) {
-      _errorMessage = 'Você deve aceitar os termos de uso';
+      _errorMessage = 'You must accept the terms of use';
       isValid = false;
     }
     

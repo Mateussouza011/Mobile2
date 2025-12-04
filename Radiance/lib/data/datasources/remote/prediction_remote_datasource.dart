@@ -57,7 +57,7 @@ class PredictionRemoteDataSourceImpl implements PredictionRemoteDataSource {
         );
       } else {
         throw ServerException(
-          'Erro ao obter predição',
+          'Error getting prediction',
           response.statusCode,
         );
       }
@@ -65,7 +65,7 @@ class PredictionRemoteDataSourceImpl implements PredictionRemoteDataSource {
       if (e is ServerException || e is ConnectionException) {
         rethrow;
       }
-      throw ServerException('Erro ao processar resposta: $e');
+      throw ServerException('Error processing response: $e');
     }
   }
 }

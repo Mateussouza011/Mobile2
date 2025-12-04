@@ -43,7 +43,7 @@ class DefaultShadcnInputDelegate implements ShadcnInputDelegate {
   @override
   String? validateInput(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Campo obrigatório';
+      return 'Required field';
     }
     return null;
   }
@@ -92,16 +92,16 @@ class CPFInputDelegate extends DefaultShadcnInputDelegate {
   @override
   String? validateInput(String? value) {
     if (value == null || value.isEmpty) {
-      return 'CPF é obrigatório';
+      return 'CPF is required';
     }
     
     final numbers = value.replaceAll(RegExp(r'[^0-9]'), '');
     
     if (numbers.length != 11) {
-      return 'CPF deve ter 11 dígitos';
+      return 'CPF must have 11 digits';
     }
     if (RegExp(r'^(\d)\1{10}$').hasMatch(numbers)) {
-      return 'CPF inválido';
+      return 'Invalid CPF';
     }
     
     return null;
@@ -126,12 +126,12 @@ class EmailInputDelegate extends DefaultShadcnInputDelegate {
   @override
   String? validateInput(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Email é obrigatório';
+      return 'Email is required';
     }
     
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(value)) {
-      return 'Email inválido';
+      return 'Invalid email';
     }
     
     return null;
@@ -172,12 +172,12 @@ class PhoneInputDelegate extends DefaultShadcnInputDelegate {
   @override
   String? validateInput(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Telefone é obrigatório';
+      return 'Phone is required';
     }
     
     final numbers = value.replaceAll(RegExp(r'[^0-9]'), '');
     if (numbers.length < 10 || numbers.length > 11) {
-      return 'Telefone inválido';
+      return 'Invalid phone';
     }
     
     return null;
@@ -205,23 +205,23 @@ class PasswordInputDelegate extends DefaultShadcnInputDelegate {
   @override
   String? validateInput(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Senha é obrigatória';
+      return 'Password is required';
     }
     
     if (value.length < 8) {
-      return 'Senha deve ter no mínimo 8 caracteres';
+      return 'Password must be at least 8 characters';
     }
     
     if (!RegExp(r'[A-Z]').hasMatch(value)) {
-      return 'Senha deve conter pelo menos uma letra maiúscula';
+      return 'Password must contain at least one uppercase letter';
     }
     
     if (!RegExp(r'[a-z]').hasMatch(value)) {
-      return 'Senha deve conter pelo menos uma letra minúscula';
+      return 'Password must contain at least one lowercase letter';
     }
     
     if (!RegExp(r'[0-9]').hasMatch(value)) {
-      return 'Senha deve conter pelo menos um número';
+      return 'Password must contain at least one number';
     }
     
     return null;
@@ -230,7 +230,7 @@ class PasswordInputDelegate extends DefaultShadcnInputDelegate {
   @override
   String? getHelperText(String currentText) {
     if (currentText.isEmpty) {
-      return 'Mínimo 8 caracteres, com maiúsculas, minúsculas e números';
+      return 'Minimum 8 characters, with uppercase, lowercase and numbers';
     }
     
     int strength = 0;
@@ -241,15 +241,15 @@ class PasswordInputDelegate extends DefaultShadcnInputDelegate {
     
     switch (strength) {
       case 1:
-        return 'Senha fraca';
+        return 'Weak password';
       case 2:
-        return 'Senha média';
+        return 'Medium password';
       case 3:
-        return 'Senha boa';
+        return 'Good password';
       case 4:
-        return 'Senha forte';
+        return 'Strong password';
       default:
-        return 'Digite a senha';
+        return 'Enter password';
     }
   }
   

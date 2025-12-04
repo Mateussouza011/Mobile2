@@ -1,22 +1,24 @@
-import 'package:go_router/go_router.dart';
-import 'package:flutter/material.dart';
 import 'home_delegate.dart';
 import 'home_view_model.dart';
+import '../navigation/diamond_coordinator.dart';
 import '../../../core/data/models/prediction_model.dart';
 import '../../../core/data/models/user_model.dart';
 import '../../../core/data/repositories/auth_repository.dart';
 import '../../../core/data/repositories/prediction_history_repository.dart';
+
+/// Service that handles home business logic.
+/// Implements HomeDelegate to respond to view events.
 class HomeService implements HomeDelegate {
   final HomeViewModel viewModel;
   final AuthRepository authRepository;
   final PredictionHistoryRepository historyRepository;
-  final BuildContext context;
+  final DiamondCoordinator coordinator;
 
   HomeService({
     required this.viewModel,
     required this.authRepository,
     required this.historyRepository,
-    required this.context,
+    required this.coordinator,
   });
 
   @override
@@ -27,7 +29,7 @@ class HomeService implements HomeDelegate {
     try {
       final user = getCurrentUser();
       if (user == null || user.id == null) {
-        onError('Usuário não autenticado');
+        onError('User not authenticated');
         return;
       }
 
@@ -44,7 +46,7 @@ class HomeService implements HomeDelegate {
         lastPrediction: results[2] as PredictionHistoryModel?,
       );
     } catch (e) {
-      onError('Erro ao carregar estatísticas: ${e.toString()}');
+      onError('Failed to load statistics: ${e.toString()}');
     } finally {
       viewModel.setLoading(false);
     }
@@ -52,23 +54,21 @@ class HomeService implements HomeDelegate {
 
   @override
   void navigateToPrediction() {
-    GoRouter.of(context).go('/diamond-prediction');
+    coordinator.goToPrediction();
   }
 
   @override
   void navigateToHistory() {
-    GoRouter.of(context).go('/diamond-history');
+    coordinator.goToHistory();
   }
 
   @override
   Future<void> logout() async {
     try {
       await authRepository.logout();
-      if (context.mounted) {
-        GoRouter.of(context).go('/diamond-login');
-      }
+      coordinator.goToLogin();
     } catch (e) {
-      onError('Erro ao fazer logout: ${e.toString()}');
+      onError('Failed to logout: ${e.toString()}');
     }
   }
 
@@ -95,3 +95,4 @@ class HomeService implements HomeDelegate {
     return authRepository.currentUser;
   }
 }
+

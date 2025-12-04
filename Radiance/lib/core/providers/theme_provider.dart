@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 class ThemeProvider extends ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.light;
-  String _selectedLanguage = 'Português';
+  String _selectedLanguage = 'English';
   ThemeMode get themeMode => _themeMode;
   String get selectedLanguage => _selectedLanguage;
   bool get isDarkMode => _themeMode == ThemeMode.dark;
@@ -22,8 +22,8 @@ class ThemeProvider extends ChangeNotifier {
     }
   }
   List<String> get availableLanguages => [
-    'Português',
-    'Inglês',
-    'Espanhol',
+    'English',
+    'Portuguese',
+    'Spanish',
   ];
 }

@@ -54,6 +54,7 @@ void main() {
       timestamp: DateTime(2025, 11, 27),
     );
 
+    // ignore: unused_local_variable - kept for future test expansion
     const tParams = PredictionParams(
       carat: 1.0,
       cut: 'Ideal',

@@ -23,7 +23,7 @@ class PredictionApiService {
       ).timeout(
         const Duration(seconds: ApiConstants.defaultTimeout),
         onTimeout: () => throw const PredictionException(
-          'Tempo limite da requisição excedido. Verifique sua conexão.',
+          'Request timeout. Check your connection.',
         ),
       );
 
@@ -38,20 +38,20 @@ class PredictionApiService {
         } catch (e) {
           debugPrint('[PredictionAPI] Parse error: $e');
           return PredictionResult.failure(
-            'Erro ao processar resposta da API: ${e.toString()}',
+            'Error processing API response: ${e.toString()}',
           );
         }
       } else if (response.statusCode == 400) {
         return PredictionResult.failure(
-          'Dados inválidos. Verifique os parâmetros informados.',
+          'Invalid data. Check the parameters provided.',
         );
       } else if (response.statusCode == 500) {
         return PredictionResult.failure(
-          'Erro no servidor. Tente novamente mais tarde.',
+          'Server error. Try again later.',
         );
       } else {
         return PredictionResult.failure(
-          'Erro na requisição (${response.statusCode}). Tente novamente.',
+          'Request error (${response.statusCode}). Try again.',
         );
       }
     } on PredictionException catch (e) {
@@ -61,12 +61,12 @@ class PredictionApiService {
       debugPrint('[PredictionAPI] Exception: $e');
       if (kIsWeb && e.toString().contains('XMLHttpRequest')) {
         return PredictionResult.failure(
-          'Erro de CORS. A API não permite requisições do navegador. '
-          'Tente executar o app em modo nativo ou use um proxy.',
+          'CORS error. The API does not allow browser requests. '
+          'Try running the app in native mode or use a proxy.',
         );
       }
       return PredictionResult.failure(
-        'Erro de conexão. Verifique sua internet e tente novamente.',
+        'Connection error. Check your internet and try again.',
       );
     }
   }

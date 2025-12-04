@@ -50,10 +50,10 @@ class PredictionRepositoryImpl implements PredictionRepository {
       } on ConnectionException catch (e) {
         return Left(ConnectionFailure(e.message));
       } catch (e) {
-        return Left(UnexpectedFailure('Erro inesperado: $e'));
+        return Left(UnexpectedFailure('Unexpected error: $e'));
       }
     } else {
-      return const Left(ConnectionFailure('Sem conexão com a internet'));
+      return const Left(ConnectionFailure('No internet connection'));
     }
   }
 
@@ -69,7 +69,7 @@ class PredictionRepositoryImpl implements PredictionRepository {
     } on CacheException catch (e) {
       return Left(CacheFailure(e.message));
     } catch (e) {
-      return Left(UnexpectedFailure('Erro ao salvar histórico: $e'));
+      return Left(UnexpectedFailure('Error saving history: $e'));
     }
   }
 
@@ -90,7 +90,7 @@ class PredictionRepositoryImpl implements PredictionRepository {
     } on CacheException catch (e) {
       return Left(CacheFailure(e.message));
     } catch (e) {
-      return Left(UnexpectedFailure('Erro ao buscar histórico: $e'));
+      return Left(UnexpectedFailure('Error fetching history: $e'));
     }
   }
 
@@ -102,7 +102,7 @@ class PredictionRepositoryImpl implements PredictionRepository {
     } on CacheException catch (e) {
       return Left(CacheFailure(e.message));
     } catch (e) {
-      return Left(UnexpectedFailure('Erro ao limpar histórico: $e'));
+      return Left(UnexpectedFailure('Error clearing history: $e'));
     }
   }
 
@@ -114,7 +114,7 @@ class PredictionRepositoryImpl implements PredictionRepository {
     } on CacheException catch (e) {
       return Left(CacheFailure(e.message));
     } catch (e) {
-      return Left(UnexpectedFailure('Erro ao deletar predição: $e'));
+      return Left(UnexpectedFailure('Error deleting prediction: $e'));
     }
   }
 }

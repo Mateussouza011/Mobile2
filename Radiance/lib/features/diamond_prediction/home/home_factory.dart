@@ -3,11 +3,16 @@ import 'package:provider/provider.dart';
 import 'home_view_model.dart';
 import 'home_service.dart';
 import 'home_view.dart';
+import '../navigation/diamond_coordinator.dart';
+import '../../../core/navigation/app_coordinator.dart';
 import '../../../core/data/repositories/auth_repository.dart';
 import '../../../core/data/repositories/prediction_history_repository.dart';
+
 class HomeFactory {
   static Widget create(BuildContext context) {
     final viewModel = HomeViewModel();
+    final appCoordinator = AppCoordinatorImpl(context);
+    final diamondCoordinator = DiamondCoordinatorImpl(appCoordinator);
     
     return ChangeNotifierProvider.value(
       value: viewModel,
@@ -17,7 +22,7 @@ class HomeFactory {
             viewModel: viewModel,
             authRepository: AuthRepository(),
             historyRepository: PredictionHistoryRepository(),
-            context: context,
+            coordinator: diamondCoordinator,
           );
           viewModel.setCurrentUser(service.getCurrentUser());
           
@@ -27,3 +32,4 @@ class HomeFactory {
     );
   }
 }
+

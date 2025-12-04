@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/colors.dart';
 
 enum ShadcnSliderType {
   single,
@@ -356,8 +357,8 @@ class ShadcnPriceRangeSlider extends StatelessWidget {
       min: min,
       max: max,
       enabled: enabled,
-      label: 'Faixa de Preço',
-      labelFormatter: (value) => 'R\$ ${value.toStringAsFixed(0)}',
+      label: 'Price Range',
+      labelFormatter: (value) => '\$ ${value.toStringAsFixed(0)}',
       divisions: 20,
       showTicks: true,
     );
@@ -378,10 +379,10 @@ class ShadcnTemperatureSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color getTemperatureColor() {
-      if (value < 10) return Colors.blue;
+      if (value < 10) return ShadcnColors.info;
       if (value < 20) return Colors.lightBlue;
-      if (value < 30) return Colors.orange;
-      return Colors.red;
+      if (value < 30) return ShadcnColors.warning;
+      return ShadcnColors.hot;
     }
 
     return ShadcnSlider.single(
@@ -390,7 +391,7 @@ class ShadcnTemperatureSlider extends StatelessWidget {
       min: -10,
       max: 50,
       enabled: enabled,
-      label: 'Temperatura',
+      label: 'Temperature',
       labelFormatter: (value) => '${value.toInt()}°C',
       activeColor: getTemperatureColor(),
       thumbColor: getTemperatureColor(),

@@ -36,7 +36,7 @@ class PredictionLocalDataSourceImpl implements PredictionLocalDataSource {
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     } catch (e) {
-      throw CacheException('Erro ao salvar predição: $e');
+      throw CacheException('Error saving prediction: $e');
     }
   }
 
@@ -54,7 +54,7 @@ class PredictionLocalDataSourceImpl implements PredictionLocalDataSource {
 
       return maps.map((map) => PredictionHistoryModel.fromMap(map)).toList();
     } catch (e) {
-      throw CacheException('Erro ao buscar histórico: $e');
+      throw CacheException('Error fetching history: $e');
     }
   }
 
@@ -69,7 +69,7 @@ class PredictionLocalDataSourceImpl implements PredictionLocalDataSource {
         whereArgs: [userId],
       );
     } catch (e) {
-      throw CacheException('Erro ao limpar histórico: $e');
+      throw CacheException('Error clearing history: $e');
     }
   }
 
@@ -84,7 +84,7 @@ class PredictionLocalDataSourceImpl implements PredictionLocalDataSource {
         whereArgs: [predictionId],
       );
     } catch (e) {
-      throw CacheException('Erro ao deletar predição: $e');
+      throw CacheException('Error deleting prediction: $e');
     }
   }
 }

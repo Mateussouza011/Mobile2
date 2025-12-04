@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/theme/colors.dart';
 
 enum ShadcnBadgeVariant {
   default_,
@@ -139,15 +140,15 @@ class ShadcnBadge extends StatelessWidget {
         );
       case ShadcnBadgeVariant.success:
         return _BadgeColors(
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          borderColor: Colors.green,
+          backgroundColor: ShadcnColors.success,
+          textColor: ShadcnColors.successForeground,
+          borderColor: ShadcnColors.success,
         );
       case ShadcnBadgeVariant.warning:
         return _BadgeColors(
-          backgroundColor: Colors.orange,
-          textColor: Colors.white,
-          borderColor: Colors.orange,
+          backgroundColor: ShadcnColors.warning,
+          textColor: ShadcnColors.warningForeground,
+          borderColor: ShadcnColors.warning,
         );
     }
   }

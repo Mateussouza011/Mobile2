@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+import '../../../core/theme/colors.dart';
 
 enum ShadcnFileUploadType {
   single,
@@ -295,7 +296,7 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
     
     switch (status) {
       case ShadcnFileUploadStatus.success:
-        return Colors.green;
+        return ShadcnColors.success;
       case ShadcnFileUploadStatus.error:
         return colorScheme.error;
       case ShadcnFileUploadStatus.uploading:
@@ -308,13 +309,13 @@ class _ShadcnFileUploadState extends State<ShadcnFileUpload> {
   String _getStatusText(ShadcnFileUploadStatus status) {
     switch (status) {
       case ShadcnFileUploadStatus.success:
-        return 'Enviado';
+        return 'Uploaded';
       case ShadcnFileUploadStatus.error:
-        return 'Erro';
+        return 'Error';
       case ShadcnFileUploadStatus.uploading:
-        return 'Enviando...';
+        return 'Uploading...';
       default:
-        return 'Pronto';
+        return 'Ready';
     }
   }
 

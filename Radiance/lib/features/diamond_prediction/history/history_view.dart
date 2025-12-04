@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'history_view_model.dart';
 import 'history_delegate.dart';
+import '../../../core/theme/colors.dart';
 import '../../../ui/widgets/shadcn/shadcn_card.dart';
 import '../../../ui/widgets/shadcn/shadcn_button.dart';
 import '../../../core/data/models/prediction_model.dart';
@@ -53,13 +54,13 @@ class _HistoryViewState extends State<HistoryView> {
               icon: const Icon(Icons.arrow_back),
               onPressed: () => widget.delegate.navigateBack(),
             ),
-            title: const Text('Historico'),
+            title: const Text('History'),
             actions: [
               const ThemeToggleButton(size: 36),
               IconButton(
                 icon: const Icon(Icons.refresh),
                 onPressed: () => widget.delegate.refresh(),
-                tooltip: 'Atualizar',
+                tooltip: 'Refresh',
               ),
             ],
           ),
@@ -113,18 +114,18 @@ class _HistoryViewState extends State<HistoryView> {
             Icon(Icons.error_outline, size: 64, color: colorScheme.error),
             const SizedBox(height: 16),
             Text(
-              'Erro ao carregar',
+              'Loading Error',
               style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
-              viewModel.errorMessage ?? 'Erro desconhecido',
+              viewModel.errorMessage ?? 'Unknown error',
               style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
             ShadcnButton(
-              text: 'Tentar Novamente',
+              text: 'Try Again',
               onPressed: () => widget.delegate.loadHistory(),
             ),
           ],
@@ -142,15 +143,15 @@ class _HistoryViewState extends State<HistoryView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.history, size: 64, color: colorScheme.onSurfaceVariant.withOpacity(0.5)),
+            Icon(Icons.history, size: 64, color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5)),
             const SizedBox(height: 16),
             Text(
-              'Nenhuma predicao encontrada',
+              'No predictions found',
               style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
-              'Suas predicoes salvas aparecerao aqui.',
+              'Your saved predictions will appear here.',
               style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant),
               textAlign: TextAlign.center,
             ),
@@ -180,7 +181,7 @@ class _HistoryViewState extends State<HistoryView> {
                       width: 44,
                       height: 44,
                       decoration: BoxDecoration(
-                        color: colorScheme.primary.withOpacity(0.1),
+                        color: colorScheme.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(Icons.diamond, color: colorScheme.primary, size: 22),
@@ -190,7 +191,7 @@ class _HistoryViewState extends State<HistoryView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${prediction.carat.toStringAsFixed(2)} quilates',
+                          '${prediction.carat.toStringAsFixed(2)} carats',
                           style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
                         ),
                         Text(
@@ -208,7 +209,7 @@ class _HistoryViewState extends State<HistoryView> {
                       '\$${prediction.predictedPrice.toStringAsFixed(2)}',
                       style: textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: Colors.green,
+                        color: ShadcnColors.chart[2],
                       ),
                     ),
                     Text(
@@ -237,7 +238,7 @@ class _HistoryViewState extends State<HistoryView> {
                 IconButton(
                   icon: Icon(Icons.delete_outline, color: colorScheme.error, size: 20),
                   onPressed: () => _showDeleteDialog(context, prediction),
-                  tooltip: 'Excluir',
+                  tooltip: 'Delete',
                 ),
               ],
             ),
@@ -265,22 +266,22 @@ class _HistoryViewState extends State<HistoryView> {
     final now = DateTime.now();
     final difference = now.difference(date);
 
-    if (difference.inDays == 0) return 'Hoje';
-    if (difference.inDays == 1) return 'Ontem';
-    if (difference.inDays < 7) return 'Ha ${difference.inDays} dias';
-    return '${date.day}/${date.month}/${date.year}';
+    if (difference.inDays == 0) return 'Today';
+    if (difference.inDays == 1) return 'Yesterday';
+    if (difference.inDays < 7) return '${difference.inDays} days ago';
+    return '${date.month}/${date.day}/${date.year}';
   }
 
   void _showDeleteDialog(BuildContext context, PredictionHistoryModel prediction) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Excluir Predicao'),
-        content: const Text('Deseja realmente excluir esta predicao do historico?'),
+        title: const Text('Delete Prediction'),
+        content: const Text('Do you really want to delete this prediction from history?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Cancelar'),
+            child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
@@ -289,7 +290,7 @@ class _HistoryViewState extends State<HistoryView> {
                 widget.delegate.deletePrediction(prediction.id!);
               }
             },
-            child: Text('Excluir', style: TextStyle(color: Theme.of(context).colorScheme.error)),
+            child: Text('Delete', style: TextStyle(color: Theme.of(context).colorScheme.error)),
           ),
         ],
       ),

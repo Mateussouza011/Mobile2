@@ -99,7 +99,7 @@ class _RegisterViewState extends State<RegisterView> {
           height: 64,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [colorScheme.primary, colorScheme.primary.withOpacity(0.7)],
+              colors: [colorScheme.primary, colorScheme.primary.withValues(alpha: 0.7)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -109,7 +109,7 @@ class _RegisterViewState extends State<RegisterView> {
         ),
         const SizedBox(height: 16),
         Text(
-          'Criar Conta',
+          'Create Account',
           style: textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.bold,
             color: colorScheme.onSurface,
@@ -117,7 +117,7 @@ class _RegisterViewState extends State<RegisterView> {
         ),
         const SizedBox(height: 8),
         Text(
-          'Preencha seus dados para comecar',
+          'Fill in your details to get started',
           style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant),
         ),
       ],
@@ -133,7 +133,7 @@ class _RegisterViewState extends State<RegisterView> {
         children: [
           if (widget.viewModel.errorMessage != null) ...[
             ShadcnAlert(
-              title: 'Erro',
+              title: 'Error',
               description: widget.viewModel.errorMessage,
               type: ShadcnAlertType.error,
               variant: ShadcnAlertVariant.filled,
@@ -143,8 +143,8 @@ class _RegisterViewState extends State<RegisterView> {
             const SizedBox(height: 16),
           ],
           ShadcnInput(
-            label: 'Nome completo',
-            placeholder: 'Seu nome',
+            label: 'Full name',
+            placeholder: 'Your name',
             controller: _nameController,
             errorText: widget.viewModel.nameError,
             enabled: !widget.viewModel.isLoading,
@@ -168,8 +168,8 @@ class _RegisterViewState extends State<RegisterView> {
           ),
           const SizedBox(height: 16),
           ShadcnInput.password(
-            label: 'Senha',
-            placeholder: 'Minimo 6 caracteres',
+            label: 'Password',
+            placeholder: 'Minimum 6 characters',
             controller: _passwordController,
             errorText: widget.viewModel.passwordError,
             enabled: !widget.viewModel.isLoading,
@@ -180,8 +180,8 @@ class _RegisterViewState extends State<RegisterView> {
           ),
           const SizedBox(height: 16),
           ShadcnInput.password(
-            label: 'Confirmar senha',
-            placeholder: 'Digite a senha novamente',
+            label: 'Confirm password',
+            placeholder: 'Enter password again',
             controller: _confirmPasswordController,
             errorText: widget.viewModel.confirmPasswordError,
             enabled: !widget.viewModel.isLoading,
@@ -202,7 +202,7 @@ class _RegisterViewState extends State<RegisterView> {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'Aceito os termos de uso e politica de privacidade',
+                  'I accept the terms of use and privacy policy',
                   style: textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant),
                 ),
               ),
@@ -210,7 +210,7 @@ class _RegisterViewState extends State<RegisterView> {
           ),
           const SizedBox(height: 24),
           ShadcnButton(
-            text: widget.viewModel.isLoading ? 'Criando conta...' : 'Criar conta',
+            text: widget.viewModel.isLoading ? 'Creating account...' : 'Create account',
             loading: widget.viewModel.isLoading,
             disabled: widget.viewModel.isLoading,
             onPressed: () => widget.delegate.onRegisterPressed(viewModel: widget.viewModel),
@@ -225,11 +225,11 @@ class _RegisterViewState extends State<RegisterView> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Ja tem uma conta? ',
+          'Already have an account? ',
           style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant),
         ),
         ShadcnButton(
-          text: 'Fazer login',
+          text: 'Log in',
           variant: ShadcnButtonVariant.link,
           disabled: widget.viewModel.isLoading,
           onPressed: () => widget.delegate.onGoToLoginPressed(viewModel: widget.viewModel),

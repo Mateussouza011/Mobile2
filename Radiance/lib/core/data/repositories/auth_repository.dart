@@ -6,14 +6,24 @@ import '../database/local_database.dart';
 import '../database/web_storage.dart';
 import '../models/user_model.dart';
 import '../../constants/api_constants.dart';
+
 class AuthRepository {
+  // Singleton instance
+  static final AuthRepository _instance = AuthRepository._internal();
+  static AuthRepository get instance => _instance;
+  
+  // Factory constructor returns singleton
+  factory AuthRepository() => _instance;
+  
+  // Private constructor
+  AuthRepository._internal()
+      : _localDatabase = LocalDatabase.instance,
+        _webStorage = WebStorage.instance;
+
   final LocalDatabase _localDatabase;
   final WebStorage _webStorage;
   UserModel? _currentUser;
 
-  AuthRepository({LocalDatabase? localDatabase})
-      : _localDatabase = localDatabase ?? LocalDatabase.instance,
-        _webStorage = WebStorage.instance;
   UserModel? get currentUser => kIsWeb ? _webStorage.currentUser : _currentUser;
   bool get isLoggedIn => currentUser != null;
   String _hashPassword(String password) {
@@ -29,7 +39,7 @@ class AuthRepository {
   }
   String? _validatePassword(String password) {
     if (password.length < 6) {
-      return 'A senha deve ter pelo menos 6 caracteres';
+      return 'Password must be at least 6 characters';
     }
     return null;
   }
@@ -40,11 +50,11 @@ class AuthRepository {
   }) async {
     try {
       if (name.trim().isEmpty) {
-        return AuthResult.failure('Nome é obrigatório');
+        return AuthResult.failure('Name is required');
       }
       
       if (!_isValidEmail(email)) {
-        return AuthResult.failure('Email inválido');
+        return AuthResult.failure('Invalid email');
       }
 
       final passwordError = _validatePassword(password);
@@ -73,7 +83,7 @@ class AuthRepository {
       );
 
       if (existingUsers.isNotEmpty) {
-        return AuthResult.failure('Este email já está cadastrado');
+        return AuthResult.failure('This email is already registered');
       }
       final user = UserModel(
         name: name.trim(),
@@ -93,7 +103,7 @@ class AuthRepository {
 
       return AuthResult.success(newUser);
     } catch (e) {
-      return AuthResult.failure('Erro ao registrar: ${e.toString()}');
+      return AuthResult.failure('Registration error: ${e.toString()}');
     }
   }
   Future<AuthResult> login({
@@ -102,11 +112,11 @@ class AuthRepository {
   }) async {
     try {
       if (!_isValidEmail(email)) {
-        return AuthResult.failure('Email inválido');
+        return AuthResult.failure('Invalid email');
       }
 
       if (password.isEmpty) {
-        return AuthResult.failure('Senha é obrigatória');
+        return AuthResult.failure('Password is required');
       }
 
       final passwordHash = _hashPassword(password);
@@ -115,7 +125,7 @@ class AuthRepository {
         if (user != null) {
           return AuthResult.success(user);
         }
-        return AuthResult.failure('Email ou senha incorretos');
+        return AuthResult.failure('Incorrect email or password');
       }
       final db = await _localDatabase.database;
 
@@ -126,7 +136,7 @@ class AuthRepository {
       );
 
       if (users.isEmpty) {
-        return AuthResult.failure('Email ou senha incorretos');
+        return AuthResult.failure('Incorrect email or password');
       }
 
       final user = UserModel.fromMap(users.first);
@@ -134,7 +144,7 @@ class AuthRepository {
 
       return AuthResult.success(user);
     } catch (e) {
-      return AuthResult.failure('Erro ao fazer login: ${e.toString()}');
+      return AuthResult.failure('Login error: ${e.toString()}');
     }
   }
   Future<void> logout() async {
@@ -179,9 +189,9 @@ class AuthRepository {
           passwordHash,
         );
         if (success) {
-          return AuthResult.successMessage('Senha atualizada com sucesso');
+          return AuthResult.successMessage('Password updated successfully');
         }
-        return AuthResult.failure('Usuário não encontrado');
+        return AuthResult.failure('User not found');
       }
       final db = await _localDatabase.database;
 
@@ -196,12 +206,12 @@ class AuthRepository {
       );
 
       if (count == 0) {
-        return AuthResult.failure('Usuário não encontrado');
+        return AuthResult.failure('User not found');
       }
 
-      return AuthResult.successMessage('Senha atualizada com sucesso');
+      return AuthResult.successMessage('Password updated successfully');
     } catch (e) {
-      return AuthResult.failure('Erro ao atualizar senha: ${e.toString()}');
+      return AuthResult.failure('Error updating password: ${e.toString()}');
     }
   }
   void setCurrentUser(UserModel? user) {

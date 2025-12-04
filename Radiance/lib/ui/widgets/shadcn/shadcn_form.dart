@@ -189,7 +189,7 @@ class _ShadcnFormFieldState extends State<ShadcnFormField> {
 
   String? _validate(String? value) {
     if (widget.required && (value == null || value.isEmpty)) {
-      return widget.requiredMessage ?? '${widget.label ?? 'Campo'} é obrigatório';
+      return widget.requiredMessage ?? '${widget.label ?? 'Field'} is required';
     }
     if (widget.validator != null) {
       return widget.validator!(value);
@@ -318,10 +318,10 @@ class ShadcnCpfInput extends StatelessWidget {
     
     String cpf = value.replaceAll(RegExp(r'\D'), '');
     if (cpf.length != 11) {
-      return 'CPF deve ter 11 dígitos';
+      return 'CPF must have 11 digits';
     }
     if (RegExp(r'^(\d)\1{10}$').hasMatch(cpf)) {
-      return 'CPF inválido';
+      return 'Invalid CPF';
     }
     
     return null;
@@ -366,7 +366,7 @@ class ShadcnCnpjInput extends StatelessWidget {
     
     String cnpj = value.replaceAll(RegExp(r'\D'), '');
     if (cnpj.length != 14) {
-      return 'CNPJ deve ter 14 dígitos';
+      return 'CNPJ must have 14 digits';
     }
     
     return null;
@@ -381,7 +381,7 @@ class ShadcnPhoneInput extends StatelessWidget {
 
   const ShadcnPhoneInput({
     super.key,
-    this.label = 'Telefone',
+    this.label = 'Phone',
     this.placeholder = '(00) 00000-0000',
     this.controller,
     this.onChanged,

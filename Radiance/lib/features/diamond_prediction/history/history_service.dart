@@ -1,29 +1,31 @@
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'history_delegate.dart';
 import 'history_view_model.dart';
+import '../navigation/diamond_coordinator.dart';
 import '../../../core/data/models/prediction_model.dart';
 import '../../../core/data/repositories/auth_repository.dart';
 import '../../../core/data/repositories/prediction_history_repository.dart';
+
+/// Service that handles history business logic.
+/// Implements HistoryDelegate to respond to view events.
 class HistoryService implements HistoryDelegate {
   final HistoryViewModel viewModel;
   final PredictionHistoryRepository historyRepository;
   final AuthRepository authRepository;
-  final BuildContext context;
+  final DiamondCoordinator _coordinator;
 
   HistoryService({
     required this.viewModel,
     required this.historyRepository,
     required this.authRepository,
-    required this.context,
-  });
+    required DiamondCoordinator coordinator,
+  }) : _coordinator = coordinator;
 
   int? get _userId => authRepository.currentUser?.id;
 
   @override
   Future<void> loadHistory() async {
     if (_userId == null) {
-      onError('Usuario nao autenticado');
+      onError('User not authenticated');
       return;
     }
 
@@ -41,7 +43,7 @@ class HistoryService implements HistoryDelegate {
       final hasMore = predictions.length >= viewModel.pageSize;
       onHistoryLoaded(predictions, hasMore: hasMore);
     } catch (e) {
-      onError('Erro ao carregar historico: ${e.toString()}');
+      onError('Error loading history: ${e.toString()}');
     } finally {
       viewModel.setLoading(false);
     }
@@ -69,7 +71,7 @@ class HistoryService implements HistoryDelegate {
         viewModel.setHasMore(false);
       }
     } catch (e) {
-      onError('Erro ao carregar mais itens: ${e.toString()}');
+      onError('Error loading more items: ${e.toString()}');
     } finally {
       viewModel.setLoading(false);
     }
@@ -87,13 +89,13 @@ class HistoryService implements HistoryDelegate {
       await historyRepository.deletePrediction(id);
       onPredictionDeleted(id);
     } catch (e) {
-      onError('Erro ao deletar predicao: ${e.toString()}');
+      onError('Error deleting prediction: ${e.toString()}');
     }
   }
 
   @override
   void navigateBack() {
-    GoRouter.of(context).go('/diamond-home');
+    _coordinator.goToHome();
   }
 
   @override
@@ -110,13 +112,6 @@ class HistoryService implements HistoryDelegate {
   @override
   void onPredictionDeleted(int id) {
     viewModel.removePrediction(id);
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Predicao removida com sucesso!'),
-          backgroundColor: Colors.green,
-        ),
-      );
-    }
+    _coordinator.showSuccessMessage('Prediction removed successfully!');
   }
 }

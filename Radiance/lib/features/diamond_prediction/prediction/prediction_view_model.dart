@@ -3,9 +3,9 @@ import '../../../core/data/models/prediction_model.dart';
 
 class PredictionViewModel extends ChangeNotifier {
   double _carat = 1.0;
-  String _cut = 'Ideal';
-  String _color = 'G';
-  String _clarity = 'VS2';
+  String? _cut; // No pre-selected value
+  String? _color; // No pre-selected value
+  String? _clarity; // No pre-selected value
   double _depth = 61.5;
   double _table = 57.0;
   double _x = 5.0;
@@ -16,9 +16,9 @@ class PredictionViewModel extends ChangeNotifier {
   PredictionResponse? _result;
   bool _showResult = false;
   double get carat => _carat;
-  String get cut => _cut;
-  String get color => _color;
-  String get clarity => _clarity;
+  String? get cut => _cut;
+  String? get color => _color;
+  String? get clarity => _clarity;
   double get depth => _depth;
   double get table => _table;
   double get x => _x;
@@ -28,25 +28,32 @@ class PredictionViewModel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   PredictionResponse? get result => _result;
   bool get showResult => _showResult;
-  static const List<String> cutOptions = ['Fair', 'Good', 'Very Good', 'Premium', 'Ideal'];
+  
+  // Cut: Best (Ideal) to Worst (Fair)
+  static const List<String> cutOptions = ['Ideal', 'Premium', 'Very Good', 'Good', 'Fair'];
+  
+  // Color: Best (D - colorless) to Worst (J - faint tint)
   static const List<String> colorOptions = ['D', 'E', 'F', 'G', 'H', 'I', 'J'];
-  static const List<String> clarityOptions = ['I1', 'SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF'];
+  
+  // Clarity: Best (IF - flawless) to Worst (I1 - visible inclusions)
+  static const List<String> clarityOptions = ['IF', 'VVS1', 'VVS2', 'VS1', 'VS2', 'SI1', 'SI2', 'I1'];
+  
   void setCarat(double value) {
     _carat = value;
     notifyListeners();
   }
 
-  void setCut(String value) {
+  void setCut(String? value) {
     _cut = value;
     notifyListeners();
   }
 
-  void setColor(String value) {
+  void setColor(String? value) {
     _color = value;
     notifyListeners();
   }
 
-  void setClarity(String value) {
+  void setClarity(String? value) {
     _clarity = value;
     notifyListeners();
   }
@@ -105,9 +112,9 @@ class PredictionViewModel extends ChangeNotifier {
 
   void reset() {
     _carat = 1.0;
-    _cut = 'Ideal';
-    _color = 'G';
-    _clarity = 'VS2';
+    _cut = null; // No pre-selected value
+    _color = null; // No pre-selected value
+    _clarity = null; // No pre-selected value
     _depth = 61.5;
     _table = 57.0;
     _x = 5.0;
@@ -119,13 +126,18 @@ class PredictionViewModel extends ChangeNotifier {
     _showResult = false;
     notifyListeners();
   }
+  
+  bool get isFormValid => _cut != null && _color != null && _clarity != null;
 
-  PredictionRequest buildRequest() {
+  PredictionRequest? buildRequest() {
+    if (_cut == null || _color == null || _clarity == null) {
+      return null;
+    }
     return PredictionRequest(
       carat: _carat,
-      cut: _cut,
-      color: _color,
-      clarity: _clarity,
+      cut: _cut!,
+      color: _color!,
+      clarity: _clarity!,
       depth: _depth,
       table: _table,
       x: _x,

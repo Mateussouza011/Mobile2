@@ -1,16 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import '../../../core/data/repositories/auth_repository.dart';
+import '../navigation/auth_coordinator.dart';
 import 'login_view_model.dart';
 import 'login_delegate.dart';
+
+/// Service that handles login business logic.
+/// Implements LoginDelegate to respond to view events.
 class LoginService implements LoginDelegate {
   final AuthRepository _authRepository;
-  final BuildContext _context;
+  final AuthCoordinator _coordinator;
 
   LoginService({
-    required BuildContext context,
+    required AuthCoordinator coordinator,
     AuthRepository? authRepository,
-  })  : _context = context,
+  })  : _coordinator = coordinator,
         _authRepository = authRepository ?? AuthRepository();
 
   @override
@@ -61,14 +63,12 @@ class LoginService implements LoginDelegate {
       );
 
       if (result.isSuccess && result.user != null) {
-        if (_context.mounted) {
-          _context.go('/diamond-home');
-        }
+        _coordinator.goToHome();
       } else {
-        viewModel.setError(result.message ?? 'Erro ao fazer login');
+        viewModel.setError(result.message ?? 'Login failed');
       }
     } catch (e) {
-      viewModel.setError('Erro inesperado. Tente novamente.');
+      viewModel.setError('Unexpected error. Please try again.');
     } finally {
       viewModel.setLoading(false);
     }
@@ -78,13 +78,14 @@ class LoginService implements LoginDelegate {
   void onRegisterPressed({
     required LoginViewModel viewModel,
   }) {
-    _context.go('/auth/register');
+    _coordinator.goToRegister();
   }
 
   @override
   void onForgotPasswordPressed({
     required LoginViewModel viewModel,
   }) {
-    _context.go('/auth/forgot-password');
+    _coordinator.goToForgotPassword();
   }
 }
+

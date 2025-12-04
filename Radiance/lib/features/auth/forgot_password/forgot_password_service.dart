@@ -1,20 +1,18 @@
 import '../../../core/data/repositories/auth_repository.dart';
+import '../navigation/auth_coordinator.dart';
 import 'forgot_password_view_model.dart';
 import 'forgot_password_delegate.dart';
 
-typedef VoidCallback = void Function();
-
+/// Service that handles forgot password business logic.
+/// Implements ForgotPasswordDelegate to respond to view events.
 class ForgotPasswordService implements ForgotPasswordDelegate {
   final AuthRepository _authRepository;
-  final VoidCallback _onRecoverySuccess;
-  final VoidCallback _onGoToLogin;
+  final AuthCoordinator _coordinator;
 
   ForgotPasswordService({
-    required VoidCallback onRecoverySuccess,
-    required VoidCallback onGoToLogin,
+    required AuthCoordinator coordinator,
     AuthRepository? authRepository,
-  })  : _onRecoverySuccess = onRecoverySuccess,
-        _onGoToLogin = onGoToLogin,
+  })  : _coordinator = coordinator,
         _authRepository = authRepository ?? AuthRepository();
 
   @override
@@ -33,14 +31,14 @@ class ForgotPasswordService implements ForgotPasswordDelegate {
       final user = await _authRepository.findUserByEmail(viewModel.email);
       
       if (user != null) {
-        viewModel.setSuccess('Email de recuperacao enviado! Verifique sua caixa de entrada.');
+        viewModel.setSuccess('Recovery email sent! Check your inbox.');
         await Future.delayed(const Duration(seconds: 2));
-        _onRecoverySuccess();
+        _coordinator.goToLogin();
       } else {
-        viewModel.setError('Email nao encontrado em nossa base de dados.');
+        viewModel.setError('Email not found in our database.');
       }
     } catch (e) {
-      viewModel.setError('Erro inesperado. Tente novamente.');
+      viewModel.setError('Unexpected error. Please try again.');
     } finally {
       viewModel.setLoading(false);
     }
@@ -48,6 +46,6 @@ class ForgotPasswordService implements ForgotPasswordDelegate {
 
   @override
   void onGoToLoginPressed({required ForgotPasswordViewModel viewModel}) {
-    _onGoToLogin();
+    _coordinator.goToLogin();
   }
 }

@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import '../../../core/theme/colors.dart';
+import '../navigation/diamond_coordinator.dart';
+import '../../auth/navigation/auth_coordinator.dart';
 import '../../../ui/widgets/shadcn/shadcn_button.dart';
 import '../../../ui/widgets/shadcn/shadcn_card.dart';
 
 class LandingView extends StatelessWidget {
-  const LandingView({super.key});
+  final DiamondCoordinator diamondCoordinator;
+  final AuthCoordinator authCoordinator;
+
+  const LandingView({
+    super.key,
+    required this.diamondCoordinator,
+    required this.authCoordinator,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +59,8 @@ class LandingView extends StatelessWidget {
             gradient: LinearGradient(
               colors: [
                 colorScheme.primary,
-                colorScheme.primary.withOpacity(0.6),
-                Colors.purple.withOpacity(0.6),
+                colorScheme.primary.withValues(alpha: 0.6),
+                ShadcnColors.chart[0].withValues(alpha: 0.6),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -59,7 +68,7 @@ class LandingView extends StatelessWidget {
             borderRadius: BorderRadius.circular(28),
             boxShadow: [
               BoxShadow(
-                color: colorScheme.primary.withOpacity(0.4),
+                color: colorScheme.primary.withValues(alpha: 0.4),
                 blurRadius: 30,
                 offset: const Offset(0, 12),
               ),
@@ -82,7 +91,7 @@ class LandingView extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          'Utilize inteligencia artificial para estimar o valor de diamantes com base em suas caracteristicas fisicas.',
+          'Use artificial intelligence to estimate diamond values based on their physical characteristics.',
           style: textTheme.bodyLarge?.copyWith(
             color: colorScheme.onSurfaceVariant,
             height: 1.6,
@@ -95,9 +104,9 @@ class LandingView extends StatelessWidget {
 
   Widget _buildFeatures(BuildContext context, ColorScheme colorScheme, TextTheme textTheme, bool isDesktop) {
     final features = [
-      (Icons.auto_awesome, 'IA Avancada', 'Modelo treinado com milhares de diamantes'),
-      (Icons.speed, 'Resultado Instantaneo', 'Obtenha estimativas em segundos'),
-      (Icons.history, 'Historico Completo', 'Salve e acompanhe suas consultas'),
+      (Icons.auto_awesome, 'Advanced AI', 'Model trained with thousands of diamonds'),
+      (Icons.speed, 'Instant Results', 'Get estimates in seconds'),
+      (Icons.history, 'Complete History', 'Save and track your queries'),
     ];
 
     if (isDesktop) {
@@ -129,7 +138,7 @@ class LandingView extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: colorScheme.primaryContainer.withOpacity(0.5),
+              color: colorScheme.primaryContainer.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: colorScheme.primary, size: 24),
@@ -160,18 +169,18 @@ class LandingView extends StatelessWidget {
         SizedBox(
           width: 280,
           child: ShadcnButton(
-            text: 'Comecar Agora',
+            text: 'Get Started',
             leadingIcon: const Icon(Icons.arrow_forward, size: 18),
-            onPressed: () => context.go('/diamond-login'),
+            onPressed: () => authCoordinator.goToLogin(),
           ),
         ),
         const SizedBox(height: 12),
         SizedBox(
           width: 280,
           child: ShadcnButton(
-            text: 'Criar Conta',
+            text: 'Create Account',
             variant: ShadcnButtonVariant.outline,
-            onPressed: () => context.go('/auth/register'),
+            onPressed: () => authCoordinator.goToRegister(),
           ),
         ),
       ],
@@ -184,16 +193,16 @@ class LandingView extends StatelessWidget {
         const Divider(),
         const SizedBox(height: 16),
         Text(
-          'Construido com nosso Design System',
+          'Built with our Design System',
           style: textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant),
         ),
         const SizedBox(height: 8),
         ShadcnButton(
-          text: 'Ver Componentes',
+          text: 'View Components',
           variant: ShadcnButtonVariant.ghost,
           size: ShadcnButtonSize.sm,
           trailingIcon: const Icon(Icons.open_in_new, size: 14),
-          onPressed: () => context.go('/design-system'),
+          onPressed: () => diamondCoordinator.goToHome(), // TODO: Add design system route
         ),
       ],
     );

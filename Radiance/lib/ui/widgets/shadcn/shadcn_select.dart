@@ -260,7 +260,7 @@ class _ShadcnSelectState<T> extends State<ShadcnSelect<T>> {
                               ],
                             )
                           : Text(
-                              widget.placeholder ?? 'Selecione uma opção',
+                              widget.placeholder ?? 'Select an option',
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: colorScheme.inverseSurface,
                                 fontSize: 15,
@@ -424,7 +424,7 @@ class _SelectDropdownState<T> extends State<_SelectDropdown<T>> {
                               ? Padding(
                                   padding: const EdgeInsets.all(16.0),
                                   child: Text(
-                                    'Nenhuma opção encontrada',
+                                    'No options found',
                                     style: theme.textTheme.bodyMedium?.copyWith(
                                       color: colorScheme.inverseSurface,
                                     ),
