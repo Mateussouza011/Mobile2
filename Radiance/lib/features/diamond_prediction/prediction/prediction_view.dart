@@ -206,21 +206,37 @@ class _FormView extends StatelessWidget {
               const SizedBox(height: 12),
               Row(
                 children: [
-                  Expanded(child: _DimensionField(label: 'X', value: viewModel.x, onChanged: viewModel.setX)),
+                  Expanded(
+                      child: _DimensionField(
+                          label: 'X',
+                          value: viewModel.x,
+                          onChanged: viewModel.setX)),
                   const SizedBox(width: 12),
-                  Expanded(child: _DimensionField(label: 'Y', value: viewModel.y, onChanged: viewModel.setY)),
+                  Expanded(
+                      child: _DimensionField(
+                          label: 'Y',
+                          value: viewModel.y,
+                          onChanged: viewModel.setY)),
                   const SizedBox(width: 12),
-                  Expanded(child: _DimensionField(label: 'Z', value: viewModel.z, onChanged: viewModel.setZ)),
+                  Expanded(
+                      child: _DimensionField(
+                          label: 'Z',
+                          value: viewModel.z,
+                          onChanged: viewModel.setZ)),
                 ],
               ),
               const SizedBox(height: 32),
               SizedBox(
                 width: double.infinity,
-                child: ShadcnButton(
+                child: ShadcnButtonView.withLeadingIcon(
                   text: 'Calculate Price',
-                  loading: viewModel.isLoading,
                   leadingIcon: const Icon(Icons.calculate, size: 18),
-                  onPressed: viewModel.isLoading ? null : () => delegate.predict(),
+                  variant: ShadcnButtonVariant.default_,
+                  size: ShadcnButtonSize.lg,
+                  loading: viewModel.isLoading,
+                  disabled: viewModel.isLoading,
+                  onPressed:
+                      viewModel.isLoading ? null : () => delegate.predict(),
                 ),
               ),
             ],
@@ -265,7 +281,9 @@ class _SliderField extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(label, style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500)),
+                  Text(label,
+                      style: textTheme.titleSmall
+                          ?.copyWith(fontWeight: FontWeight.w500)),
                   if (description != null) ...[
                     const SizedBox(height: 2),
                     Text(
@@ -322,7 +340,8 @@ class _SelectField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500)),
+        Text(label,
+            style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w500)),
         if (description != null) ...[
           const SizedBox(height: 2),
           Text(
@@ -337,10 +356,12 @@ class _SelectField extends StatelessWidget {
         ShadcnSelect<String>(
           value: value,
           placeholder: placeholder,
-          options: options.map((o) => ShadcnSelectOption(
-            value: o,
-            label: optionLabels?[o] ?? o,
-          )).toList(),
+          options: options
+              .map((o) => ShadcnSelectOption(
+                    value: o,
+                    label: optionLabels?[o] ?? o,
+                  ))
+              .toList(),
           onChanged: (v) {
             onChanged(v);
           },
@@ -365,7 +386,7 @@ class _DimensionField extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    
+
     final labelMap = {
       'X': 'Width (X)',
       'Y': 'Length (Y)',
@@ -415,6 +436,7 @@ class _DimensionField extends StatelessWidget {
     );
   }
 }
+
 class _ResultModal extends StatelessWidget {
   final PredictionResponse result;
   final PredictionViewModel viewModel;
@@ -480,16 +502,19 @@ class _ResultModal extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: ShadcnColors.chart[2].withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: ShadcnColors.chart[2].withValues(alpha: 0.3)),
+                  border: Border.all(
+                      color: ShadcnColors.chart[2].withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.check_circle, size: 16, color: ShadcnColors.chart[2]),
+                    Icon(Icons.check_circle,
+                        size: 16, color: ShadcnColors.chart[2]),
                     const SizedBox(width: 6),
                     Text(
                       'Saved to history',
@@ -510,36 +535,39 @@ class _ResultModal extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    _ModalSummaryRow(label: 'Carats', value: '${viewModel.carat.toStringAsFixed(2)} ct'),
+                    _ModalSummaryRow(
+                        label: 'Carats',
+                        value: '${viewModel.carat.toStringAsFixed(2)} ct'),
                     const SizedBox(height: 8),
                     _ModalSummaryRow(label: 'Cut', value: viewModel.cut ?? '-'),
                     const SizedBox(height: 8),
-                    _ModalSummaryRow(label: 'Color', value: viewModel.color ?? '-'),
+                    _ModalSummaryRow(
+                        label: 'Color', value: viewModel.color ?? '-'),
                     const SizedBox(height: 8),
-                    _ModalSummaryRow(label: 'Clarity', value: viewModel.clarity ?? '-'),
+                    _ModalSummaryRow(
+                        label: 'Clarity', value: viewModel.clarity ?? '-'),
                     const SizedBox(height: 8),
                     _ModalSummaryRow(
                       label: 'Dimensions',
-                      value: '${viewModel.x.toStringAsFixed(1)} x ${viewModel.y.toStringAsFixed(1)} x ${viewModel.z.toStringAsFixed(1)}',
+                      value:
+                          '${viewModel.x.toStringAsFixed(1)} x ${viewModel.y.toStringAsFixed(1)} x ${viewModel.z.toStringAsFixed(1)}',
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ShadcnButton(
-                  text: 'New Prediction',
-                  leadingIcon: const Icon(Icons.add, size: 18),
-                  onPressed: onNewPrediction,
-                ),
+              _HighlightedButton(
+                text: 'New Prediction',
+                icon: Icons.add_circle_outline,
+                onPressed: onNewPrediction,
               ),
               const SizedBox(height: 12),
               SizedBox(
                 width: double.infinity,
-                child: ShadcnButton(
+                child: ShadcnButtonView(
                   text: 'Back to Home',
                   variant: ShadcnButtonVariant.outline,
+                  size: ShadcnButtonSize.lg,
                   onPressed: onGoHome,
                 ),
               ),
@@ -567,13 +595,148 @@ class _ModalSummaryRow extends StatelessWidget {
       children: [
         Text(
           label,
-          style: textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant),
+          style: textTheme.bodySmall
+              ?.copyWith(color: colorScheme.onSurfaceVariant),
         ),
         Text(
           value,
           style: textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
         ),
       ],
+    );
+  }
+}
+
+class _HighlightedButtonViewModel extends ChangeNotifier {
+  bool _isHovered = false;
+  bool _isPressed = false;
+
+  bool get isHovered => _isHovered;
+  bool get isPressed => _isPressed;
+
+  void setHovered(bool value) {
+    if (_isHovered != value) {
+      _isHovered = value;
+      notifyListeners();
+    }
+  }
+
+  void setPressed(bool value) {
+    if (_isPressed != value) {
+      _isPressed = value;
+      notifyListeners();
+    }
+  }
+
+  double get scale => _isPressed ? 0.95 : (_isHovered ? 1.02 : 1.0);
+
+  double get elevation => _isPressed ? 2 : (_isHovered ? 12 : 8);
+
+  double get glowOpacity => _isPressed ? 0.3 : (_isHovered ? 0.6 : 0.4);
+}
+
+class _HighlightedButton extends StatefulWidget {
+  final String text;
+  final IconData icon;
+  final VoidCallback onPressed;
+
+  const _HighlightedButton({
+    required this.text,
+    required this.icon,
+    required this.onPressed,
+  });
+
+  @override
+  State<_HighlightedButton> createState() => _HighlightedButtonState();
+}
+
+class _HighlightedButtonState extends State<_HighlightedButton> {
+  late final _HighlightedButtonViewModel _viewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _viewModel = _HighlightedButtonViewModel();
+  }
+
+  @override
+  void dispose() {
+    _viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return ListenableBuilder(
+      listenable: _viewModel,
+      builder: (context, child) {
+        return GestureDetector(
+          onTapDown: (_) => _viewModel.setPressed(true),
+          onTapUp: (_) {
+            _viewModel.setPressed(false);
+            widget.onPressed();
+          },
+          onTapCancel: () => _viewModel.setPressed(false),
+          child: MouseRegion(
+            onEnter: (_) => _viewModel.setHovered(true),
+            onExit: (_) => _viewModel.setHovered(false),
+            cursor: SystemMouseCursors.click,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 150),
+              curve: Curves.easeOut,
+              transform: Matrix4.identity()..scale(_viewModel.scale),
+              transformAlignment: Alignment.center,
+              child: Container(
+                width: double.infinity,
+                height: 48,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      colorScheme.primary,
+                      colorScheme.primary.withOpacity(0.8),
+                      colorScheme.secondary,
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: colorScheme.primary
+                          .withOpacity(_viewModel.glowOpacity),
+                      blurRadius: _viewModel.elevation,
+                      spreadRadius: 0,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      widget.icon,
+                      color: colorScheme.onPrimary,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      widget.text,
+                      style: TextStyle(
+                        color: colorScheme.onPrimary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
